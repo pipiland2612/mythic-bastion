@@ -21,7 +21,7 @@ This project is a school project focused on game development, implementing core 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/mythic-bastion.git
+git clone https://github.com/pipiland2612/mythic-bastion.git
 ```
 
 2. Navigate to the project directory:
