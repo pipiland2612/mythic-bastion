@@ -11,9 +11,10 @@ abstract class Enemy extends Creature:
 end Enemy
 
 object Enemy:
-  def enemyOfName(key: String, difficulty: Int): Enemy =
-    key match
-      case Monster01.name =>
-        val data = Monster01.data
-        Monster01(data(0), data(1), data(2), data(3), data(4), data(5))
-      case _ => null
+
+  def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
+    val initialData: Vector[Int] = key match
+      case Monster01.name => Monster01.data
+      case _ => return None
+    val data: Vector[Int] = initialData.map(element => element * difficulty)
+    Some(Creep(data(0), data(1), data(2), data(3), data(4), data(5)))
