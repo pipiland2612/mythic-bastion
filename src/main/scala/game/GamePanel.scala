@@ -32,11 +32,6 @@ class GamePanel extends JPanel with Runnable:
     super.paintComponents(g)
     val g2d = g.asInstanceOf[Graphics2D]
 
-    g2d.setFont(new Font("Arial",Font.PLAIN, 20))
-    g2d.setColor(Color.WHITE)
-    g2d.drawString("Hello World", 100, 100)
-    g2d.drawRect(500, 500, 100, 100)
-
     g2d.dispose()
 
   override def run(): Unit =
