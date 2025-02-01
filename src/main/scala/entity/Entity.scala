@@ -2,6 +2,8 @@ package entity
 
 import entity.creature.Creature
 
+import java.awt.Graphics2D
+
 abstract class Entity:
 
   var pos: (Int, Int)
@@ -13,4 +15,5 @@ abstract class Entity:
 
   def update(): Unit = {}
 
-  def draw(): Unit = {}
+  // TODO: Implement this
+  def draw(g2d: Graphics2D): Unit = {}

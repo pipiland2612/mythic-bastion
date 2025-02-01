@@ -1,8 +1,12 @@
 package utils
 
+import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
+import entity.creature.Creature
+
 import java.awt.geom.AffineTransform
 import java.awt.{Graphics2D, Image}
 import java.awt.image.BufferedImage
+import java.io.{File, InputStream}
 import javax.imageio.ImageIO
 
 object Tools:
@@ -25,7 +29,7 @@ object Tools:
       case e: Exception =>
         throw new RuntimeException(s"Failed to load image at path: /$path with exception: $e")
 
-  def loadImagesCoords(x: Int, y: Int, w: Int, h: Int, path: String): BufferedImage =
+  def loadImageCoords(x: Int, y: Int, w: Int, h: Int, path: String): BufferedImage =
     try
       val image = loadImage(path)
       image.getSubimage(x, y, w, h)
@@ -41,7 +45,20 @@ object Tools:
     g.dispose()
     scaledImage
 
-  //TODO: Implement this, to read data from JSON file
-  def parser(path: String): Unit = {}
+  //TODO: Implement this, to read data from JSON file, parse in enemy object
+  def creatureParser(jsonPath: String, imagePath: String, creature: Creature): Unit =
+    try
+      val objectMapper: ObjectMapper = ObjectMapper()
+      val root: JsonNode = objectMapper.readTree(getClass.getResourceAsStream(s"/images/$jsonPath"))
+      val image = loadImage(imagePath)
 
+      val resNode: JsonNode = root.path("res")
 
+      resNode.forEach(key =>
+        val x: Int = key.path("x").asInt()
+        val y: Int = key.path("y").asInt()
+        val w: Int = key.path("w").asInt()
+        val h: Int = key.path("h").asInt()
+      )
+    catch
+      case e: Exception => e.printStackTrace()

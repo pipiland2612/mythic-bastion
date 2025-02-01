@@ -1,5 +1,7 @@
 package entity.creature.enemy
 
+import java.awt.image.BufferedImage
+
 case class Creep(maxHealth: Int, var health: Int, playerDamage: Int, apDmg: Int, adDmg: Int, range: Int) extends Enemy:
   var pos: (Int, Int) = (0,0)
 

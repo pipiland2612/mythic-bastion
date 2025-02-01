@@ -2,7 +2,7 @@ package game
 
 import system.SystemHandler
 
-import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
+import java.awt.{Color, Dimension, Graphics, Graphics2D}
 import javax.swing.JPanel
 
 
