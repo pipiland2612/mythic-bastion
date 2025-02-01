@@ -1,20 +1,24 @@
 package game
 
+import system.SystemHandler
+
 import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
 import javax.swing.JPanel
 
 
 class GamePanel extends JPanel with Runnable:
 
+  // Configuration
   val screenWidth = 1280
   val screenHeight = 800
   val FPS = 60
 
+  // System initialize
+  val systemHandler: SystemHandler = SystemHandler(this)
   var gameThread: Thread = _
 
   this.setPreferredSize(new Dimension(screenWidth, screenHeight))
   this.setBackground(Color.BLACK)
-
 
   def setUpGame(): Unit = {}
 
