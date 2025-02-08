@@ -52,8 +52,20 @@ object Tools:
       val root: JsonNode = objectMapper.readTree(getClass.getResourceAsStream(s"/images/$jsonPath"))
       val image = loadImage(imagePath)
 
-      val resNode: JsonNode = root.path("res")
+      val mNode: JsonNode = root.path("mc").get(0)
+      val map: Vector[(String, Int)] = Vector()
+      mNode.path("labels").forEach(data =>
+        val string: String = data.path("name").asText()
+        val value: Int = data.path("frame").asInt()
+        map :+ (string, value)
+      )
 
+      mNode.path("frames").forEach(data =>
+
+
+      )
+
+      val resNode: JsonNode = root.path("res")
       resNode.forEach(key =>
         val x: Int = key.path("x").asInt()
         val y: Int = key.path("y").asInt()
