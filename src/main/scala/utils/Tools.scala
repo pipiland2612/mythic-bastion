@@ -50,12 +50,11 @@ object Tools:
     scaledImage
 
   //TODO: Implement this, to read data from JSON file, parse in enemy object
-  def creatureParser(jsonPath: String, imagePath: String, creature: Creature) : Unit =
+  def parser(jsonPath: String, imagePath: String): Option[Vector[Vector[BufferedImage]]] =
     try
       val objectMapper: ObjectMapper = ObjectMapper()
       val root: JsonNode = objectMapper.readTree(getClass.getResourceAsStream(s"/images/$jsonPath"))
       val image = loadImage(imagePath)
-      var walkingAnimation: Vector[BufferedImage] = Vector()
       var animation: Vector[Vector[BufferedImage]] = Vector()
 
       val resNode: JsonNode = root.path("res")
@@ -107,7 +106,7 @@ object Tools:
               currSum = 0
           )
           animation = animation :+ temp
-          animation.foreach(ele => println(ele.size))
-        case None =>
+          Some(animation)
+        case None => None
     catch
-      case e: Exception => e.printStackTrace()
+      case e: Exception => throw new Exception(e)
