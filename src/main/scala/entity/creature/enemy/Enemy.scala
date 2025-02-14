@@ -3,6 +3,7 @@ package entity.creature.enemy
 import entity.creature.Creature
 import utils.Tools
 
+import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
 abstract class Enemy extends Creature:
@@ -30,6 +31,8 @@ abstract class Enemy extends Creature:
 
   def attackPlayer(): Unit = {}
 
+  override def draw(g2d: Graphics2D): Unit =
+    super.draw(g2d)
 
 end Enemy
 

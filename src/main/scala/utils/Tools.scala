@@ -49,7 +49,6 @@ object Tools:
     g.dispose()
     scaledImage
 
-  //TODO: Implement this, to read data from JSON file, parse in enemy object
   def parser(jsonPath: String, imagePath: String): Option[Vector[Vector[BufferedImage]]] =
     try
       val objectMapper: ObjectMapper = ObjectMapper()
