@@ -5,7 +5,7 @@ import utils.Tools
 class ParserTest extends AnyFunSuite {
 
   test("add should handle correctly when parsing")
-    Tools.parser("enemies/Monster01.json", "enemies/Monster01.png")
+    Tools.creatureParser("enemies/Boss01.json", "enemies/Boss01.png", null)
     val testCases: Vector[(Int, Int)] = Vector(
 
     )

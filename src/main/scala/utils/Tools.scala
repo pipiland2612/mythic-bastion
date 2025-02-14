@@ -6,8 +6,12 @@ import entity.creature.Creature
 import java.awt.geom.AffineTransform
 import java.awt.{Graphics2D, Image}
 import java.awt.image.BufferedImage
-import java.io.{File, InputStream}
 import javax.imageio.ImageIO
+import scala.collection.mutable.ListBuffer
+import scala.collection.mutable
+import scala.jdk.CollectionConverters.*
+
+case class ImageProb(val x: Int, val y: Int, val w: Int, val h: Int)
 
 object Tools:
 
@@ -46,31 +50,64 @@ object Tools:
     scaledImage
 
   //TODO: Implement this, to read data from JSON file, parse in enemy object
-  def creatureParser(jsonPath: String, imagePath: String, creature: Creature): Unit =
+  def creatureParser(jsonPath: String, imagePath: String, creature: Creature) : Unit =
     try
       val objectMapper: ObjectMapper = ObjectMapper()
       val root: JsonNode = objectMapper.readTree(getClass.getResourceAsStream(s"/images/$jsonPath"))
       val image = loadImage(imagePath)
-
-      val mNode: JsonNode = root.path("mc").get(0)
-      val map: Vector[(String, Int)] = Vector()
-      mNode.path("labels").forEach(data =>
-        val string: String = data.path("name").asText()
-        val value: Int = data.path("frame").asInt()
-        map :+ (string, value)
-      )
-
-      mNode.path("frames").forEach(data =>
-
-
-      )
+      var walkingAnimation: Vector[BufferedImage] = Vector()
+      var animation: Vector[Vector[BufferedImage]] = Vector()
 
       val resNode: JsonNode = root.path("res")
-      resNode.forEach(key =>
-        val x: Int = key.path("x").asInt()
-        val y: Int = key.path("y").asInt()
-        val w: Int = key.path("w").asInt()
-        val h: Int = key.path("h").asInt()
+      val resToPos: mutable.Map[String, ImageProb] = mutable.Map()
+
+      resNode.fields().forEachRemaining ( entry =>
+        val key = entry.getKey
+        val node = entry.getValue
+
+        val x = node.path("x").asInt()
+        val y = node.path("y").asInt()
+        val w = node.path("w").asInt()
+        val h = node.path("h").asInt()
+
+        resToPos += (key -> ImageProb(x, y, w, h))
       )
+
+      root.path("mc").fieldNames().asScala.take(1).toList.headOption match
+        case Some(name) =>
+          val mNode: JsonNode = root.path("mc").path(name)
+          val map: Vector[(String, Int)] = Vector()
+          val ref: ListBuffer[Int] = ListBuffer()
+          mNode.path("labels").forEach(data =>
+            val string: String = data.path("name").asText()
+            val value: Int = data.path("frame").asInt()
+            map :+ (string, value)
+            ref += value
+          )
+          println(ref)
+          var currSum: Int = 0
+          val frames = mNode.path("frames")
+          var index: Int = 0
+          var temp: Vector[BufferedImage] = Vector()
+
+          frames.forEach(data =>
+            var value: Int = data.path("duration").asInt()
+            if (value == 0) value = 1
+            currSum += value
+
+            resToPos.get(data.path("res").asText()) match
+              case Some(value) =>
+                val currImage: BufferedImage = image.getSubimage(value.x, value.y, value.w, value.h)
+                temp = temp :+ currImage
+              case None =>
+            if index + 1 < ref.length && (currSum + ref(index) >= ref(index + 1)) then
+              animation = animation :+ temp
+              index += 1
+              temp = Vector()
+              currSum = 0
+          )
+          animation = animation :+ temp
+          animation.foreach(ele => println(ele.size))
+        case None =>
     catch
       case e: Exception => e.printStackTrace()
