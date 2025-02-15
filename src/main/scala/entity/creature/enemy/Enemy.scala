@@ -15,11 +15,12 @@ abstract class Enemy extends Creature:
   var fightingAnimation: Animation = _
   var deadAnimation: Animation = _
 
+  val scaleFactor: Int = 2
   val playerDamage: Int
   val jsonPath, imagePath: String
   def enemyParse(): Unit =
     if (jsonPath == null || imagePath == null) then return
-    Tools.parser(jsonPath, imagePath) match
+    Tools.parser(jsonPath, imagePath, scaleFactor) match
       case Some(value) =>
         walkingAnimation = Animation(value(0), 20)
         walkingUpAnimation = Animation(value(1), 20)

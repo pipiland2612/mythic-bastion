@@ -44,12 +44,9 @@ object Tools:
   def scaleImage(origin: BufferedImage, width: Int, height: Int): BufferedImage =
     val resized = origin.getScaledInstance(width, height, Image.SCALE_DEFAULT)
     val scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-    val g: Graphics2D = scaledImage.createGraphics()
-    g.drawImage(resized, 0, 0, width, height, null)
-    g.dispose()
     scaledImage
 
-  def parser(jsonPath: String, imagePath: String): Option[Vector[Vector[BufferedImage]]] =
+  def parser(jsonPath: String, imagePath: String, scaleFactor: Int): Option[Vector[Vector[BufferedImage]]] =
     try
       val objectMapper: ObjectMapper = ObjectMapper()
       val root: JsonNode = objectMapper.readTree(getClass.getResourceAsStream(s"/images/$jsonPath"))
@@ -82,7 +79,6 @@ object Tools:
             map :+ (string, value)
             ref += value
           )
-          println(ref)
           var currSum: Int = 0
           val frames = mNode.path("frames")
           var index: Int = 0
@@ -96,7 +92,8 @@ object Tools:
             resToPos.get(data.path("res").asText()) match
               case Some(value) =>
                 val currImage: BufferedImage = image.getSubimage(value.x, value.y, value.w, value.h)
-                temp = temp :+ currImage
+                val scaledImage: BufferedImage = scaleImage(currImage, scaleFactor, scaleFactor)
+                temp = temp :+ scaledImage
               case None =>
             if index + 1 < ref.length && (currSum + ref(index) >= ref(index + 1)) then
               animation = animation :+ temp
