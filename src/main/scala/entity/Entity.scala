@@ -21,5 +21,8 @@ abstract class Entity:
 
   // TODO: Implement this
   def draw(g2d: Graphics2D): Unit =
+    if currentAnimation == null then
+      println("Nothing to show")
+      return
     val image: BufferedImage = currentAnimation.getCurrentFrame
     g2d.drawImage(image, pos._1, pos._2, null)

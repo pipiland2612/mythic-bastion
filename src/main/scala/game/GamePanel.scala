@@ -1,5 +1,6 @@
 package game
 
+import stage.StageManager
 import system.SystemHandler
 
 import java.awt.{Color, Dimension, Graphics, Graphics2D}
@@ -15,6 +16,8 @@ class GamePanel extends JPanel with Runnable:
 
   // System initialize
   val systemHandler: SystemHandler = SystemHandler(this)
+  val stageManager: StageManager = StageManager(this)
+  var currentGameState: GameState = GameState.PlayState
   var gameThread: Thread = _
 
   this.setPreferredSize(new Dimension(screenWidth, screenHeight))
@@ -29,8 +32,14 @@ class GamePanel extends JPanel with Runnable:
   def update(): Unit = {}
 
   override def paintComponent(g: Graphics): Unit =
+    // TODO: Implement this method first to draw stage state
     super.paintComponents(g)
     val g2d = g.asInstanceOf[Graphics2D]
+
+    if currentGameState == GameState.PlayState then
+      stageManager.drawCurrentStage(g2d)
+    else if currentGameState == GameState.TitleState then
+      {}
 
     g2d.dispose()
 

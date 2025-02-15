@@ -1,33 +1,33 @@
 package entity.creature.enemy
 
 import entity.creature.Creature
-import utils.Tools
+import utils.{Animation, Tools}
 
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
 abstract class Enemy extends Creature:
 
-  var walkingFrames: Vector[BufferedImage] = Vector()
-  var walkingUpFrames: Vector[BufferedImage] = Vector()
-  var walkingDownFrames: Vector[BufferedImage] = Vector()
-  var idleFrames: Vector[BufferedImage] = Vector()
-  var fightingFrames: Vector[BufferedImage] = Vector()
-  var deadFrames: Vector[BufferedImage] = Vector()
-
-  val jsonPath, imagePath: String
-  def enemyParse(): Unit =
-    Tools.parser(jsonPath, imagePath) match
-      case Some(value) =>
-        walkingFrames = value(0)
-        walkingUpFrames = value(1)
-        walkingDownFrames = value(2)
-        idleFrames = value(3)
-        fightingFrames = value(4)
-        deadFrames = value(5)
-      case _ =>
+  var walkingAnimation: Animation = _
+  var walkingUpAnimation: Animation = _
+  var walkingDownAnimation: Animation = _
+  var idleAnimation: Animation = _
+  var fightingAnimation: Animation = _
+  var deadAnimation: Animation = _
 
   val playerDamage: Int
+  val jsonPath, imagePath: String
+  def enemyParse(): Unit =
+    if (jsonPath == null || imagePath == null) then return
+    Tools.parser(jsonPath, imagePath) match
+      case Some(value) =>
+        walkingAnimation = Animation(value(0), 20)
+        walkingUpAnimation = Animation(value(1), 20)
+        walkingDownAnimation = Animation(value(2), 20)
+        idleAnimation = Animation(value(3), 20)
+        fightingAnimation = Animation(value(4), 20)
+        deadAnimation = Animation(value(5), 20)
+      case _ =>
 
   def attackPlayer(): Unit = {}
 
@@ -38,7 +38,7 @@ end Enemy
 
 object Enemy:
 
-  def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
+  def enemyOfName(key: String, difficulty: Int): Enemy =
     var initialData: Vector[Int] = Vector()
     var jsonData, imageData: String = ""
     key match
@@ -46,6 +46,6 @@ object Enemy:
         initialData = Monster01.data
         jsonData = Monster01.jsonPath
         imageData = Monster01.imagePath
-      case _ => return None
+      case _ => return null
     val data: Vector[Int] = initialData.map(element => element * difficulty)
-    Some(Creep(data(0), data(1), data(2), data(3), data(4), data(5), jsonData, imageData))
+    Creep(data(0), data(1), data(2), data(3), data(4), data(5), jsonData, imageData)

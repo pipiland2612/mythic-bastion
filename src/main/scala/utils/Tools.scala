@@ -53,7 +53,7 @@ object Tools:
     try
       val objectMapper: ObjectMapper = ObjectMapper()
       val root: JsonNode = objectMapper.readTree(getClass.getResourceAsStream(s"/images/$jsonPath"))
-      val image = loadImage(imagePath)
+      val image: BufferedImage = loadImage(imagePath)
       var animation: Vector[Vector[BufferedImage]] = Vector()
 
       val resNode: JsonNode = root.path("res")
@@ -108,4 +108,5 @@ object Tools:
           Some(animation)
         case None => None
     catch
-      case e: Exception => throw new Exception(e)
+      case e: Exception =>
+        throw new Exception(s"Failed to parse the file at $jsonPath and $imagePath")

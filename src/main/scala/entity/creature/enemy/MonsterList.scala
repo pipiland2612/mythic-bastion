@@ -1,8 +1,9 @@
 package entity.creature.enemy
 
 case class Creep(maxHealth: Int, var health: Int, playerDamage: Int, apDmg: Int, adDmg: Int, range: Int, jsonPath: String, imagePath: String) extends Enemy:
-  var pos: (Int, Int) = (0,0)
-
+  var pos: (Int, Int) = (100, 100)
+  enemyParse()
+  currentAnimation = idleAnimation
 end Creep
 
 // data = [maxHealth, health, playerDamage, apDmg, adDmg, range]

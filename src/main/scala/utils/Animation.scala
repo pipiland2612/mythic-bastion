@@ -8,7 +8,9 @@ class Animation(val frames: Vector[BufferedImage], val frameDuration: Int):
 
   def update(): Unit =
     frameCount += 1
-    if (frameCount >= frameDuration) then frameCount = 0
+    if (frameCount >= frameDuration) then
+      frameCount = 0
+      currentFrame = (currentFrame + 1) % frames.length
 
-  def getCurrentFrame: BufferedImage = frames(frameCount)
+  def getCurrentFrame: BufferedImage = frames(currentFrame)
 
