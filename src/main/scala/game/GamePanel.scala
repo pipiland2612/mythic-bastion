@@ -2,7 +2,9 @@ package game
 
 import stage.StageManager
 import system.SystemHandler
+import utils.Tools
 
+import java.awt.image.BufferedImage
 import java.awt.{Color, Dimension, Graphics, Graphics2D}
 import javax.swing.JPanel
 

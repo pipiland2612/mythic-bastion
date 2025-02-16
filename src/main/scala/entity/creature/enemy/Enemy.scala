@@ -39,7 +39,7 @@ end Enemy
 
 object Enemy:
 
-  def enemyOfName(key: String, difficulty: Int): Enemy =
+  def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
     var initialData: Vector[Int] = Vector()
     var jsonData, imageData: String = ""
     key match
@@ -47,6 +47,6 @@ object Enemy:
         initialData = Monster01.data
         jsonData = Monster01.jsonPath
         imageData = Monster01.imagePath
-      case _ => return null
+      case _ => None
     val data: Vector[Int] = initialData.map(element => element * difficulty)
-    Creep(data(0), data(1), data(2), data(3), data(4), data(5), jsonData, imageData)
+    Some(Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), jsonData, imageData))

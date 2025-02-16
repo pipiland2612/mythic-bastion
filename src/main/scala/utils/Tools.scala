@@ -1,10 +1,9 @@
 package utils
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
-import entity.creature.Creature
 
 import java.awt.geom.AffineTransform
-import java.awt.{Graphics2D, Image}
+import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import scala.collection.mutable.ListBuffer
@@ -32,7 +31,17 @@ object Tools:
     catch
       case e: Exception =>
         throw new RuntimeException(s"Failed to load image at path: /$path with exception: $e")
-
+        
+  def loadJson(path: String): JsonNode =
+    try
+      val objectMapper: ObjectMapper = ObjectMapper()
+      val root: JsonNode = objectMapper.readTree(getClass.getResourceAsStream(s"/json/$path"))
+      if (root == null) throw new RuntimeException(s"Json not found: /json/$path")
+      root
+    catch
+      case e: Exception =>
+        throw new RuntimeException(s"Failed to load json file at path: /$path with exception: $e")
+  
   def loadImageCoords(x: Int, y: Int, w: Int, h: Int, path: String): BufferedImage =
     try
       val image = loadImage(path)
@@ -41,15 +50,19 @@ object Tools:
       case e: Exception =>
         throw new RuntimeException(s"Failed to load image at path: /$path with exception: $e")
 
-  def scaleImage(origin: BufferedImage, width: Int, height: Int): BufferedImage =
-    val resized = origin.getScaledInstance(width, height, Image.SCALE_DEFAULT)
-    val scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+  def scaleImage(origin: BufferedImage, scaleX: Int, scaleY: Int): BufferedImage =
+    val newWidth = origin.getWidth() * scaleX
+    val newHeight = origin.getHeight() * scaleY
+
+    val scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB)
+    val g: Graphics2D = scaledImage.createGraphics()
+    g.drawImage(origin, 0, 0, newWidth, newHeight, null)
+    g.dispose()
     scaledImage
 
   def parser(jsonPath: String, imagePath: String, scaleFactor: Int): Option[Vector[Vector[BufferedImage]]] =
     try
-      val objectMapper: ObjectMapper = ObjectMapper()
-      val root: JsonNode = objectMapper.readTree(getClass.getResourceAsStream(s"/images/$jsonPath"))
+      val root: JsonNode = loadJson(jsonPath)
       val image: BufferedImage = loadImage(imagePath)
       var animation: Vector[Vector[BufferedImage]] = Vector()
 
@@ -92,7 +105,7 @@ object Tools:
             resToPos.get(data.path("res").asText()) match
               case Some(value) =>
                 val currImage: BufferedImage = image.getSubimage(value.x, value.y, value.w, value.h)
-                val scaledImage: BufferedImage = scaleImage(currImage, scaleFactor, scaleFactor)
+                val scaledImage: BufferedImage = Tools.scaleImage(currImage, scaleFactor, scaleFactor)
                 temp = temp :+ scaledImage
               case None =>
             if index + 1 < ref.length && (currSum + ref(index) >= ref(index + 1)) then

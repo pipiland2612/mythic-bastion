@@ -1,6 +1,6 @@
 package entity.creature.enemy
 
-case class Creep(maxHealth: Int, var health: Int, playerDamage: Int, apDmg: Int, adDmg: Int, range: Int, jsonPath: String, imagePath: String) extends Enemy:
+case class Creep(name: String, maxHealth: Int, var health: Int, playerDamage: Int, apDmg: Int, adDmg: Int, range: Int, jsonPath: String, imagePath: String) extends Enemy:
   var pos: (Int, Int) = (100, 100)
   enemyParse()
   currentAnimation = idleAnimation

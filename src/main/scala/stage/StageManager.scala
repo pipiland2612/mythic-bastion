@@ -8,15 +8,24 @@ import scala.collection.mutable.ListBuffer
 
 class StageManager (gp: GamePanel) :
 
-  var currentStage: Stage = Stage1()
+  var currentStage: Option[Stage] = Some(Stage1())
+
+  def updateCurrentStage(stage: Stage): Unit = currentStage = Some(stage)
 
   def drawCurrentStage(g2d: Graphics2D): Unit =
-    if currentStage == null then return
+    currentStage match
+      case Some(stage) =>
+        var entityList: ListBuffer[Entity] = ListBuffer()
+        stage.enemyList.foreach {
+          case Some(enemy) => entityList += enemy
+          case None =>
+        }
+        stage.allianceList.foreach {
+          case Some(alliance) => entityList += alliance
+          case None =>
+        }
 
-    var entityList: ListBuffer[Entity] = ListBuffer()
-    currentStage.enemyList.foreach(enemy => entityList += enemy)
-    currentStage.allianceList.foreach(alliance => entityList += alliance)
-
-    entityList = entityList.sortBy(entity => entity.pos._2)
-
-    entityList.foreach(entity => entity.draw(g2d))
+        //sort by y coords
+        entityList = entityList.sortBy(entity => entity.pos._2)
+        entityList.foreach(entity => entity.draw(g2d))
+      case None =>
