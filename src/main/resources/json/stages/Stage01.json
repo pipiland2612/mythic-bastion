@@ -1,0 +1,39 @@
+{
+  "stageName": "Forest of Doom",
+  "stageID": 1,
+  "spawnPosition": [
+    { "x" : 100, "y": 100},
+    { "x" : 200, "y": 300}
+  ],
+  "waves": [
+    {
+      "waveNumber": 1,
+      "enemies": [
+        { "type": "Monster01", "count": 10, "spawnInterval": 2, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 0 }
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "enemies": [
+        { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 2, "spawnInterval": 6, "spawnIndex": 1 }
+      ]
+    }
+  ],
+  "map": {
+    "path": [
+      { "x": 0, "y": 5 },
+      { "x": 2, "y": 5 },
+      { "x": 5, "y": 5 },
+      { "x": 5, "y": 3 },
+      { "x": 8, "y": 3 }
+    ],
+    "towerSpots": [
+      { "x": 1, "y": 4 },
+      { "x": 3, "y": 5 },
+      { "x": 6, "y": 2 }
+    ]
+  }
+}

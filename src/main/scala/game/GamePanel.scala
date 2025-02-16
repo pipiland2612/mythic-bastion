@@ -39,7 +39,7 @@ class GamePanel extends JPanel with Runnable:
     val g2d = g.asInstanceOf[Graphics2D]
 
     if currentGameState == GameState.PlayState then
-      stageManager.drawCurrentStage(g2d)
+      stageManager.draw(g2d)
     else if currentGameState == GameState.TitleState then
       {}
 
