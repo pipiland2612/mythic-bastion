@@ -20,7 +20,6 @@ abstract class Enemy extends Creature:
   val jsonPath, imagePath: String
 
   def enemyParse(): Unit =
-    if (jsonPath == null || imagePath == null) then return
     Tools.parser(jsonPath, imagePath, scaleFactor) match
       case Some(value) =>
         walkingAnimation = Animation(value(0), 20)
@@ -69,4 +68,4 @@ object Enemy:
         imageData = Monster01.imagePath
       case _ => return None
     val data: Vector[Int] = initialData.map(element => element * difficulty)
-    Some(Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), jsonData, imageData))
+    Some(Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6) / difficulty, jsonData, imageData))
