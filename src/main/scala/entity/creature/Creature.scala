@@ -9,6 +9,7 @@ abstract class Creature extends Entity:
   var health: Int
   var state: State = State.IDLE
   var needsAnimationUpdate: Boolean = false
+  var direction: Direction = Direction.RIGHT
   
   def move(dx: Int, dy: Int): Unit =
     state = State.RUN

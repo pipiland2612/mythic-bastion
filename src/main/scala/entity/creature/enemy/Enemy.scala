@@ -1,6 +1,6 @@
 package entity.creature.enemy
 
-import entity.creature.Creature
+import entity.creature.{Creature, Direction}
 import utils.{Animation, Tools}
 
 import java.awt.Graphics2D
@@ -18,6 +18,7 @@ abstract class Enemy extends Creature:
   val scaleFactor: Int = 2
   val playerDamage: Int
   val jsonPath, imagePath: String
+
   def enemyParse(): Unit =
     if (jsonPath == null || imagePath == null) then return
     Tools.parser(jsonPath, imagePath, scaleFactor) match
@@ -31,6 +32,25 @@ abstract class Enemy extends Creature:
       case _ =>
 
   def attackPlayer(): Unit = {}
+
+  def followPath(map: Vector[(Int, Int)]): Unit =
+    var index = 0
+    while index <= map.length do
+      val currentGoal: (Int, Int) = map(index)
+      while this.pos != currentGoal do
+        val xDist: Int = Math.abs(this.pos._1 - currentGoal._1)
+        val yDist: Int = Math.abs(this.pos._2 - currentGoal._2)
+        if xDist > yDist then
+          if currentGoal._1 < this.pos._1 then
+            this.direction = Direction.LEFT
+          else
+            this.direction = Direction.RIGHT
+        else if xDist < yDist then
+          if currentGoal._2 < this.pos._2 then
+            this.direction = Direction.UP
+          else
+            this.direction = Direction.DOWN
+      index += 1
 
   override def draw(g2d: Graphics2D): Unit =
     super.draw(g2d)
@@ -47,6 +67,6 @@ object Enemy:
         initialData = Monster01.data
         jsonData = Monster01.jsonPath
         imageData = Monster01.imagePath
-      case _ => None
+      case _ => return None
     val data: Vector[Int] = initialData.map(element => element * difficulty)
     Some(Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), jsonData, imageData))
