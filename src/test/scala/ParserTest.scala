@@ -1,14 +1,14 @@
 
 import org.scalatest.funsuite.AnyFunSuite
+import stage.Stage
 import utils.Tools
 
-class ParserTest extends AnyFunSuite {
+class ParserTest extends AnyFunSuite :
 
   test("add should handle correctly when parsing")
     Tools.parser("enemies/Boss01.json", "enemies/Boss01.png", 2)
-    val testCases: Vector[(Int, Int)] = Vector(
 
-    )
-    for test <- testCases do
-      println(test._1)
-}
+  test("add should parse corrent stage")
+    val stage: Stage = Tools.loadStage("stages/Stage01.json")
+    println(stage)
+

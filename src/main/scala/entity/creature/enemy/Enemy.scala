@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage
 
 abstract class Enemy extends Creature:
 
-  var name: String
   var walkingAnimation: Animation = _
   var walkingUpAnimation: Animation = _
   var walkingDownAnimation: Animation = _
@@ -16,6 +15,7 @@ abstract class Enemy extends Creature:
   var fightingAnimation: Animation = _
   var deadAnimation: Animation = _
 
+  val name: String
   val scaleFactor: Int = 2
   val playerDamage: Int
   val jsonPath, imagePath: String
@@ -65,7 +65,7 @@ object Enemy:
       Monster02.name -> (Monster02.data, Monster02.jsonPath, Monster02.imagePath),
       Monster03.name -> (Monster03.data, Monster03.jsonPath, Monster03.imagePath)
     )
-  
+
     enemyData.get(key).map { case (initialData, jsonData, imageData) =>
       val data: Vector[Int] = initialData.map(_ * difficulty)
       Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6) / difficulty, jsonData, imageData)
