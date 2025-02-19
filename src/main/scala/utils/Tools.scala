@@ -1,7 +1,8 @@
 package utils
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
-import stage.Stage
+import stage.{EnemyData, Stage, Wave}
+import entity.creature.enemy.Enemy
 
 import java.awt.geom.AffineTransform
 import java.awt.Graphics2D
@@ -61,9 +62,39 @@ object Tools:
     g.dispose()
     scaledImage
 
-  def loadStage(jsonPath: String): Option[Stage] =
+
+  def loadStage(jsonPath: String): Stage =
     try
       val root: JsonNode = loadJson(jsonPath)
+      val stageName: String = root.path("stageName").asText()
+      val stageID: Int = root.path("stageID").asInt()
+      val difficulty: Int = root.path("difficulty").asInt()
+      var spawnPosition: Vector[(Int, Int)] = Vector()
+      var waves: Vector[Wave] = Vector()
+
+      root.path("spawnPosition").forEach(data =>
+        val x: Int = data.path("x").asInt()
+        val y: Int = data.path("y").asInt()
+        spawnPosition = spawnPosition :+ (x,y)
+      )
+
+      root.path("waves").forEach(data =>
+        val currentWave: Vector[EnemyData] = Vector()
+        data.path("enemies").forEach(enemyData =>
+          val enemyType: Option[Enemy] = Enemy.enemyOfName(enemyData.path("type").asText(), difficulty)
+          enemyType match
+            case Some(enemy) =>
+              val count: Int = enemyData.path("count").asInt()
+              val spawnInterval: Double = enemyData.path("spawnInterval").asDouble()
+              val spawnIndex: Int = enemyData.path("spawnIndex").asInt()
+              currentWave :+ EnemyData(enemy, count, spawnInterval, spawnIndex)
+            case _ =>
+        )
+        val wave: Wave = Wave(currentWave)
+        waves = waves :+ wave
+      )
+
+      Stage(stageName, stageID, difficulty, spawnPosition, waves)
 
     catch
       case e: Exception =>

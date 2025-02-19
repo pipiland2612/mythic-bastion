@@ -8,6 +8,7 @@ import scala.collection.mutable.ListBuffer
 case class Stage(
   stageName: String,
   stageID: Int,
+  difficulty: Int,
   spawnPosition: Vector[(Int, Int)],
   waves: Vector[Wave],
 ):

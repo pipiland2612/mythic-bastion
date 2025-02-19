@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage
 
 abstract class Enemy extends Creature:
 
+  var name: String
   var walkingAnimation: Animation = _
   var walkingUpAnimation: Animation = _
   var walkingDownAnimation: Animation = _
@@ -59,13 +60,17 @@ end Enemy
 object Enemy:
 
   def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
-    var initialData: Vector[Int] = Vector()
-    var jsonData, imageData: String = ""
-    key match
-      case Monster01.name =>
-        initialData = Monster01.data
-        jsonData = Monster01.jsonPath
-        imageData = Monster01.imagePath
-      case _ => return None
-    val data: Vector[Int] = initialData.map(element => element * difficulty)
-    Some(Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6) / difficulty, jsonData, imageData))
+    val enemyData = Map(
+      Monster01.name -> (Monster01.data, Monster01.jsonPath, Monster01.imagePath),
+      Monster02.name -> (Monster02.data, Monster02.jsonPath, Monster02.imagePath),
+      Monster03.name -> (Monster03.data, Monster03.jsonPath, Monster03.imagePath)
+    )
+  
+    enemyData.get(key).map { case (initialData, jsonData, imageData) =>
+      val data: Vector[Int] = initialData.map(_ * difficulty)
+      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6) / difficulty, jsonData, imageData)
+    }
+
+
+  def clone(enemy: Enemy): Enemy =
+    Creep(enemy.name, enemy.maxHealth, enemy.health, enemy.playerDamage, enemy.apDmg, enemy.adDmg, enemy.range, enemy.speed, enemy.jsonPath, enemy.imagePath)

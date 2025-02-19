@@ -1,6 +1,7 @@
 {
   "stageName": "Forest of Doom",
   "stageID": 1,
+  "difficulty": 1,
   "spawnPosition": [
     { "x" : 100, "y": 100},
     { "x" : 200, "y": 300}
