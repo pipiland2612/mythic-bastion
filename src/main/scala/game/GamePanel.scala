@@ -1,7 +1,8 @@
 package game
 
-import stage.StageManager
+import stage.{Stage, StageManager}
 import system.SystemHandler
+import utils.Tools
 
 import java.awt.{Color, Dimension, Graphics, Graphics2D}
 import javax.swing.JPanel
@@ -23,13 +24,16 @@ class GamePanel extends JPanel with Runnable:
   this.setPreferredSize(new Dimension(screenWidth, screenHeight))
   this.setBackground(Color.BLACK)
 
-  def setUpGame(): Unit = {}
+  def setUpGame(): Unit =
+    val stage: Stage = Tools.loadStage("stages/Stage01.json")
+    stageManager.currentStage = Some(stage)
 
   def startGameThread(): Unit =
     gameThread = Thread(this)
     gameThread.start()
 
-  def update(): Unit = {}
+  def update(): Unit =
+    stageManager.update()
 
   override def paintComponent(g: Graphics): Unit =
     // TODO: Implement this method first to draw stage state

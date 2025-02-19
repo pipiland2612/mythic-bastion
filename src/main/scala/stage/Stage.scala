@@ -13,10 +13,12 @@ case class Stage(
   waves: Vector[Wave],
   map: GameMap,
 ):
-  var allianceList: ListBuffer[Option[Alliance]] = ListBuffer()
+  var enemyList: ListBuffer[Enemy] = ListBuffer()
+  var allianceList: ListBuffer[Alliance] = ListBuffer()
+  var currentWave: Int = 0
 
   override def toString: String =
-    val alliances = allianceList.map(_.map(_.toString).getOrElse("None")).mkString(", ")
+    val alliances = allianceList.map(_.toString).mkString(", ")
     val positions = spawnPosition.map ((x, y) => s"($x, $y)" ).mkString(", ")
     val waveInfo = waves.map(_.toString).mkString("; ")
 
@@ -28,7 +30,10 @@ case class Wave(enemyData: Vector[EnemyData]):
     if (enemyData.isEmpty) "Wave(Empty)"
     else s"Wave(${enemyData.map(_.toString).mkString("; ")})"
 
-case class GameMap(path: Vector[(Int,Int)], towerPos: Vector[(Int,Int)])
+case class GameMap(
+  path: Vector[(Int,Int)],
+  towerPos: Vector[(Int,Int)]
+)
 
 case class EnemyData(
   enemyType: Enemy,

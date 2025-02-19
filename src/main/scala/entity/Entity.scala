@@ -4,7 +4,6 @@ import entity.creature.Creature
 import utils.Animation
 
 import java.awt.Graphics2D
-import java.awt.image.BufferedImage
 
 abstract class Entity:
 
@@ -19,9 +18,7 @@ abstract class Entity:
 
   def update(): Unit = {}
 
-  // TODO: Implement this
   def draw(g2d: Graphics2D): Unit =
-    val image: BufferedImage = currentAnimation match
-      case Some(animation) => animation.getCurrentFrame
-      case None => return 
-    g2d.drawImage(image, pos._1, pos._2, null)
+    currentAnimation.foreach(animation =>
+      g2d.drawImage(animation.getCurrentFrame, pos._1, pos._2, null)
+    )

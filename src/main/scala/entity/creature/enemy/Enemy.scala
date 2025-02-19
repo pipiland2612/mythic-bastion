@@ -15,6 +15,7 @@ abstract class Enemy extends Creature:
   var fightingAnimation: Animation = _
   var deadAnimation: Animation = _
 
+  var path: Vector[(Int, Int)] = _
   val name: String
   val scaleFactor: Int = 2
   val playerDamage: Int
@@ -51,10 +52,10 @@ abstract class Enemy extends Creature:
 
   def attackPlayer(): Unit = {}
 
-  def followPath(map: Vector[(Int, Int)]): Unit =
+  def followPath(): Unit =
     var index = 0
-    while index <= map.length do
-      val currentGoal: (Int, Int) = map(index)
+    while index <= path.length do
+      val currentGoal: (Int, Int) = path(index)
       while this.pos != currentGoal do
         val xDist: Int = Math.abs(this.pos._1 - currentGoal._1)
         val yDist: Int = Math.abs(this.pos._2 - currentGoal._2)
@@ -68,7 +69,12 @@ abstract class Enemy extends Creature:
             this.direction = Direction.UP
           else
             this.direction = Direction.DOWN
+        continueMove()
       index += 1
+
+  override def update(): Unit =
+    super.update()
+    followPath()
 
   override def draw(g2d: Graphics2D): Unit =
     super.draw(g2d)

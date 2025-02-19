@@ -13,7 +13,6 @@ abstract class Creature extends Entity:
   var direction: Direction = Direction.RIGHT
   var isCollided: Boolean = false
 
-
   def images: Map[(Direction, State), Animation] = Map()
 //    Map(
 //      (Direction.RIGHT, State.IDLE) -> idleAnimations(Direction.RIGHT),
@@ -47,7 +46,7 @@ abstract class Creature extends Entity:
         case Direction.RIGHT => this.move(this.speed, 0)
 
   def checkAnimationUpdate(): Unit =
-    if(needsAnimationUpdate && currentAnimation.isDefined) then
+    if(needsAnimationUpdate) then
       needsAnimationUpdate = false
       currentAnimation = images.get(this.direction, this.state)
       currentAnimation.foreach(animation => animation.update())

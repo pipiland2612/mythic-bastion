@@ -27,7 +27,6 @@
       "enemies": [
         { "type": "Monster02", "count": 15, "spawnInterval": 2, "spawnIndex": 0 },
         { "type": "Monster03", "count": 6, "spawnInterval": 4, "spawnIndex": 1 },
-        { "type": "Boss01", "count": 1, "spawnInterval": 10, "spawnIndex": 0 }
       ]
     }
   ],
