@@ -7,14 +7,14 @@
   ],
   "waves": [
     {
-      "waveNumber": 1,
+      "wave": 1,
       "enemies": [
         { "type": "Monster01", "count": 10, "spawnInterval": 2, "spawnIndex": 0 },
         { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 0 }
       ]
     },
     {
-      "waveNumber": 2,
+      "wave": 2,
       "enemies": [
         { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
         { "type": "Monster02", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },

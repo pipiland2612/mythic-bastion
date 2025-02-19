@@ -10,7 +10,7 @@ import scala.collection.mutable.ListBuffer
 
 class StageManager (gp: GamePanel) :
 
-  var currentStage: Option[Stage] = Some(Stage1())
+  var currentStage: Option[Stage] = None
 
   def updateCurrentStage(stage: Stage): Unit = currentStage = Some(stage)
 
@@ -33,14 +33,14 @@ class StageManager (gp: GamePanel) :
     currentStage match
       case Some(stage) =>
         var entityList: ListBuffer[Entity] = ListBuffer()
-        stage.enemyList.foreach {
-          case Some(enemy) => entityList += enemy
-          case None =>
-        }
-        stage.allianceList.foreach {
-          case Some(alliance) => entityList += alliance
-          case None =>
-        }
+//        stage.enemyList.foreach {
+//          case Some(enemy) => entityList += enemy
+//          case None =>
+//        }
+//        stage.allianceList.foreach {
+//          case Some(alliance) => entityList += alliance
+//          case None =>
+//        }
 
         //sort by y coords
         entityList = entityList.sortBy(entity => entity.pos._2)

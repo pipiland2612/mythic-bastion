@@ -1,6 +1,7 @@
 package utils
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
+import stage.Stage
 
 import java.awt.geom.AffineTransform
 import java.awt.Graphics2D
@@ -59,6 +60,14 @@ object Tools:
     g.drawImage(origin, 0, 0, newWidth, newHeight, null)
     g.dispose()
     scaledImage
+
+  def loadStage(jsonPath: String): Option[Stage] =
+    try
+      val root: JsonNode = loadJson(jsonPath)
+
+    catch
+      case e: Exception =>
+        throw new Exception(s"Failed to load stage at path $jsonPath")
 
   def parser(jsonPath: String, imagePath: String, scaleFactor: Int): Option[Vector[Vector[BufferedImage]]] =
     try
