@@ -13,7 +13,7 @@ abstract class Entity:
   val adDmg: Int
   val range: Int
 
-  var currentAnimation: Animation = _
+  var currentAnimation: Option[Animation] = None
 
   def attack(creature: Creature): Unit = {}
 
@@ -21,8 +21,7 @@ abstract class Entity:
 
   // TODO: Implement this
   def draw(g2d: Graphics2D): Unit =
-    if currentAnimation == null then
-      println("Nothing to show")
-      return
-    val image: BufferedImage = currentAnimation.getCurrentFrame
+    val image: BufferedImage = currentAnimation match
+      case Some(animation) => animation.getCurrentFrame
+      case None => return 
     g2d.drawImage(image, pos._1, pos._2, null)

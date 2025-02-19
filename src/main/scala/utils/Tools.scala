@@ -1,7 +1,7 @@
 package utils
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
-import stage.{EnemyData, Stage, Wave}
+import stage.{EnemyData, GameMap, Stage, Wave}
 import entity.creature.enemy.Enemy
 
 import java.awt.geom.AffineTransform
@@ -28,7 +28,7 @@ object Tools:
   def loadImage(path: String): BufferedImage =
     try
       val imageStream = getClass.getResourceAsStream(s"/images/$path")
-      if (imageStream == null) throw new RuntimeException(s"Image not found: /images/$path")
+      if (Option(imageStream).isEmpty) throw new RuntimeException(s"Image not found: /images/$path") // this is same as: if (imageStream == null)
       ImageIO.read(imageStream)
     catch
       case e: Exception =>
@@ -38,7 +38,7 @@ object Tools:
     try
       val objectMapper: ObjectMapper = ObjectMapper()
       val root: JsonNode = objectMapper.readTree(getClass.getResourceAsStream(s"/json/$path"))
-      if (root == null) throw new RuntimeException(s"Json not found: /json/$path")
+      if (Option(root).isEmpty) throw new RuntimeException(s"Json not found: /json/$path")
       root
     catch
       case e: Exception =>
@@ -69,14 +69,12 @@ object Tools:
       val stageName: String = root.path("stageName").asText()
       val stageID: Int = root.path("stageID").asInt()
       val difficulty: Int = root.path("difficulty").asInt()
-      var spawnPosition: Vector[(Int, Int)] = Vector()
       var waves: Vector[Wave] = Vector()
 
-      root.path("spawnPosition").forEach(data =>
-        val x: Int = data.path("x").asInt()
-        val y: Int = data.path("y").asInt()
-        spawnPosition = spawnPosition :+ (x,y)
-      )
+      val spawnPosition: Vector[(Int, Int)] = getPosition(root.path("spawnPosition"))
+      val path: Vector[(Int,Int)] = getPosition(root.path("map").path("path"))
+      val towerPos: Vector[(Int,Int)] = getPosition(root.path("map").path("towerSpots"))
+      val map: GameMap = GameMap(path, towerPos)
 
       root.path("waves").forEach(data =>
         var currentWave: Vector[EnemyData] = Vector()
@@ -94,11 +92,20 @@ object Tools:
         waves = waves :+ wave
       )
 
-      Stage(stageName, stageID, difficulty, spawnPosition, waves)
+      Stage(stageName, stageID, difficulty, spawnPosition, waves, map)
 
     catch
       case e: Exception =>
         throw new Exception(s"Failed to load stage at path $jsonPath")
+
+  private def getPosition(node: JsonNode): Vector[(Int, Int)] =
+    var storage: Vector[(Int, Int)] = Vector()
+    node.forEach(data =>
+      val x: Int = data.path("x").asInt()
+      val y: Int = data.path("y").asInt()
+      storage = storage :+ (x,y)
+    )
+    storage
 
   def parser(jsonPath: String, imagePath: String, scaleFactor: Int): Option[Vector[Vector[BufferedImage]]] =
     try
@@ -124,12 +131,10 @@ object Tools:
       root.path("mc").fieldNames().asScala.take(1).toList.headOption match
         case Some(name) =>
           val mNode: JsonNode = root.path("mc").path(name)
-          val map: Vector[(String, Int)] = Vector()
           val ref: ListBuffer[Int] = ListBuffer()
           mNode.path("labels").forEach(data =>
             val string: String = data.path("name").asText()
             val value: Int = data.path("frame").asInt()
-            map :+ (string, value)
             ref += value
           )
           var currSum: Int = 0
