@@ -1,0 +1,51 @@
+{
+  "stageName": "Cavern of Shadows",
+  "stageID": 2,
+  "difficulty": 2,
+  "spawnPosition": [
+    { "x": 120, "y": 120 },
+    { "x": 250, "y": 350 }
+  ],
+  "waves": [
+    {
+      "wave": 1,
+      "enemies": [
+        { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 8, "spawnInterval": 3, "spawnIndex": 0 }
+      ]
+    },
+    {
+      "wave": 2,
+      "enemies": [
+        { "type": "Monster01", "count": 20, "spawnInterval": 1.2, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 10, "spawnInterval": 2.5, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 4, "spawnInterval": 5, "spawnIndex": 1 }
+      ]
+    },
+    {
+      "wave": 3,
+      "enemies": [
+        { "type": "Monster02", "count": 15, "spawnInterval": 2, "spawnIndex": 0 },
+        { "type": "Monster03", "count": 6, "spawnInterval": 4, "spawnIndex": 1 },
+        { "type": "Boss01", "count": 1, "spawnInterval": 10, "spawnIndex": 0 }
+      ]
+    }
+  ],
+  "map": {
+    "path": [
+      { "x": 0, "y": 5 },
+      { "x": 2, "y": 5 },
+      { "x": 5, "y": 5 },
+      { "x": 5, "y": 3 },
+      { "x": 8, "y": 3 },
+      { "x": 8, "y": 6 },
+      { "x": 10, "y": 6 }
+    ],
+    "towerSpots": [
+      { "x": 1, "y": 4 },
+      { "x": 3, "y": 5 },
+      { "x": 6, "y": 2 },
+      { "x": 9, "y": 5 }
+    ]
+  }
+}

@@ -79,7 +79,7 @@ object Tools:
       )
 
       root.path("waves").forEach(data =>
-        val currentWave: Vector[EnemyData] = Vector()
+        var currentWave: Vector[EnemyData] = Vector()
         data.path("enemies").forEach(enemyData =>
           val enemyType: Option[Enemy] = Enemy.enemyOfName(enemyData.path("type").asText(), difficulty)
           enemyType match
@@ -87,7 +87,7 @@ object Tools:
               val count: Int = enemyData.path("count").asInt()
               val spawnInterval: Double = enemyData.path("spawnInterval").asDouble()
               val spawnIndex: Int = enemyData.path("spawnIndex").asInt()
-              currentWave :+ EnemyData(enemy, count, spawnInterval, spawnIndex)
+              currentWave = currentWave :+ EnemyData(enemy, count, spawnInterval, spawnIndex)
             case _ =>
         )
         val wave: Wave = Wave(currentWave)
