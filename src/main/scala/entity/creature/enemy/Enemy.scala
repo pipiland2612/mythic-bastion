@@ -25,22 +25,22 @@ abstract class Enemy extends Creature:
   def setPath(path: Vector[(Int, Int)]) = this.path = Some(path)
 
   override def images: Map[(Direction, State), Animation] =
-      Map(
-        (Direction.RIGHT, State.IDLE) -> idleAnimation,
-        (Direction.DOWN, State.IDLE) -> idleAnimation,
-        (Direction.LEFT, State.IDLE) -> idleAnimation,
-        (Direction.UP, State.IDLE) -> idleAnimation,
+    Map(
+      (Direction.RIGHT, State.IDLE) -> idleAnimation,
+      (Direction.DOWN, State.IDLE) -> idleAnimation,
+      (Direction.LEFT, State.IDLE) -> idleAnimation,
+      (Direction.UP, State.IDLE) -> idleAnimation,
 
-        (Direction.RIGHT, State.RUN) -> walkingAnimation,
-        (Direction.DOWN, State.RUN) -> walkingDownAnimation,
-        (Direction.LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
-        (Direction.UP, State.RUN) -> walkingUpAnimation,
+      (Direction.RIGHT, State.RUN) -> walkingAnimation,
+      (Direction.DOWN, State.RUN) -> walkingDownAnimation,
+      (Direction.LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
+      (Direction.UP, State.RUN) -> walkingUpAnimation,
 
-        (Direction.UP, State.ATTACK) -> fightingAnimation,
-        (Direction.DOWN, State.ATTACK) -> fightingAnimation,
-        (Direction.LEFT, State.ATTACK) -> fightingAnimation,
-        (Direction.RIGHT, State.ATTACK) -> fightingAnimation
-      )
+      (Direction.UP, State.ATTACK) -> fightingAnimation,
+      (Direction.DOWN, State.ATTACK) -> fightingAnimation,
+      (Direction.LEFT, State.ATTACK) -> fightingAnimation,
+      (Direction.RIGHT, State.ATTACK) -> fightingAnimation
+    )
 
   def enemyParse(): Unit =
     Tools.parser(jsonPath, imagePath, scaleFactor) match

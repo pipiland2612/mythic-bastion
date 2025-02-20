@@ -78,8 +78,13 @@ object Tools:
       var waves: Vector[Wave] = Vector()
 
       val spawnPosition: Vector[(Int, Int)] = getPosition(root.path("spawnPosition"))
-      val path: Vector[(Int,Int)] = getPosition(root.path("map").path("path"))
       val towerPos: Vector[(Int,Int)] = getPosition(root.path("map").path("towerSpots"))
+      var path: Vector[Vector[(Int,Int)]] = Vector()
+      root.path("map").path("path").forEach(data =>
+        val pos: Vector[(Int,Int)] = getPosition(data)
+        path = path :+ pos
+      )
+
       val map: GameMap = GameMap(path, towerPos)
 
       root.path("waves").forEach(data =>

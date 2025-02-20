@@ -71,6 +71,6 @@ class StageManager (gp: GamePanel) :
     currentStage.foreach ( stage =>
       val enemy: Enemy = Enemy.clone(enemyData.enemyType)
       enemy.pos = stage.spawnPosition(enemyData.spawnIndex)
-      enemy.setPath(stage.map.path)
+      enemy.setPath(stage.map.path(enemyData.spawnIndex))
       stage.enemyList += enemy
     )

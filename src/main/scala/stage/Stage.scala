@@ -31,7 +31,7 @@ case class Wave(enemyData: Vector[EnemyData]):
     else s"Wave(${enemyData.map(_.toString).mkString("; ")})"
 
 case class GameMap(
-  path: Vector[(Int,Int)],
+  path: Vector[Vector[(Int,Int)]],
   towerPos: Vector[(Int,Int)]
 )
 
