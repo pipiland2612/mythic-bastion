@@ -4,6 +4,8 @@ import entity.Entity
 import game.GamePanel
 import utils.Animation
 
+import scala.math.sqrt
+
 abstract class Creature(gp: GamePanel) extends Entity(gp):
   val speed: Double
   val maxHealth: Double

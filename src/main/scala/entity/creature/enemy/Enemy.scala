@@ -2,7 +2,7 @@ package entity.creature.enemy
 
 import entity.creature.{Creature, Direction, State}
 import game.GamePanel
-import utils.{Animation, Tools}
+import utils.{Animation, Cache, Tools}
 
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
@@ -59,10 +59,10 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       (Direction.DOWN_RIGHT, State.ATTACK) -> fightingAnimation
     )
 
-
   def enemyParse(): Unit =
-    Tools.parser(jsonPath, imagePath, scaleFactor) match
+    Cache.cachedResult.get(this.name) match
       case Some(value) =>
+        println(s"Using cache result of $name")
         walkingAnimation = Animation(value(0), 10)
         walkingUpAnimation = Animation(value(1), 10)
         walkingDownAnimation = Animation(value(2), 10)
@@ -70,6 +70,12 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
         fightingAnimation = Animation(value(4), 10)
         deadAnimation = Animation(value(5), 10)
       case _ =>
+        Tools.parser(jsonPath, imagePath, scaleFactor) match
+          case Some(value) =>
+            println(s"Add cache to $name")
+            Cache.cachedResult += this.name -> value
+            enemyParse()
+          case _ => throw new Exception(s"Parsing error")
 
   def attackPlayer(): Unit =
     gp.stageManager.currentPlayer.foreach(player =>
