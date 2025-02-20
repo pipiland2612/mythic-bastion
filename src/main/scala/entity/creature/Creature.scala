@@ -14,7 +14,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp):
   var direction: Direction = Direction.RIGHT
   var isCollided: Boolean = false
 
-  def images: Map[(Direction, State), Animation] = Map()
+  var images: Map[(Direction, State), Animation] = Map()
 //    Map(
 //      (Direction.RIGHT, State.IDLE) -> idleAnimations(Direction.RIGHT),
 //      (Direction.DOWN, State.IDLE) -> idleAnimations(Direction.DOWN),

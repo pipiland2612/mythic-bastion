@@ -3,9 +3,9 @@ package game
 import entity.creature.enemy.Enemy
 import stage.{Stage, StageManager}
 import system.SystemHandler
-import utils.Tools
+import utils.{Cache, Tools}
 
-import java.awt.{Color, Dimension, Graphics, Graphics2D}
+import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
 import javax.swing.JPanel
 
 
@@ -33,6 +33,7 @@ class GamePanel extends JPanel with Runnable:
     val stage: Stage = Tools.loadStage("stages/Stage01.json")
     Enemy.gp = this
     stageManager.setStage(stage)
+    stageManager.setUpBackgroundImage()
 
   def startGameThread(): Unit =
     gameThread = Thread(this)
@@ -45,11 +46,21 @@ class GamePanel extends JPanel with Runnable:
     super.paintComponents(g)
     val g2d = g.asInstanceOf[Graphics2D]
 
+    val startTime: Long = System.nanoTime()
+
     if currentGameState == GameState.PlayState then
       stageManager.draw(g2d)
     else if currentGameState == GameState.TitleState then
       {}
 
+    val x = 10
+    val y = 400
+    val endTime = System.nanoTime()
+    val passTime = endTime - startTime
+    g2d.setFont(new Font("Arial",Font.PLAIN, 20))
+    g2d.setColor(Color.WHITE)
+
+    g2d.drawString("Draw time: " + passTime, x,y)
     g2d.dispose()
 
   override def run(): Unit =
