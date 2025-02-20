@@ -15,11 +15,12 @@ abstract class Enemy extends Creature:
   var fightingAnimation: Animation = _
   var deadAnimation: Animation = _
 
-  var path: Vector[(Int, Int)] = _
   val name: String
-  val scaleFactor: Int = 2
+  val scaleFactor: Double = 1.25
   val playerDamage: Int
   val jsonPath, imagePath: String
+  var path: Vector[(Int, Int)] = _
+  var index = 0
 
   override def images: Map[(Direction, State), Animation] =
       Map(
@@ -30,7 +31,7 @@ abstract class Enemy extends Creature:
 
         (Direction.RIGHT, State.RUN) -> walkingAnimation,
         (Direction.DOWN, State.RUN) -> walkingDownAnimation,
-        (Direction.LEFT, State.RUN) -> walkingAnimation,
+        (Direction.LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
         (Direction.UP, State.RUN) -> walkingUpAnimation,
 
         (Direction.UP, State.ATTACK) -> fightingAnimation,
@@ -42,37 +43,38 @@ abstract class Enemy extends Creature:
   def enemyParse(): Unit =
     Tools.parser(jsonPath, imagePath, scaleFactor) match
       case Some(value) =>
-        walkingAnimation = Animation(value(0), 20)
-        walkingUpAnimation = Animation(value(1), 20)
-        walkingDownAnimation = Animation(value(2), 20)
-        idleAnimation = Animation(value(3), 20)
-        fightingAnimation = Animation(value(4), 20)
-        deadAnimation = Animation(value(5), 20)
+        walkingAnimation = Animation(value(0), 10)
+        walkingUpAnimation = Animation(value(1), 10)
+        walkingDownAnimation = Animation(value(2), 10)
+        idleAnimation = Animation(value(3), 10)
+        fightingAnimation = Animation(value(4), 10)
+        deadAnimation = Animation(value(5), 10)
       case _ =>
 
   def attackPlayer(): Unit = {}
 
-  def followPath(): Unit =
-    for goal <- path do
-      while this.pos != goal do
-        val xDist: Int = Math.abs(this.pos._1 - goal._1)
-        val yDist: Int = Math.abs(this.pos._2 - goal._2)
-        if xDist > yDist then
-          if goal._1 < this.pos._1 then
-            this.direction = Direction.LEFT
-          else
-            this.direction = Direction.RIGHT
-        else if xDist < yDist then
-          if goal._2 < this.pos._2 then
-            this.direction = Direction.UP
-          else
-            this.direction = Direction.DOWN
-        continueMove()
-        if xDist <= this.speed && yDist <= this.speed then this.pos = goal
+  def followPath(goal: (Int, Int)): Unit =
+    val xDist: Int = Math.abs(this.pos._1 - goal._1)
+    val yDist: Int = Math.abs(this.pos._2 - goal._2)
+
+    if xDist <= this.speed && yDist <= this.speed then
+      index += 1
+    if xDist > yDist then
+      if goal._1 < this.pos._1 then
+        this.direction = Direction.LEFT
+      else
+        this.direction = Direction.RIGHT
+    else if xDist < yDist then
+      if goal._2 < this.pos._2 then
+        this.direction = Direction.UP
+      else
+        this.direction = Direction.DOWN
 
   override def update(): Unit =
     super.update()
-    followPath()
+    if index < path.length then
+      followPath(path(index))
+      continueMove()
 
   override def draw(g2d: Graphics2D): Unit =
     super.draw(g2d)

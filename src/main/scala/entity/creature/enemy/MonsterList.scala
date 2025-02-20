@@ -26,7 +26,7 @@ object Monster01:
   val imagePath: String = "enemies/Monster01.png"
 
 object Monster02:
-  val data: Vector[Int] = Vector(100, 100, 1, 20, 0, 5, 10)
+  val data: Vector[Int] = Vector(100, 100, 1, 20, 0, 5, 2)
   val name: String = "Monster02"
   val jsonPath: String = "enemies/Monster02.json"
   val imagePath: String = "enemies/Monster02.png"

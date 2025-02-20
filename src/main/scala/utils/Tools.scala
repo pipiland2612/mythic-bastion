@@ -25,6 +25,12 @@ object Tools:
     g2d.dispose()
     flippedImage
 
+  def flipAnimation(animation: Animation): Animation =
+    val vector: Vector[BufferedImage] =
+      for image <- animation.frames
+      yield flipImageHorizontally(image)
+    Animation(vector, animation.frameDuration)
+
   def loadImage(path: String): BufferedImage =
     try
       val imageStream = getClass.getResourceAsStream(s"/images/$path")
@@ -52,9 +58,9 @@ object Tools:
       case e: Exception =>
         throw new RuntimeException(s"Failed to load image at path: /$path with exception: $e")
 
-  def scaleImage(origin: BufferedImage, scaleX: Int, scaleY: Int): BufferedImage =
-    val newWidth = origin.getWidth() * scaleX
-    val newHeight = origin.getHeight() * scaleY
+  def scaleImage(origin: BufferedImage, scaleX: Double, scaleY: Double): BufferedImage =
+    val newWidth: Int = (origin.getWidth() * scaleX).toInt
+    val newHeight: Int = (origin.getHeight() * scaleY).toInt
 
     val scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB)
     val g: Graphics2D = scaledImage.createGraphics()
@@ -107,7 +113,7 @@ object Tools:
     )
     storage
 
-  def parser(jsonPath: String, imagePath: String, scaleFactor: Int): Option[Vector[Vector[BufferedImage]]] =
+  def parser(jsonPath: String, imagePath: String, scaleFactor: Double): Option[Vector[Vector[BufferedImage]]] =
     try
       val root: JsonNode = loadJson(jsonPath)
       val image: BufferedImage = loadImage(imagePath)

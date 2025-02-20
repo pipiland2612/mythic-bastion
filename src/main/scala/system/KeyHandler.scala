@@ -10,6 +10,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener:
   @Override
   def mouseClicked(e: MouseEvent): Unit =
     System.out.println("Mouse clicked at: " + e.getX + ", " + e.getY)
+    gp.stageManager.startWave()
 
   @Override
   def mousePressed(e: MouseEvent): Unit = {}
