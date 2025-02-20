@@ -75,6 +75,7 @@ object Tools:
       val stageName: String = root.path("stageName").asText()
       val stageID: Int = root.path("stageID").asInt()
       val difficulty: Int = root.path("difficulty").asInt()
+      val coins: Int = root.path("coins").asInt()
       var waves: Vector[Wave] = Vector()
 
       val spawnPosition: Vector[(Double, Double)] = getPosition(root.path("spawnPosition"))
@@ -103,7 +104,7 @@ object Tools:
         waves = waves :+ wave
       )
 
-      Stage(stageName, stageID, difficulty, spawnPosition, waves, map)
+      Stage(stageName, stageID, difficulty, coins, spawnPosition, waves, map)
 
     catch
       case e: Exception =>

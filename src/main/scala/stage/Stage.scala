@@ -9,6 +9,7 @@ case class Stage(
   stageName: String,
   stageID: Int,
   difficulty: Int,
+  coins: Int,
   spawnPosition: Vector[(Double, Double)],
   waves: Vector[Wave],
   map: GameMap,

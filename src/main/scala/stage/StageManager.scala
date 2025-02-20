@@ -8,16 +8,19 @@ import utils.Tools
 import java.awt.Graphics2D
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import scala.collection.mutable
-import scala.collection.mutable.{ListBuffer, PriorityQueue}
+import scala.collection.mutable.ListBuffer
 
 class StageManager (gp: GamePanel) :
 
   private var currentStage: Option[Stage] = None
   private var isSpawning: Boolean = false
+  var currentPlayer: Option[PlayerStage] = None
 
   def startWave(): Unit = isSpawning = true
 
-  def setStage(stage: Stage): Unit = currentStage = Some(stage)
+  def setStage(stage: Stage): Unit =
+    currentStage = Some(stage)
+    currentPlayer = Some(PlayerStage(stage.coins))
 
   def backgroundImagePath: String =
     currentStage match
@@ -30,12 +33,10 @@ class StageManager (gp: GamePanel) :
 
       scheduleEnemySpawns(currentWaveData)
 
-      for (enemy <- stage.enemyList.toList) do
-        enemy.update()
+      stage.enemyList.toList.foreach(enemy => enemy.update())
+      stage.allianceList.toList.foreach(alliance => alliance.update())
 
-      for (alliance <- stage.allianceList.toList) do
-        alliance.update()
-
+      stage.enemyList = stage.enemyList.filter(!_.haveReachBase)
     )
 
   def draw(g2d: Graphics2D): Unit =

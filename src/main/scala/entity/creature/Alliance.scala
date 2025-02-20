@@ -1,6 +1,8 @@
 package entity.creature
 
-abstract class Alliance extends Creature:
+import game.GamePanel
+
+abstract class Alliance(gp: GamePanel) extends Creature(gp):
   val maxHealth: Double
   var health: Double
 

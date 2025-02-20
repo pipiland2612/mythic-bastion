@@ -1,9 +1,10 @@
 package entity.creature
 
 import entity.Entity
+import game.GamePanel
 import utils.Animation
 
-abstract class Creature extends Entity:
+abstract class Creature(gp: GamePanel) extends Entity(gp):
   val speed: Double
   val maxHealth: Double
   var health: Double

@@ -1,16 +1,18 @@
 package entity.creature.enemy
 
 import entity.creature.{Creature, Direction, State}
+import game.GamePanel
 import utils.{Animation, Tools}
 
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
-abstract class Enemy extends Creature:
+abstract class Enemy(gp: GamePanel) extends Creature(gp):
   val name: String
   val jsonPath, imagePath: String
   val playerDamage: Double
 
+  var haveReachBase: Boolean = false
   var scaleFactor: Double = 1.25
   var walkingAnimation: Animation = _
   var walkingUpAnimation: Animation = _
@@ -69,7 +71,10 @@ abstract class Enemy extends Creature:
         deadAnimation = Animation(value(5), 10)
       case _ =>
 
-  def attackPlayer(): Unit = {}
+  def attackPlayer(): Unit =
+    gp.stageManager.currentPlayer.foreach(player =>
+      player.updateHealth(-(this.playerDamage.toInt))
+    )
 
   def followPath(goal: (Double, Double)): Unit =
     val (xDist, yDist) = (goal._1 - this.pos._1, goal._2 - this.pos._2)
@@ -101,7 +106,10 @@ abstract class Enemy extends Creature:
       if index < path.length then
         followPath(path(index))
         continueMove()
+      else this.haveReachBase = true
     )
+
+    if this.haveReachBase then attackPlayer()
 
   override def draw(g2d: Graphics2D): Unit =
     super.draw(g2d)
@@ -109,6 +117,8 @@ abstract class Enemy extends Creature:
 end Enemy
 
 object Enemy:
+
+  var gp: GamePanel = _
 
   def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
     val enemyData = Map(
@@ -119,8 +129,8 @@ object Enemy:
 
     enemyData.get(key).map ((initialData, jsonData, imageData) =>
       val data: Vector[Double] = initialData.map(_ * difficulty)
-      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6) / difficulty, jsonData, imageData)
+      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6) / difficulty, jsonData, imageData, gp)
     )
 
   def clone(enemy: Enemy): Enemy =
-    Creep(enemy.name, enemy.maxHealth, enemy.health, enemy.playerDamage, enemy.apDmg, enemy.adDmg, enemy.range, enemy.speed, enemy.jsonPath, enemy.imagePath)
+    Creep(enemy.name, enemy.maxHealth, enemy.health, enemy.playerDamage, enemy.apDmg, enemy.adDmg, enemy.range, enemy.speed, enemy.jsonPath, enemy.imagePath, gp)

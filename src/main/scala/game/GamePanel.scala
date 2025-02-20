@@ -1,5 +1,6 @@
 package game
 
+import entity.creature.enemy.Enemy
 import stage.{Stage, StageManager}
 import system.SystemHandler
 import utils.Tools
@@ -30,6 +31,7 @@ class GamePanel extends JPanel with Runnable:
 
   def setUpGame(): Unit =
     val stage: Stage = Tools.loadStage("stages/Stage01.json")
+    Enemy.gp = this
     stageManager.setStage(stage)
 
   def startGameThread(): Unit =

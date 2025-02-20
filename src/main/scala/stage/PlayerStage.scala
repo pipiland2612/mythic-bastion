@@ -1,9 +1,12 @@
 package stage
 
-class PlayerStage (var coins: Int):
+class PlayerStage (private var coins: Int):
 
   private val maxHealth: Int = 20
   private var health: Int = maxHealth
+
+  def getHealth: Int = health
+  def getCoins: Int = coins
 
   def updateCoin(dx: Int): Unit = coins += dx
 

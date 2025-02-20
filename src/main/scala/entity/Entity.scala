@@ -1,12 +1,13 @@
 package entity
 
 import entity.creature.Creature
+import game.GamePanel
 import utils.Animation
 
 import java.awt.Graphics2D
 import java.awt.geom.AffineTransform
 
-abstract class Entity:
+abstract class Entity(gp: GamePanel):
 
   var pos: (Double, Double)
   val apDmg: Double
