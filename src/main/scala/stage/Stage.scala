@@ -9,7 +9,7 @@ case class Stage(
   stageName: String,
   stageID: Int,
   difficulty: Int,
-  spawnPosition: Vector[(Int, Int)],
+  spawnPosition: Vector[(Double, Double)],
   waves: Vector[Wave],
   map: GameMap,
 ):
@@ -31,8 +31,8 @@ case class Wave(enemyData: Vector[EnemyData]):
     else s"Wave(${enemyData.map(_.toString).mkString("; ")})"
 
 case class GameMap(
-  path: Vector[Vector[(Int,Int)]],
-  towerPos: Vector[(Int,Int)]
+  path: Vector[Vector[(Double,Double)]],
+  towerPos: Vector[(Double,Double)]
 )
 
 case class EnemyData(

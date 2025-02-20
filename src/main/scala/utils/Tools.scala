@@ -77,11 +77,11 @@ object Tools:
       val difficulty: Int = root.path("difficulty").asInt()
       var waves: Vector[Wave] = Vector()
 
-      val spawnPosition: Vector[(Int, Int)] = getPosition(root.path("spawnPosition"))
-      val towerPos: Vector[(Int,Int)] = getPosition(root.path("map").path("towerSpots"))
-      var path: Vector[Vector[(Int,Int)]] = Vector()
+      val spawnPosition: Vector[(Double, Double)] = getPosition(root.path("spawnPosition"))
+      val towerPos: Vector[(Double,Double)] = getPosition(root.path("map").path("towerSpots"))
+      var path: Vector[Vector[(Double,Double)]] = Vector()
       root.path("map").path("path").forEach(data =>
-        val pos: Vector[(Int,Int)] = getPosition(data)
+        val pos: Vector[(Double,Double)] = getPosition(data)
         path = path :+ pos
       )
 
@@ -109,11 +109,11 @@ object Tools:
       case e: Exception =>
         throw new Exception(s"Failed to load stage at path $jsonPath")
 
-  private def getPosition(node: JsonNode): Vector[(Int, Int)] =
-    var storage: Vector[(Int, Int)] = Vector()
+  private def getPosition(node: JsonNode): Vector[(Double, Double)] =
+    var storage: Vector[(Double, Double)] = Vector()
     node.forEach(data =>
-      val x: Int = data.path("x").asInt()
-      val y: Int = data.path("y").asInt()
+      val x: Double = data.path("x").asDouble()
+      val y: Double = data.path("y").asDouble()
       storage = storage :+ (x,y)
     )
     storage

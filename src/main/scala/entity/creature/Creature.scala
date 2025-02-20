@@ -4,9 +4,9 @@ import entity.Entity
 import utils.Animation
 
 abstract class Creature extends Entity:
-  val speed: Int
-  val maxHealth: Int
-  var health: Int
+  val speed: Double
+  val maxHealth: Double
+  var health: Double
 
   var state: State = State.IDLE
   var needsAnimationUpdate: Boolean = false
@@ -32,7 +32,7 @@ abstract class Creature extends Entity:
 //
 //    )
 
-  def move(dx: Int, dy: Int): Unit =
+  def move(dx: Double, dy: Double): Unit =
     state = State.RUN
     this.pos = (pos._1 + dx, pos._2 + dy)
     needsAnimationUpdate = true

@@ -4,13 +4,14 @@ import entity.creature.Creature
 import utils.Animation
 
 import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 
 abstract class Entity:
 
-  var pos: (Int, Int)
-  val apDmg: Int
-  val adDmg: Int
-  val range: Int
+  var pos: (Double, Double)
+  val apDmg: Double
+  val adDmg: Double
+  val range: Double
 
   var currentAnimation: Option[Animation] = None
 
@@ -20,5 +21,7 @@ abstract class Entity:
 
   def draw(g2d: Graphics2D): Unit =
     currentAnimation.foreach(animation =>
-      g2d.drawImage(animation.getCurrentFrame, pos._1, pos._2, null)
+      val transform = new AffineTransform()
+      transform.translate(pos._1, pos._2)
+      g2d.drawImage(animation.getCurrentFrame, transform, null)
     )

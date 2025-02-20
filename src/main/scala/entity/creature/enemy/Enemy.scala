@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
 abstract class Enemy extends Creature:
   val name: String
   val jsonPath, imagePath: String
-  val playerDamage: Int
+  val playerDamage: Double
 
   var scaleFactor: Double = 1.25
   var walkingAnimation: Animation = _
@@ -19,10 +19,10 @@ abstract class Enemy extends Creature:
   var fightingAnimation: Animation = _
   var deadAnimation: Animation = _
 
-  private var path: Option[Vector[(Int, Int)]] = None
+  private var path: Option[Vector[(Double, Double)]] = None
   private var index = 0
 
-  def setPath(path: Vector[(Int, Int)]) = this.path = Some(path)
+  def setPath(path: Vector[(Double, Double)]) = this.path = Some(path)
 
   override def images: Map[(Direction, State), Animation] =
     Map(
@@ -55,7 +55,7 @@ abstract class Enemy extends Creature:
 
   def attackPlayer(): Unit = {}
 
-  def followPath(goal: (Int, Int)): Unit =
+  def followPath(goal: (Double, Double)): Unit =
     val (xDist, yDist) = (Math.abs(this.pos._1 - goal._1), Math.abs(this.pos._2 - goal._2))
     if (xDist <= this.speed && yDist <= this.speed) then
       index += 1
@@ -92,7 +92,7 @@ object Enemy:
     )
 
     enemyData.get(key).map ((initialData, jsonData, imageData) =>
-      val data: Vector[Int] = initialData.map(_ * difficulty)
+      val data: Vector[Double] = initialData.map(_ * difficulty)
       Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6) / difficulty, jsonData, imageData)
     )
 
