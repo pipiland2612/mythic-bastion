@@ -3,6 +3,7 @@ package stage
 import entity.Entity
 import entity.creature.enemy.Enemy
 import game.GamePanel
+import utils.Tools
 
 import java.awt.Graphics2D
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
@@ -17,6 +18,11 @@ class StageManager (gp: GamePanel) :
   def startWave(): Unit = isSpawning = true
 
   def setStage(stage: Stage): Unit = currentStage = Some(stage)
+
+  def backgroundImagePath: String =
+    currentStage match
+      case Some(stage) => s"maps/map${stage.stageID}.jpg"
+      case _ => throw new Exception("Can not find background image path")
 
   def update(): Unit =
     currentStage.foreach ( stage =>
@@ -34,6 +40,8 @@ class StageManager (gp: GamePanel) :
 
   def draw(g2d: Graphics2D): Unit =
     currentStage.foreach(stage =>
+      g2d.drawImage(Tools.loadImage(backgroundImagePath), 0, 0, gp.screenWidth, gp.screenHeight, null)
+
       var entityList: ListBuffer[Entity] = ListBuffer()
       entityList.addAll(stage.enemyList)
       entityList.addAll(stage.allianceList)
@@ -41,7 +49,6 @@ class StageManager (gp: GamePanel) :
       entityList = entityList.sortBy(entity => entity.pos._2) //sort by y coords
       entityList.foreach(entity => entity.draw(g2d))
     )
-
 
   private def scheduleEnemySpawns(enemyDataList: Vector[EnemyData]): Unit =
     if isSpawning then
@@ -64,7 +71,6 @@ class StageManager (gp: GamePanel) :
     currentStage.foreach ( stage =>
       val enemy: Enemy = Enemy.clone(enemyData.enemyType)
       enemy.pos = stage.spawnPosition(enemyData.spawnIndex)
-      enemy.path = stage.map.path
+      enemy.setPath(stage.map.path)
       stage.enemyList += enemy
-
     )

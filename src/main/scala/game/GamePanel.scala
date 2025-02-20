@@ -17,7 +17,7 @@ class GamePanel extends JPanel with Runnable:
   val maxScreenRow: Int = 12
   val screenWidth: Int = tileSize * maxScreenColumn
   val screenHeight: Int = tileSize * maxScreenRow
-  val FPS: Int = 60
+  val FPS: Int = 90
 
   // System initialize
   val systemHandler: SystemHandler = SystemHandler(this)
@@ -42,8 +42,6 @@ class GamePanel extends JPanel with Runnable:
   override def paintComponent(g: Graphics): Unit =
     super.paintComponents(g)
     val g2d = g.asInstanceOf[Graphics2D]
-
-    g2d.drawImage(Tools.loadImage("maps/map0.jpg"), 0, 0, screenWidth, screenHeight, null)
 
     if currentGameState == GameState.PlayState then
       stageManager.draw(g2d)
