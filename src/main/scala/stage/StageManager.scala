@@ -1,6 +1,6 @@
 package stage
 
-import entity.Entity
+import entity.creature.Creature
 import entity.creature.enemy.Enemy
 import game.GamePanel
 import utils.Tools
@@ -8,8 +8,6 @@ import utils.Tools
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 
 class StageManager (gp: GamePanel):
 
@@ -42,7 +40,7 @@ class StageManager (gp: GamePanel):
     currentStage.foreach(stage =>
       g2d.drawImage(backgroundImage, 0, 0, null)
 
-      val sortedEntities = (stage.enemyList ++ stage.allianceList).toList.sortBy(_.pos._2)
+      val sortedEntities: List[Creature] = (stage.enemyList ++ stage.allianceList).toList.sortBy(_.pos._2)
       sortedEntities.foreach(_.draw(g2d))
     )
 
