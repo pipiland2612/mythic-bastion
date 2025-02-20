@@ -36,7 +36,6 @@ class GamePanel extends JPanel with Runnable:
     stageManager.update()
 
   override def paintComponent(g: Graphics): Unit =
-    // TODO: Implement this method first to draw stage state
     super.paintComponents(g)
     val g2d = g.asInstanceOf[Graphics2D]
 

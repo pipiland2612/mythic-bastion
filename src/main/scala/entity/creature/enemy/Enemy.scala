@@ -53,24 +53,22 @@ abstract class Enemy extends Creature:
   def attackPlayer(): Unit = {}
 
   def followPath(): Unit =
-    var index = 0
-    while index <= path.length do
-      val currentGoal: (Int, Int) = path(index)
-      while this.pos != currentGoal do
-        val xDist: Int = Math.abs(this.pos._1 - currentGoal._1)
-        val yDist: Int = Math.abs(this.pos._2 - currentGoal._2)
+    for goal <- path do
+      while this.pos != goal do
+        val xDist: Int = Math.abs(this.pos._1 - goal._1)
+        val yDist: Int = Math.abs(this.pos._2 - goal._2)
         if xDist > yDist then
-          if currentGoal._1 < this.pos._1 then
+          if goal._1 < this.pos._1 then
             this.direction = Direction.LEFT
           else
             this.direction = Direction.RIGHT
         else if xDist < yDist then
-          if currentGoal._2 < this.pos._2 then
+          if goal._2 < this.pos._2 then
             this.direction = Direction.UP
           else
             this.direction = Direction.DOWN
         continueMove()
-      index += 1
+        if xDist <= this.speed && yDist <= this.speed then this.pos = goal
 
   override def update(): Unit =
     super.update()
@@ -90,11 +88,10 @@ object Enemy:
       Monster03.name -> (Monster03.data, Monster03.jsonPath, Monster03.imagePath)
     )
 
-    enemyData.get(key).map { case (initialData, jsonData, imageData) =>
+    enemyData.get(key).map ((initialData, jsonData, imageData) =>
       val data: Vector[Int] = initialData.map(_ * difficulty)
       Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6) / difficulty, jsonData, imageData)
-    }
-
+    )
 
   def clone(enemy: Enemy): Enemy =
     Creep(enemy.name, enemy.maxHealth, enemy.health, enemy.playerDamage, enemy.apDmg, enemy.adDmg, enemy.range, enemy.speed, enemy.jsonPath, enemy.imagePath)

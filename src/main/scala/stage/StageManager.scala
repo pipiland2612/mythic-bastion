@@ -3,50 +3,63 @@ package stage
 import entity.Entity
 import entity.creature.enemy.Enemy
 import game.GamePanel
-import javafx.animation.AnimationTimer
-import javafx.application.Platform
 
 import java.awt.Graphics2D
-import java.awt.event.{ActionEvent, ActionListener}
-import javax.swing.Timer
-import scala.collection.mutable.ListBuffer
+import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
+import scala.collection.mutable
+import scala.collection.mutable.{ListBuffer, PriorityQueue}
 
 class StageManager (gp: GamePanel) :
 
   var currentStage: Option[Stage] = None
-  var isEndOfWave: Boolean = false
+  var isSpawning: Boolean = false
 
-  def spawnEnemy(enemyData: EnemyData): Unit =
-    currentStage.foreach(stage =>
+  private def scheduleEnemySpawns(enemyDataList: Vector[EnemyData]): Unit =
+    if !isSpawning then
+      enemyDataList.foreach ( enemyData =>
+        val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+        var spawnedCount = 0
+        println(s"Scheduling enemy spawns for ${enemyData.enemyType} with interval ${enemyData.spawnInterval} seconds.")
+
+        val task: Runnable = () => (
+          if (spawnedCount < enemyData.count) then
+            println(s"Spawning enemy ${enemyData.enemyType}, count: $spawnedCount / ${enemyData.count}")
+            spawnEnemy(enemyData)
+            spawnedCount += 1
+          else
+            println(s"Max spawn reached for ${enemyData.enemyType}, stopping spawning.")
+            scheduler.shutdown()
+          )
+
+        // Start the task with the specified interval for each enemy data
+        scheduler.scheduleAtFixedRate(task, 0, enemyData.spawnInterval.toLong, TimeUnit.SECONDS)
+      )
+      isSpawning = true
+
+  private def spawnEnemy(enemyData: EnemyData): Unit =
+    currentStage.foreach ( stage =>
       val enemy: Enemy = Enemy.clone(enemyData.enemyType)
       enemy.pos = stage.spawnPosition(enemyData.spawnIndex)
       enemy.path = stage.map.path
       stage.enemyList += enemy
+
+      println(s"Enemy spawned: ${enemyData.enemyType} at position ${enemy.pos}")
     )
-
-  def scheduleSpawning(enemyData: EnemyData): Unit =
-    var count = 0
-    val timer = new Timer(enemyData.spawnInterval.toInt, new ActionListener {
-      override def actionPerformed(e: ActionEvent): Unit =
-        spawnEnemy(enemyData)
-        count += 1
-        if (count >= enemyData.count) then
-          isEndOfWave = true
-          e.getSource.asInstanceOf[Timer].stop()
-    })
-
-    timer.setInitialDelay(0)
-    timer.start()
 
   def update(): Unit =
-    currentStage.foreach(stage =>
-      if isEndOfWave then
-        stage.currentWave += 1
-        isEndOfWave = false
-      scheduleSpawning(stage.waves(stage.currentWave).enemyData(0))
-      stage.enemyList.foreach(enemy => enemy.update())
-      stage.allianceList.foreach(enemy => enemy.update())
+    currentStage.foreach ( stage =>
+      val currentWaveData = stage.waves(stage.currentWave).enemyData
+
+      scheduleEnemySpawns(currentWaveData)
+
+      for (enemy <- stage.enemyList.toList) do
+        enemy.update()
+
+      for (alliance <- stage.allianceList.toList) do
+        alliance.update()
+
     )
+
 
   def draw(g2d: Graphics2D): Unit =
     currentStage.foreach(stage =>

@@ -13,14 +13,14 @@ case class Creep(
   imagePath: String
 ) extends Enemy:
 
-  var pos: (Int, Int) = (100, 100)
+  var pos: (Int, Int) = (0, 0)
   enemyParse()
   currentAnimation = Some(idleAnimation)
 end Creep
 
 // data = [maxHealth, health, playerDamage, apDmg, adDmg, range, speed]
 object Monster01:
-  val data: Vector[Int] = Vector(100, 100, 1, 0, 10, 2, 3)
+  val data: Vector[Int] = Vector(100, 100, 1, 0, 10, 2, 1)
   val name: String = "Monster01"
   val jsonPath: String = "enemies/Monster01.json"
   val imagePath: String = "enemies/Monster01.png"
