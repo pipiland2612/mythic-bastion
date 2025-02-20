@@ -26,21 +26,37 @@ abstract class Enemy extends Creature:
 
   override def images: Map[(Direction, State), Animation] =
     Map(
+      // Idle animations
       (Direction.RIGHT, State.IDLE) -> idleAnimation,
       (Direction.DOWN, State.IDLE) -> idleAnimation,
       (Direction.LEFT, State.IDLE) -> idleAnimation,
       (Direction.UP, State.IDLE) -> idleAnimation,
+      (Direction.UP_LEFT, State.IDLE) -> idleAnimation,
+      (Direction.UP_RIGHT, State.IDLE) -> idleAnimation,
+      (Direction.DOWN_LEFT, State.IDLE) -> idleAnimation,
+      (Direction.DOWN_RIGHT, State.IDLE) -> idleAnimation,
 
+      // Running animations
       (Direction.RIGHT, State.RUN) -> walkingAnimation,
       (Direction.DOWN, State.RUN) -> walkingDownAnimation,
       (Direction.LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
       (Direction.UP, State.RUN) -> walkingUpAnimation,
+      (Direction.UP_LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
+      (Direction.UP_RIGHT, State.RUN) -> walkingAnimation,
+      (Direction.DOWN_LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
+      (Direction.DOWN_RIGHT, State.RUN) -> walkingAnimation,
 
+      // Attack animations
       (Direction.UP, State.ATTACK) -> fightingAnimation,
       (Direction.DOWN, State.ATTACK) -> fightingAnimation,
       (Direction.LEFT, State.ATTACK) -> fightingAnimation,
-      (Direction.RIGHT, State.ATTACK) -> fightingAnimation
+      (Direction.RIGHT, State.ATTACK) -> fightingAnimation,
+      (Direction.UP_LEFT, State.ATTACK) -> fightingAnimation,
+      (Direction.UP_RIGHT, State.ATTACK) -> fightingAnimation,
+      (Direction.DOWN_LEFT, State.ATTACK) -> fightingAnimation,
+      (Direction.DOWN_RIGHT, State.ATTACK) -> fightingAnimation
     )
+
 
   def enemyParse(): Unit =
     Tools.parser(jsonPath, imagePath, scaleFactor) match
@@ -56,17 +72,27 @@ abstract class Enemy extends Creature:
   def attackPlayer(): Unit = {}
 
   def followPath(goal: (Double, Double)): Unit =
-    val (xDist, yDist) = (Math.abs(this.pos._1 - goal._1), Math.abs(this.pos._2 - goal._2))
-    if (xDist <= this.speed && yDist <= this.speed) then
+    val (xDist, yDist) = (goal._1 - this.pos._1, goal._2 - this.pos._2)
+    val absX = Math.abs(xDist)
+    val absY = Math.abs(yDist)
+
+    if (absX <= this.speed && absY <= this.speed) then
       index += 1
       return
 
-    direction = (xDist, yDist) match
-      case (x, y) if x > y =>
-        if (goal._1 < this.pos._1) Direction.LEFT else Direction.RIGHT
-      case (x, y) if x < y =>
-        if (goal._2 < this.pos._2) Direction.UP else Direction.DOWN
-      case _ => direction
+    // Move diagonally if it brings us closer
+    if (absX > 0 && absY > 0) then
+      direction =
+        if (xDist < 0 && yDist < 0) Direction.UP_LEFT
+        else if (xDist > 0 && yDist < 0) Direction.UP_RIGHT
+        else if (xDist < 0 && yDist > 0) Direction.DOWN_LEFT
+        else Direction.DOWN_RIGHT
+    else
+      direction =
+        if (absX > absY)
+          if (xDist < 0) Direction.LEFT else Direction.RIGHT
+        else
+          if (yDist < 0) Direction.UP else Direction.DOWN
 
 
   override def update(): Unit =

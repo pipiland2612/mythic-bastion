@@ -44,6 +44,10 @@ abstract class Creature extends Entity:
         case Direction.DOWN => this.move(0, this.speed)
         case Direction.LEFT => this.move(-this.speed, 0)
         case Direction.RIGHT => this.move(this.speed, 0)
+        case Direction.UP_LEFT => this.move(-this.speed, -this.speed)
+        case Direction.UP_RIGHT => this.move(this.speed, -this.speed)
+        case Direction.DOWN_LEFT => this.move(-this.speed, this.speed)
+        case Direction.DOWN_RIGHT => this.move(this.speed, this.speed)
 
   def checkAnimationUpdate(): Unit =
     if(needsAnimationUpdate) then
