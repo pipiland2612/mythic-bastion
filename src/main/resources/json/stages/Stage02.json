@@ -4,12 +4,13 @@
   "difficulty": 2,
   "coins": 800,
   "spawnPosition": [
-    { "x": 120, "y": 120 },
-    { "x": 250, "y": 350 }
+    { "x": 25, "y": 430 },
+    { "x": 400, "y": 40 }
   ],
   "waves": [
     {
       "wave": 1,
+      "delay": 1,
       "enemies": [
         { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
         { "type": "Monster02", "count": 8, "spawnInterval": 3, "spawnIndex": 0 }
@@ -17,6 +18,7 @@
     },
     {
       "wave": 2,
+      "delay": 40,
       "enemies": [
         { "type": "Monster01", "count": 20, "spawnInterval": 1.2, "spawnIndex": 0 },
         { "type": "Monster02", "count": 10, "spawnInterval": 2.5, "spawnIndex": 1 },
@@ -25,21 +27,35 @@
     },
     {
       "wave": 3,
+      "delay": 50,
       "enemies": [
         { "type": "Monster02", "count": 15, "spawnInterval": 2, "spawnIndex": 0 },
-        { "type": "Monster03", "count": 6, "spawnInterval": 4, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 6, "spawnInterval": 4, "spawnIndex": 1 }
       ]
     }
   ],
   "map": {
     "path": [
-      { "x": 0, "y": 5 },
-      { "x": 2, "y": 5 },
-      { "x": 5, "y": 5 },
-      { "x": 5, "y": 3 },
-      { "x": 8, "y": 3 },
-      { "x": 8, "y": 6 },
-      { "x": 10, "y": 6 }
+      [
+        { "x": 40, "y": 430 },
+        { "x": 100, "y": 460 },
+        { "x": 300, "y": 460 },
+        { "x": 350, "y": 430 },
+        { "x": 380, "y": 430 },
+        { "x": 420, "y": 450 },
+        { "x": 520, "y": 420 },
+        { "x": 720, "y": 420 }
+      ],
+      [
+        { "x": 380, "y": 100 },
+        { "x": 390, "y": 140 },
+        { "x": 400, "y": 200 },
+        { "x": 600, "y": 205 },
+        { "x": 100, "y": 430 },
+        { "x": 420, "y": 450 },
+        { "x": 520, "y": 420 },
+        { "x": 720, "y": 420 }
+      ]
     ],
     "towerSpots": [
       { "x": 1, "y": 4 },

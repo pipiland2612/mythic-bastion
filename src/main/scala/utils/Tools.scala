@@ -89,6 +89,7 @@ object Tools:
       val map: GameMap = GameMap(path, towerPos)
 
       root.path("waves").forEach(data =>
+        val delay: Int = data.path("delay").asInt()
         var currentWave: Vector[EnemyData] = Vector()
         data.path("enemies").forEach(enemyData =>
           val enemyType: Option[Enemy] = Enemy.enemyOfName(enemyData.path("type").asText(), difficulty)
@@ -100,7 +101,7 @@ object Tools:
               currentWave = currentWave :+ EnemyData(enemy, count, spawnInterval, spawnIndex)
             case _ =>
         )
-        val wave: Wave = Wave(currentWave)
+        val wave: Wave = Wave(delay, currentWave)
         waves = waves :+ wave
       )
 
@@ -108,7 +109,7 @@ object Tools:
 
     catch
       case e: Exception =>
-        throw new Exception(s"Failed to load stage at path $jsonPath")
+        throw new Exception(s"Failed to load stage at path $jsonPath with exeption ${e.printStackTrace()}")
 
   private def getPosition(node: JsonNode): Vector[(Double, Double)] =
     var storage: Vector[(Double, Double)] = Vector()
@@ -176,4 +177,4 @@ object Tools:
         case None => None
     catch
       case e: Exception =>
-        throw new Exception(s"Failed to parse the file at $jsonPath and $imagePath")
+        throw new Exception(s"Failed to parse the file at $jsonPath and $imagePath with exception $e")

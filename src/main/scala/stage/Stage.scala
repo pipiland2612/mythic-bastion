@@ -26,7 +26,10 @@ case class Stage(
     s"Stage($stageName, ID: $stageID, Difficulty: $difficulty, " +
       s"Spawn Positions: [$positions], Waves: [$waveInfo], Alliances: [$alliances])"
 
-case class Wave(enemyData: Vector[EnemyData]):
+case class Wave(
+  delay: Int,
+  enemyData: Vector[EnemyData],
+):
   override def toString: String =
     if (enemyData.isEmpty) "Wave(Empty)"
     else s"Wave(${enemyData.map(_.toString).mkString("; ")})"

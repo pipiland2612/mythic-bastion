@@ -29,9 +29,7 @@ class StageManager (gp: GamePanel) :
 
   def update(): Unit =
     currentStage.foreach ( stage =>
-      val currentWaveData = stage.waves(stage.currentWave).enemyData
-
-      scheduleEnemySpawns(currentWaveData)
+      scheduleWaveSpawn(stage.waves)
 
       stage.enemyList.toList.foreach(enemy => enemy.update())
       stage.allianceList.toList.foreach(alliance => alliance.update())
@@ -51,22 +49,32 @@ class StageManager (gp: GamePanel) :
       entityList.foreach(entity => entity.draw(g2d))
     )
 
-  private def scheduleEnemySpawns(enemyDataList: Vector[EnemyData]): Unit =
+  private def scheduleWaveSpawn(waves: Vector[Wave]): Unit =
     if isSpawning then
-      enemyDataList.foreach ( enemyData =>
-        val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
-        var spawnedCount = 0
-
-        val task: Runnable = () => (
-          if (spawnedCount <= enemyData.count) then
-            spawnEnemy(enemyData)
-            spawnedCount += 1
-          else
-            scheduler.shutdown()
+      val waveScheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+      waves.foreach(wave =>
+        val waveTask: Runnable = () => (
+          scheduleEnemySpawn(wave.enemyData)
         )
-        scheduler.scheduleAtFixedRate(task, 0, enemyData.spawnInterval.toLong, TimeUnit.SECONDS)
+        waveScheduler.schedule(waveTask, wave.delay.toLong, TimeUnit.SECONDS)
+        isSpawning = false
       )
+
+  private def scheduleEnemySpawn(enemyDataList: Vector[EnemyData]): Unit =
+    enemyDataList.foreach ( enemyData =>
+      val spawnerScheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+      var spawnedCount = 0
+
+      val task: Runnable = () => (
+        if (spawnedCount <= enemyData.count) then
+          spawnEnemy(enemyData)
+          spawnedCount += 1
+        else
+          spawnerScheduler.shutdown()
+      )
+      spawnerScheduler.scheduleAtFixedRate(task, 0, enemyData.spawnInterval.toLong, TimeUnit.SECONDS)
       isSpawning = false
+    )
 
   private def spawnEnemy(enemyData: EnemyData): Unit =
     currentStage.foreach ( stage =>
