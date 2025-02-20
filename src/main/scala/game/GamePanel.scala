@@ -33,6 +33,7 @@ class GamePanel extends JPanel with Runnable:
     val stage: Stage = Tools.loadStage("stages/Stage01.json")
     Enemy.gp = this
     stageManager.setStage(stage)
+    stageManager.setUpBackgroundImage()
 
   def startGameThread(): Unit =
     gameThread = Thread(this)

@@ -6,14 +6,17 @@ import game.GamePanel
 import utils.Tools
 
 import java.awt.Graphics2D
+import java.awt.image.BufferedImage
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class StageManager (gp: GamePanel) :
+class StageManager (gp: GamePanel):
 
   private var currentStage: Option[Stage] = None
   private var isSpawning: Boolean = false
+  private var entityList: ListBuffer[Entity] = ListBuffer()
+  private var backgroundImage: BufferedImage = _
   var currentPlayer: Option[PlayerStage] = None
 
   def startWave(): Unit = isSpawning = true
@@ -22,9 +25,9 @@ class StageManager (gp: GamePanel) :
     currentStage = Some(stage)
     currentPlayer = Some(PlayerStage(stage.coins))
 
-  def backgroundImagePath: String =
-    currentStage match
-      case Some(stage) => s"maps/map${stage.stageID}.jpg"
+  def setUpBackgroundImage(): Unit =
+    this.backgroundImage = currentStage match
+      case Some(stage) => Tools.loadImage(s"maps/map${stage.stageID}.jpg")
       case _ => throw new Exception("Can not find background image path")
 
   def update(): Unit =
@@ -39,14 +42,14 @@ class StageManager (gp: GamePanel) :
 
   def draw(g2d: Graphics2D): Unit =
     currentStage.foreach(stage =>
-      g2d.drawImage(Tools.loadImage(backgroundImagePath), 0, 0, gp.screenWidth, gp.screenHeight, null)
+      g2d.drawImage(backgroundImage, 0, 0, gp.screenWidth, gp.screenHeight, null)
 
-      var entityList: ListBuffer[Entity] = ListBuffer()
       entityList.addAll(stage.enemyList)
       entityList.addAll(stage.allianceList)
 
       entityList = entityList.sortBy(entity => entity.pos._2) //sort by y coords
       entityList.foreach(entity => entity.draw(g2d))
+      entityList.clear()
     )
 
   private def scheduleWaveSpawn(waves: Vector[Wave]): Unit =

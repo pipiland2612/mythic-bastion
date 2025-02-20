@@ -26,43 +26,42 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
 
   def setPath(path: Vector[(Double, Double)]) = this.path = Some(path)
 
-  override def images: Map[(Direction, State), Animation] =
-    Map(
-      // Idle animations
-      (Direction.RIGHT, State.IDLE) -> idleAnimation,
-      (Direction.DOWN, State.IDLE) -> idleAnimation,
-      (Direction.LEFT, State.IDLE) -> idleAnimation,
-      (Direction.UP, State.IDLE) -> idleAnimation,
-      (Direction.UP_LEFT, State.IDLE) -> idleAnimation,
-      (Direction.UP_RIGHT, State.IDLE) -> idleAnimation,
-      (Direction.DOWN_LEFT, State.IDLE) -> idleAnimation,
-      (Direction.DOWN_RIGHT, State.IDLE) -> idleAnimation,
+  def setUpImages(): Unit =
+    this.images = Map(
+        // Idle animations
+        (Direction.RIGHT, State.IDLE) -> idleAnimation,
+        (Direction.DOWN, State.IDLE) -> idleAnimation,
+        (Direction.LEFT, State.IDLE) -> idleAnimation,
+        (Direction.UP, State.IDLE) -> idleAnimation,
+        (Direction.UP_LEFT, State.IDLE) -> idleAnimation,
+        (Direction.UP_RIGHT, State.IDLE) -> idleAnimation,
+        (Direction.DOWN_LEFT, State.IDLE) -> idleAnimation,
+        (Direction.DOWN_RIGHT, State.IDLE) -> idleAnimation,
 
-      // Running animations
-      (Direction.RIGHT, State.RUN) -> walkingAnimation,
-      (Direction.DOWN, State.RUN) -> walkingDownAnimation,
-      (Direction.LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
-      (Direction.UP, State.RUN) -> walkingUpAnimation,
-      (Direction.UP_LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
-      (Direction.UP_RIGHT, State.RUN) -> walkingAnimation,
-      (Direction.DOWN_LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
-      (Direction.DOWN_RIGHT, State.RUN) -> walkingAnimation,
+        // Running animations
+        (Direction.RIGHT, State.RUN) -> walkingAnimation,
+        (Direction.DOWN, State.RUN) -> walkingDownAnimation,
+        (Direction.LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
+        (Direction.UP, State.RUN) -> walkingUpAnimation,
+        (Direction.UP_LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
+        (Direction.UP_RIGHT, State.RUN) -> walkingAnimation,
+        (Direction.DOWN_LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
+        (Direction.DOWN_RIGHT, State.RUN) -> walkingAnimation,
 
-      // Attack animations
-      (Direction.UP, State.ATTACK) -> fightingAnimation,
-      (Direction.DOWN, State.ATTACK) -> fightingAnimation,
-      (Direction.LEFT, State.ATTACK) -> fightingAnimation,
-      (Direction.RIGHT, State.ATTACK) -> fightingAnimation,
-      (Direction.UP_LEFT, State.ATTACK) -> fightingAnimation,
-      (Direction.UP_RIGHT, State.ATTACK) -> fightingAnimation,
-      (Direction.DOWN_LEFT, State.ATTACK) -> fightingAnimation,
-      (Direction.DOWN_RIGHT, State.ATTACK) -> fightingAnimation
-    )
+        // Attack animations
+        (Direction.UP, State.ATTACK) -> fightingAnimation,
+        (Direction.DOWN, State.ATTACK) -> fightingAnimation,
+        (Direction.LEFT, State.ATTACK) -> fightingAnimation,
+        (Direction.RIGHT, State.ATTACK) -> fightingAnimation,
+        (Direction.UP_LEFT, State.ATTACK) -> fightingAnimation,
+        (Direction.UP_RIGHT, State.ATTACK) -> fightingAnimation,
+        (Direction.DOWN_LEFT, State.ATTACK) -> fightingAnimation,
+        (Direction.DOWN_RIGHT, State.ATTACK) -> fightingAnimation
+      )
 
   def enemyParse(): Unit =
     Cache.cachedResult.get(this.name) match
       case Some(value) =>
-        println(s"Using cache result of $name")
         walkingAnimation = Animation(value(0), 10)
         walkingUpAnimation = Animation(value(1), 10)
         walkingDownAnimation = Animation(value(2), 10)
@@ -72,7 +71,6 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       case _ =>
         Tools.parser(jsonPath, imagePath, scaleFactor) match
           case Some(value) =>
-            println(s"Add cache to $name")
             Cache.cachedResult += this.name -> value
             enemyParse()
           case _ => throw new Exception(s"Parsing error")
@@ -104,7 +102,6 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
           if (xDist < 0) Direction.LEFT else Direction.RIGHT
         else
           if (yDist < 0) Direction.UP else Direction.DOWN
-
 
   override def update(): Unit =
     super.update()

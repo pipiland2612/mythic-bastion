@@ -15,6 +15,9 @@ abstract class Entity(gp: GamePanel):
   val range: Double
 
   var currentAnimation: Option[Animation] = None
+  val transform = new AffineTransform()
+
+  def setUp(): Unit = {}
 
   def attack(creature: Creature): Unit = {}
 
@@ -22,7 +25,6 @@ abstract class Entity(gp: GamePanel):
 
   def draw(g2d: Graphics2D): Unit =
     currentAnimation.foreach(animation =>
-      val transform = new AffineTransform()
-      transform.translate(pos._1, pos._2)
+      transform.setToTranslation(pos._1, pos._2)
       g2d.drawImage(animation.getCurrentFrame, transform, null)
     )
