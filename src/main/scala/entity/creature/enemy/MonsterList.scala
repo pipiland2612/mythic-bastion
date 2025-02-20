@@ -18,6 +18,7 @@ case class Creep(
 
   var pos: (Double, Double) = (0, 0)
   enemyParse()
+  setUpImages()
   currentAnimation = Some(idleAnimation)
 end Creep
 

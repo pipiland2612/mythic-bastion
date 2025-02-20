@@ -58,16 +58,15 @@ object Tools:
       case e: Exception =>
         throw new RuntimeException(s"Failed to load image at path: /$path with exception: $e")
 
-  def scaleImage(origin: BufferedImage, scaleX: Double, scaleY: Double): BufferedImage =
-    val newWidth: Int = (origin.getWidth() * scaleX).toInt
-    val newHeight: Int = (origin.getHeight() * scaleY).toInt
-
+  def scaleImage(origin: BufferedImage, newWidth: Int, newHeight: Int): BufferedImage =
     val scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB)
     val g: Graphics2D = scaledImage.createGraphics()
     g.drawImage(origin, 0, 0, newWidth, newHeight, null)
     g.dispose()
     scaledImage
 
+  def scaleImage(origin: BufferedImage, scaleX: Double, scaleY: Double): BufferedImage =
+    scaleImage(origin, (origin.getWidth * scaleX).toInt, (origin.getHeight * scaleY).toInt)
 
   def loadStage(jsonPath: String): Stage =
     try

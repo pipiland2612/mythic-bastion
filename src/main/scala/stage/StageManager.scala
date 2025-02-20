@@ -1,64 +1,57 @@
 package stage
 
-import entity.Entity
+import entity.creature.Creature
 import entity.creature.enemy.Enemy
 import game.GamePanel
 import utils.Tools
 
 import java.awt.Graphics2D
+import java.awt.image.BufferedImage
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 
-class StageManager (gp: GamePanel) :
+class StageManager (gp: GamePanel):
 
   private var currentStage: Option[Stage] = None
   private var isSpawning: Boolean = false
+  private var backgroundImage: BufferedImage = _
   var currentPlayer: Option[PlayerStage] = None
 
-  def startWave(): Unit = isSpawning = true
+  def startWave(): Unit =
+    currentStage.foreach(stage => scheduleWaveSpawn(stage.waves))
 
   def setStage(stage: Stage): Unit =
     currentStage = Some(stage)
     currentPlayer = Some(PlayerStage(stage.coins))
 
-  def backgroundImagePath: String =
-    currentStage match
-      case Some(stage) => s"maps/map${stage.stageID}.jpg"
+  def setUpBackgroundImage(): Unit =
+    this.backgroundImage = currentStage match
+      case Some(stage) => Tools.scaleImage(Tools.loadImage(s"maps/map${stage.stageID}.jpg"), gp.screenWidth, gp.screenHeight)
       case _ => throw new Exception("Can not find background image path")
 
   def update(): Unit =
     currentStage.foreach ( stage =>
-      scheduleWaveSpawn(stage.waves)
+      stage.enemyList.toList.foreach(_.update())
+      stage.allianceList.toList.foreach(_.update())
 
-      stage.enemyList.toList.foreach(enemy => enemy.update())
-      stage.allianceList.toList.foreach(alliance => alliance.update())
-
-      stage.enemyList = stage.enemyList.filter(!_.haveReachBase)
+      stage.enemyList.filterInPlace(!_.haveReachBase)
     )
 
   def draw(g2d: Graphics2D): Unit =
     currentStage.foreach(stage =>
-      g2d.drawImage(Tools.loadImage(backgroundImagePath), 0, 0, gp.screenWidth, gp.screenHeight, null)
+      g2d.drawImage(backgroundImage, 0, 0, null)
 
-      var entityList: ListBuffer[Entity] = ListBuffer()
-      entityList.addAll(stage.enemyList)
-      entityList.addAll(stage.allianceList)
-
-      entityList = entityList.sortBy(entity => entity.pos._2) //sort by y coords
-      entityList.foreach(entity => entity.draw(g2d))
+      val sortedEntities: List[Creature] = (stage.enemyList ++ stage.allianceList).toList.sortBy(_.pos._2)
+      sortedEntities.foreach(_.draw(g2d))
     )
 
   private def scheduleWaveSpawn(waves: Vector[Wave]): Unit =
-    if isSpawning then
-      val waveScheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
-      waves.foreach(wave =>
-        val waveTask: Runnable = () => (
-          scheduleEnemySpawn(wave.enemyData)
-        )
-        waveScheduler.schedule(waveTask, wave.delay.toLong, TimeUnit.SECONDS)
-        isSpawning = false
+    val waveScheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+    waves.foreach(wave =>
+      val waveTask: Runnable = () => (
+        scheduleEnemySpawn(wave.enemyData)
       )
+      waveScheduler.schedule(waveTask, wave.delay.toLong, TimeUnit.SECONDS)
+    )
 
   private def scheduleEnemySpawn(enemyDataList: Vector[EnemyData]): Unit =
     enemyDataList.foreach ( enemyData =>
@@ -73,7 +66,6 @@ class StageManager (gp: GamePanel) :
           spawnerScheduler.shutdown()
       )
       spawnerScheduler.scheduleAtFixedRate(task, 0, enemyData.spawnInterval.toLong, TimeUnit.SECONDS)
-      isSpawning = false
     )
 
   private def spawnEnemy(enemyData: EnemyData): Unit =
