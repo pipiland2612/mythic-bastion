@@ -63,7 +63,6 @@ abstract class Entity(gp: GamePanel):
   def draw(g2d: Graphics2D): Unit =
     currentAnimation match
       case Some(animation) =>
-        transform.setToTranslation(pos._1, pos._2)
-        g2d.drawImage(animation.getCurrentFrame, transform, None.orNull)
+        Tools.drawFrame(g2d, animation.getCurrentFrame, transform, pos)
       case _ =>
-        g2d.drawImage(idleAnimation.getCurrentFrame, transform, None.orNull)
+        Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform, pos)

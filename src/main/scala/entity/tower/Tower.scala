@@ -5,8 +5,9 @@ import entity.creature.enemy.Enemy
 import game.GamePanel
 import utils.Tools
 
-import java.awt.Graphics2D
+import java.awt.{Graphics2D, Image}
 import java.awt.geom.AffineTransform
+import java.awt.image.BufferedImage
 
 
 abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
@@ -32,14 +33,11 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   override def update(): Unit =
     super.update()
 
-
   override def draw(g2d: Graphics2D): Unit =
     currentAnimation match
       case Some(animation) =>
-        val (x,y) = Tools.getCenterCoords(pos._1, pos._2, animation.getCurrentFrame)
-        transform.setToTranslation(x, y)
-        g2d.drawImage(animation.getCurrentFrame, transform, None.orNull)
+        Tools.drawFrame(g2d, animation.getCurrentFrame, transform,
+          Tools.getCenterCoords(pos, animation.getCurrentFrame), offsetX, offsetY)
       case _ =>
-        val (x,y) = Tools.getCenterCoords(pos._1, pos._2, idleAnimation.getCurrentFrame)
-        transform.setToTranslation(x + offsetX, y + offsetY)
-        g2d.drawImage(idleAnimation.getCurrentFrame, transform, None.orNull)
+        Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform,
+          Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame), offsetX, offsetY)

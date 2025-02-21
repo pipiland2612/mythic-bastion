@@ -27,8 +27,8 @@ object Tools:
     g2d.dispose()
     flippedImage
 
-  def getCenterCoords(x: Double, y: Double, image: BufferedImage): (Double, Double) =
-    (x - image.getWidth()/2, y - image.getHeight()/2)
+  def getCenterCoords(coords: (Double, Double), image: BufferedImage): (Double, Double) =
+    (coords._1 - image.getWidth()/2, coords._2 - image.getHeight()/2)
 
   def flipAnimation(animation: Animation): Animation =
     val vector: Vector[BufferedImage] =
@@ -81,11 +81,10 @@ object Tools:
       val difficulty: Int = root.path("difficulty").asInt()
       val coins: Int = root.path("coins").asInt()
       var waves: Vector[Wave] = Vector()
-
       val spawnPosition: Vector[(Double, Double)] = getPosition(root.path("spawnPosition"))
+
       val mapPath: JsonNode = root.path("map")
       val towerPos: Vector[(Double,Double)] = getPosition(mapPath.path("towerSpots"))
-
       val towerImage: BufferedImage = Tools.loadImage(s"build/${mapPath.path("towerImage").asText()}.png")
       val towerBuilds: Vector[TowerBuild] = towerPos.map(TowerBuild(_, towerImage))
       var path: Vector[Vector[(Double,Double)]] = Vector()
@@ -189,3 +188,7 @@ object Tools:
 
   def fillMap(directions: Seq[Direction], state: State, animation: Animation): Map[(Direction, State), Animation] =
     directions.map(dir => (dir, state) -> animation).toMap
+
+  def drawFrame(g2d: Graphics2D, frame: BufferedImage, transform: AffineTransform, coords: (Double, Double), offsetX: Double = 0, offsetY: Double = 0): Unit =
+    transform.setToTranslation(coords._1 + offsetX, coords._2 + offsetY)
+    g2d.drawImage(frame, transform, None.orNull)

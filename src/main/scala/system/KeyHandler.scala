@@ -48,7 +48,6 @@ class KeyHandler(gp: GamePanel) extends MouseListener:
             if value.currentTower.isEmpty then
               val tower = ExploTower(gp, 1)
               tower.pos = value.pos
-              println(tower.pos)
               value.currentTower = Some(tower)
           )
         case _ =>
