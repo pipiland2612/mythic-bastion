@@ -1,8 +1,7 @@
 package entity.creature
 
-import entity.Entity
+import entity.{Direction, Entity, State}
 import game.GamePanel
-import utils.Animation
 
 abstract class Creature(gp: GamePanel) extends Entity(gp):
   protected val maxHealth: Double

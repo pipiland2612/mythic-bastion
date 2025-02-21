@@ -3,6 +3,7 @@ package utils
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
 import stage.{EnemyData, GameMap, Stage, Wave}
 import entity.creature.enemy.Enemy
+import entity.tower.TowerBuild
 
 import java.awt.geom.AffineTransform
 import java.awt.Graphics2D
@@ -80,6 +81,7 @@ object Tools:
       val spawnPosition: Vector[(Double, Double)] = getPosition(root.path("spawnPosition"))
       val mapPath: JsonNode = root.path("map")
       val towerPos: Vector[(Double,Double)] = getPosition(mapPath.path("towerSpots"))
+      val towerBuilds: Vector[TowerBuild] = towerPos.map(TowerBuild(_))
       var path: Vector[Vector[(Double,Double)]] = Vector()
       mapPath.path("path").forEach(data =>
         val pos: Vector[(Double,Double)] = getPosition(data)
@@ -87,7 +89,7 @@ object Tools:
       )
       val towerImage: BufferedImage = Tools.loadImage(s"build/${mapPath.path("towerImage").asText()}.png")
 
-      val map: GameMap = GameMap(path, towerImage, towerPos)
+      val map: GameMap = GameMap(path, towerImage, towerBuilds)
 
       root.path("waves").forEach(data =>
         val delay: Int = data.path("delay").asInt()

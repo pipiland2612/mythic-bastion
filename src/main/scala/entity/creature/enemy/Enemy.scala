@@ -1,8 +1,9 @@
 package entity.creature.enemy
 
-import entity.creature.{Creature, Direction, State}
+import entity.creature.Creature
 import game.GamePanel
 import utils.{Animation, Tools}
+import entity.{Direction, State}
 
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage

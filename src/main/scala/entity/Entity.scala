@@ -1,6 +1,5 @@
 package entity
 
-import entity.creature.{Direction, State}
 import game.GamePanel
 import utils.{Animation, Cache, Tools}
 
@@ -23,7 +22,7 @@ abstract class Entity(gp: GamePanel):
   protected var needsAnimationUpdate: Boolean = false
   protected var state: State = State.IDLE
   protected var direction: Direction = Direction.RIGHT
-  var images: Map[(Direction, State), Animation] = Map()
+  protected var images: Map[(Direction, State), Animation] = Map()
 
   parse()
   setUpImages()
@@ -36,13 +35,12 @@ abstract class Entity(gp: GamePanel):
   def getRange: Double = range
   def getSpeed: Double = speed
 
-  def setUpImages(): Unit = {}
-  def parseInformation(value: Vector[Vector[BufferedImage]]): Unit = {}
+  def setUpImages(): Unit
+  def parseInformation(value: Vector[Vector[BufferedImage]]): Unit
 
   def parse(): Unit =
     Cache.animationCached.get(this.name) match
       case Some(value) =>
-        println(s"reusing for $name")
         parseInformation(value)
       case _ =>
         Tools.parser(jsonPath, imagePath, scaleFactor) match

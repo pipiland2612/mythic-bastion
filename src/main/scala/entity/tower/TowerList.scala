@@ -1,7 +1,8 @@
 package entity.tower
 
+import entity.{Direction, State}
 import game.GamePanel
-import utils.Animation
+import utils.{Animation, Tools}
 
 import java.awt.image.BufferedImage
 
@@ -25,6 +26,21 @@ class ExploTower(gp: GamePanel, level: Int) extends Tower(gp, level):
     shootAnimation = Animation(value(1), 10)
     shootEndAnimation = Animation(value(2), 10)
 
+  override def setUpImages(): Unit =
+    this.images = Map(
+        // Idle animations
+        (Direction.RIGHT, State.IDLE) -> idleAnimation,
+        (Direction.DOWN, State.IDLE) -> idleAnimation,
+        (Direction.LEFT, State.IDLE) -> idleAnimation,
+        (Direction.UP, State.IDLE) -> idleAnimation,
+
+        // Attack animations
+        (Direction.UP, State.ATTACK) -> shootAnimation,
+        (Direction.DOWN, State.ATTACK) -> shootAnimation,
+        (Direction.LEFT, State.ATTACK) -> shootAnimation,
+        (Direction.RIGHT, State.ATTACK) -> shootAnimation,
+      )
+
 
 class ArrowTower(gp: GamePanel, level: Int) extends Tower(gp, level):
 
@@ -43,6 +59,8 @@ class ArrowTower(gp: GamePanel, level: Int) extends Tower(gp, level):
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit = {}
 
+  override def setUpImages(): Unit = {}
+
 class MagicTower(gp: GamePanel, level: Int) extends Tower(gp, level):
 
   val towerType = "MagicTower"
@@ -59,3 +77,4 @@ class MagicTower(gp: GamePanel, level: Int) extends Tower(gp, level):
   var shootEndAnimation: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit = {}
+  override def setUpImages(): Unit = {}

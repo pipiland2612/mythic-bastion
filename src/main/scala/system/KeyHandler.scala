@@ -1,5 +1,6 @@
 package system
 
+import entity.tower.{ExploTower, TowerBuild}
 import game.GamePanel
 
 import java.awt.event.MouseEvent
@@ -14,7 +15,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener:
     val (x,y) = (e.getX, e.getY - offSetY)
     System.out.println("Mouse clicked at: " + x + ", " + y)
     handleTowerBuildOnClick(x, y)
-//    gp.stageManager.startWave()
+    gp.stageManager.startWave()
 
 
   @Override
@@ -32,17 +33,21 @@ class KeyHandler(gp: GamePanel) extends MouseListener:
 
   private def handleTowerBuildOnClick(x: Int, y: Int): Unit =
     val radius = 30
-    val positionList: Option[Vector[(Double, Double)]] = gp.stageManager.currentStage match
+    val towerBuildList: Option[Vector[TowerBuild]] = gp.stageManager.currentStage match
       case Some(stage) => Some(stage.map.towerPos)
       case _ => None
 
-    positionList.foreach(positions =>
-      val pos: Option[(Double, Double)] = positions.filter(position =>
-        Math.pow((x - position._1) / (radius), 2) + Math.pow((y - position._2) / (radius/2), 2) <= 1
-      ).sortBy(position => Math.pow(x - position._1, 2) + Math.pow(y - position._2, 2)).headOption
+    towerBuildList.foreach(towerBuildList =>
+      val pos: Option[TowerBuild] = towerBuildList.filter(towerBuild =>
+        Math.pow((x - towerBuild.pos._1) / (radius), 2) + Math.pow((y - towerBuild.pos._2) / (radius/2), 2) <= 1
+      ).sortBy(towerBuild => Math.pow(x - towerBuild.pos._1, 2) + Math.pow(y - towerBuild.pos._2, 2)).headOption
 
       pos match
         case Some(value) =>
-          println(s"Build tower at $value")
+          gp.stageManager.currentStage.foreach(stage =>
+            if value.currentTower.isEmpty then 
+              value.currentTower = Some(ExploTower(gp, 1))
+//              stage.towerList += 
+          )
         case _ =>
     )
