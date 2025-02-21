@@ -1,6 +1,6 @@
 package stage
 
-import entity.creature.Creature
+import entity.Entity
 import game.GamePanel
 import utils.Tools
 
@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage
 
 class StageManager (gp: GamePanel):
 
-  private var isSpawning: Boolean = false
   private var backgroundImage: BufferedImage = _
   private val transform = new AffineTransform()
   val waveSpawner: WaveSpawner = WaveSpawner(this)
@@ -33,6 +32,7 @@ class StageManager (gp: GamePanel):
     currentStage.foreach ( stage =>
       stage.enemyList.toList.foreach(_.update())
       stage.allianceList.toList.foreach(_.update())
+      stage.towerList.toList.foreach(_.update())
       stage.enemyList.filterInPlace(enemy => !enemy.haveReachBase)
     )
 
@@ -46,6 +46,6 @@ class StageManager (gp: GamePanel):
         g2d.drawImage(stage.map.towerImage, transform, None.orNull)
       )
 
-      val sortedEntities: List[Creature] = (stage.enemyList.toList ++ stage.allianceList.toList).sortBy(_.pos._2)
+      val sortedEntities: List[Entity] = (stage.enemyList.toList ++ stage.allianceList.toList ++ stage.towerList.toList).sortBy(_.pos._2)
       sortedEntities.foreach(_.draw(g2d))
     )

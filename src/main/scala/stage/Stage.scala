@@ -2,6 +2,7 @@ package stage
 
 import entity.creature.Alliance
 import entity.creature.enemy.Enemy
+import entity.tower.Tower
 
 import java.awt.image.BufferedImage
 import scala.collection.mutable.ListBuffer
@@ -17,6 +18,7 @@ case class Stage(
 ):
   var enemyList: ListBuffer[Enemy] = ListBuffer()
   var allianceList: ListBuffer[Alliance] = ListBuffer()
+  var towerList: ListBuffer[Tower] = ListBuffer()
   var currentWave: Int = 0
 
   override def toString: String =

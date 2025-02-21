@@ -2,24 +2,22 @@ package entity.creature.enemy
 
 import entity.creature.{Creature, Direction, State}
 import game.GamePanel
-import utils.{Animation, Cache, Tools}
+import utils.{Animation, Tools}
 
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
 abstract class Enemy(gp: GamePanel) extends Creature(gp):
-  val name: String
-  val jsonPath, imagePath: String
   val playerDamage: Double
 
   var haveReachBase: Boolean = false
-  var scaleFactor: Double = 1.25
   var walkingAnimation: Animation = _
   var walkingUpAnimation: Animation = _
   var walkingDownAnimation: Animation = _
   var idleAnimation: Animation = _
   var fightingAnimation: Animation = _
   var deadAnimation: Animation = _
+  scaleFactor = 1.25
 
   private var path: Option[Vector[(Double, Double)]] = None
   private var index = 0
@@ -59,21 +57,13 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
         (Direction.DOWN_RIGHT, State.ATTACK) -> fightingAnimation
       )
 
-  def enemyParse(): Unit =
-    Cache.animationCached.get(this.name) match
-      case Some(value) =>
-        walkingAnimation = Animation(value(0), 10)
-        walkingUpAnimation = Animation(value(1), 10)
-        walkingDownAnimation = Animation(value(2), 10)
-        idleAnimation = Animation(value(3), 10)
-        fightingAnimation = Animation(value(4), 10)
-        deadAnimation = Animation(value(5), 10)
-      case _ =>
-        Tools.parser(jsonPath, imagePath, scaleFactor) match
-          case Some(value) =>
-            Cache.animationCached += this.name -> value
-            enemyParse()
-          case _ => throw new Exception(s"Parsing error")
+  override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
+    walkingAnimation = Animation(value(0), 10)
+    walkingUpAnimation = Animation(value(1), 10)
+    walkingDownAnimation = Animation(value(2), 10)
+    idleAnimation = Animation(value(3), 10)
+    fightingAnimation = Animation(value(4), 10)
+    deadAnimation = Animation(value(5), 10)
 
   def attackPlayer(): Unit =
     gp.stageManager.currentPlayer.foreach(player =>
