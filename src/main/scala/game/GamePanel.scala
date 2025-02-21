@@ -12,19 +12,19 @@ import javax.swing.JPanel
 class GamePanel extends JPanel with Runnable:
 
   // Configuration
-  val scale: Int = 3
+  private val scale: Int = 3
   val tileSize: Int = 16 * scale
-  val maxScreenColumn: Int = 20
-  val maxScreenRow: Int = 12
+  private val maxScreenColumn: Int = 20
+  private val maxScreenRow: Int = 12
+  private val FPS: Int = 90
   val screenWidth: Int = tileSize * maxScreenColumn
   val screenHeight: Int = tileSize * maxScreenRow
-  val FPS: Int = 90
 
   // System initialize
   val systemHandler: SystemHandler = SystemHandler(this)
   val stageManager: StageManager = StageManager(this)
   var currentGameState: GameState = GameState.PlayState
-  var gameThread: Thread = _
+  private var gameThread: Thread = _
 
   this.setPreferredSize(new Dimension(screenWidth, screenHeight))
   this.setBackground(Color.BLACK)
@@ -52,6 +52,7 @@ class GamePanel extends JPanel with Runnable:
       stageManager.draw(g2d)
     else if currentGameState == GameState.TitleState then
       {}
+
 
     val x = 10
     val y = 400

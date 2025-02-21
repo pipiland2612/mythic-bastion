@@ -78,14 +78,16 @@ object Tools:
       var waves: Vector[Wave] = Vector()
 
       val spawnPosition: Vector[(Double, Double)] = getPosition(root.path("spawnPosition"))
-      val towerPos: Vector[(Double,Double)] = getPosition(root.path("map").path("towerSpots"))
+      val mapPath: JsonNode = root.path("map")
+      val towerPos: Vector[(Double,Double)] = getPosition(mapPath.path("towerSpots"))
       var path: Vector[Vector[(Double,Double)]] = Vector()
-      root.path("map").path("path").forEach(data =>
+      mapPath.path("path").forEach(data =>
         val pos: Vector[(Double,Double)] = getPosition(data)
         path = path :+ pos
       )
+      val towerImage: BufferedImage = Tools.loadImage(s"build/${mapPath.path("towerImage").asText()}.png")
 
-      val map: GameMap = GameMap(path, towerPos)
+      val map: GameMap = GameMap(path, towerImage, towerPos)
 
       root.path("waves").forEach(data =>
         val delay: Int = data.path("delay").asInt()

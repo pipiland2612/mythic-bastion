@@ -3,6 +3,7 @@ package stage
 import entity.creature.Alliance
 import entity.creature.enemy.Enemy
 
+import java.awt.image.BufferedImage
 import scala.collection.mutable.ListBuffer
 
 case class Stage(
@@ -36,7 +37,8 @@ case class Wave(
 
 case class GameMap(
   path: Vector[Vector[(Double,Double)]],
-  towerPos: Vector[(Double,Double)]
+  towerImage: BufferedImage,
+  towerPos: Vector[(Double,Double)],
 )
 
 case class EnemyData(
