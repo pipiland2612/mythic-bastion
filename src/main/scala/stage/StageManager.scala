@@ -42,12 +42,17 @@ class StageManager (gp: GamePanel):
     currentStage.foreach(stage =>
       g2d.drawImage(backgroundImage, 0, 0, None.orNull)
       stage.map.towerPos.foreach(towerBuild =>
-        val x = towerBuild.pos._1 - stage.map.towerImage.getWidth() / 2
-        val y = towerBuild.pos._2 - stage.map.towerImage.getHeight() / 2
+        val (x,y) = Tools.getCenterCoords(towerBuild.pos._1, towerBuild.pos._2, stage.map.towerImage)
         transform.setToTranslation(x, y)
         g2d.drawImage(stage.map.towerImage, transform, None.orNull)
       )
 
-//      val sortedEntities: List[Entity] = (stage.enemyList.toList ++ stage.allianceList.toList ++ stage.towerList.toList).sortBy(_.pos._2)
-//      sortedEntities.foreach(_.draw(g2d))
+      // add enemylist, alliance list, and tower list to one entity list
+      val sortedEntities: List[Entity] = (
+        stage.enemyList.toList ++
+        stage.allianceList.toList ++
+        stage.map.towerPos.flatMap(_.currentTower).toList
+      ).sortBy(_.pos._2) // then sort by y coords to draw
+
+      sortedEntities.foreach(_.draw(g2d))
     )

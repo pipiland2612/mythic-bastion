@@ -13,9 +13,9 @@ class KeyHandler(gp: GamePanel) extends MouseListener:
   @Override
   def mouseClicked(e: MouseEvent): Unit =
     val (x,y) = (e.getX, e.getY - offSetY)
-    System.out.println("Mouse clicked at: " + x + ", " + y)
+//    System.out.println("Mouse clicked at: " + x + ", " + y)
     handleTowerBuildOnClick(x, y)
-    gp.stageManager.startWave()
+//    gp.stageManager.startWave()
 
 
   @Override
@@ -45,9 +45,11 @@ class KeyHandler(gp: GamePanel) extends MouseListener:
       pos match
         case Some(value) =>
           gp.stageManager.currentStage.foreach(stage =>
-            if value.currentTower.isEmpty then 
-              value.currentTower = Some(ExploTower(gp, 1))
-//              stage.towerList += 
+            if value.currentTower.isEmpty then
+              val tower = ExploTower(gp, 1)
+              tower.pos = value.pos
+              println(tower.pos)
+              value.currentTower = Some(tower)
           )
         case _ =>
     )

@@ -26,6 +26,9 @@ object Tools:
     g2d.dispose()
     flippedImage
 
+  def getCenterCoords(x: Double, y: Double, image: BufferedImage): (Double, Double) =
+    (x - image.getWidth()/2, y - image.getHeight()/2)
+
   def flipAnimation(animation: Animation): Animation =
     val vector: Vector[BufferedImage] =
       for image <- animation.frames

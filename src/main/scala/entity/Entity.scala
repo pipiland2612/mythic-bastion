@@ -24,6 +24,8 @@ abstract class Entity(gp: GamePanel):
   protected var direction: Direction = Direction.RIGHT
   protected var images: Map[(Direction, State), Animation] = Map()
 
+  protected var idleAnimation: Animation = _
+
   parse()
   setUpImages()
 
@@ -43,7 +45,7 @@ abstract class Entity(gp: GamePanel):
       case Some(value) =>
         parseInformation(value)
       case _ =>
-        Tools.parser(jsonPath, imagePath, scaleFactor) match
+        Tools.parser(getJsonPath, getImagePath, scaleFactor) match
           case Some(value) =>
             Cache.animationCached += this.name -> value
             parseInformation(value)
@@ -59,7 +61,9 @@ abstract class Entity(gp: GamePanel):
     checkAnimationUpdate()
 
   def draw(g2d: Graphics2D): Unit =
-    currentAnimation.foreach(animation =>
-      transform.setToTranslation(pos._1, pos._2)
-      g2d.drawImage(animation.getCurrentFrame, transform, None.orNull)
-    )
+    currentAnimation match
+      case Some(animation) =>
+        transform.setToTranslation(pos._1, pos._2)
+        g2d.drawImage(animation.getCurrentFrame, transform, None.orNull)
+      case _ =>
+        g2d.drawImage(idleAnimation.getCurrentFrame, transform, None.orNull)

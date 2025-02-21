@@ -15,7 +15,6 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   var walkingAnimation: Animation = _
   var walkingUpAnimation: Animation = _
   var walkingDownAnimation: Animation = _
-  var idleAnimation: Animation = _
   var fightingAnimation: Animation = _
   var deadAnimation: Animation = _
   scaleFactor = 1.25
