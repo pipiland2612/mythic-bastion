@@ -16,7 +16,7 @@ object GameApp extends App :
   frame.setResizable(false)
   frame.setVisible(true)
   frame.setFocusable(true)
-  frame.setLocationRelativeTo(null)
+  frame.setLocationRelativeTo(None.orNull)
   frame.addMouseListener(gamePanel.systemHandler.keyHandler)
 
   gamePanel.setUpGame()

@@ -38,9 +38,9 @@ class StageManager (gp: GamePanel):
 
   def draw(g2d: Graphics2D): Unit =
     currentStage.foreach(stage =>
-      g2d.drawImage(backgroundImage, 0, 0, null)
+      g2d.drawImage(backgroundImage, 0, 0, None.orNull)
 
-      val sortedEntities: List[Creature] = (stage.enemyList ++ stage.allianceList).toList.sortBy(_.pos._2)
+      val sortedEntities: List[Creature] = (stage.enemyList.toList ++ stage.allianceList.toList).sortBy(_.pos._2)
       sortedEntities.foreach(_.draw(g2d))
     )
 

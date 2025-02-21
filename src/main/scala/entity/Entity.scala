@@ -26,5 +26,5 @@ abstract class Entity(gp: GamePanel):
   def draw(g2d: Graphics2D): Unit =
     currentAnimation.foreach(animation =>
       transform.setToTranslation(pos._1, pos._2)
-      g2d.drawImage(animation.getCurrentFrame, transform, null)
+      g2d.drawImage(animation.getCurrentFrame, transform, None.orNull)
     )

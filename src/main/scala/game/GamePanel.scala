@@ -3,7 +3,7 @@ package game
 import entity.creature.enemy.Enemy
 import stage.{Stage, StageManager}
 import system.SystemHandler
-import utils.{Cache, Tools}
+import utils.Tools
 
 import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
 import javax.swing.JPanel
@@ -69,7 +69,7 @@ class GamePanel extends JPanel with Runnable:
     var lastTime: Long = System.nanoTime()
     var currTime: Long = 0
 
-    while (gameThread != null) do
+    while (Option(gameThread).isDefined) do
       currTime = System.nanoTime()
       delta += (currTime - lastTime) / drawInterval
       lastTime = currTime

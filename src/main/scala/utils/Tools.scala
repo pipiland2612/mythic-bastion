@@ -21,7 +21,7 @@ object Tools:
     val g2d: Graphics2D = flippedImage.createGraphics()
     val at = AffineTransform.getScaleInstance(-1, 1)
     at.translate(-image.getWidth, 0)
-    g2d.drawImage(image, at, null)
+    g2d.drawImage(image, at, None.orNull)
     g2d.dispose()
     flippedImage
 
@@ -61,7 +61,7 @@ object Tools:
   def scaleImage(origin: BufferedImage, newWidth: Int, newHeight: Int): BufferedImage =
     val scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB)
     val g: Graphics2D = scaledImage.createGraphics()
-    g.drawImage(origin, 0, 0, newWidth, newHeight, null)
+    g.drawImage(origin, 0, 0, newWidth, newHeight, None.orNull)
     g.dispose()
     scaledImage
 

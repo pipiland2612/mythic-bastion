@@ -60,7 +60,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       )
 
   def enemyParse(): Unit =
-    Cache.cachedResult.get(this.name) match
+    Cache.animationCached.get(this.name) match
       case Some(value) =>
         walkingAnimation = Animation(value(0), 10)
         walkingUpAnimation = Animation(value(1), 10)
@@ -71,7 +71,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       case _ =>
         Tools.parser(jsonPath, imagePath, scaleFactor) match
           case Some(value) =>
-            Cache.cachedResult += this.name -> value
+            Cache.animationCached += this.name -> value
             enemyParse()
           case _ => throw new Exception(s"Parsing error")
 
