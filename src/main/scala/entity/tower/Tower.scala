@@ -5,7 +5,7 @@ import entity.creature.enemy.Enemy
 import game.GamePanel
 import utils.Tools
 
-import java.awt.{Color, Graphics2D}
+import java.awt.Graphics2D
 import java.awt.geom.AffineTransform
 
 
@@ -27,6 +27,11 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   protected val offsetY: Double = -10
 
   def attack(enemy: Enemy): Unit = {}
+
+
+  override def update(): Unit =
+    super.update()
+
 
   override def draw(g2d: Graphics2D): Unit =
     currentAnimation match

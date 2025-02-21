@@ -1,6 +1,7 @@
 package utils
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
+import entity.{Direction, State}
 import stage.{EnemyData, GameMap, Stage, Wave}
 import entity.creature.enemy.Enemy
 import entity.tower.TowerBuild
@@ -84,15 +85,16 @@ object Tools:
       val spawnPosition: Vector[(Double, Double)] = getPosition(root.path("spawnPosition"))
       val mapPath: JsonNode = root.path("map")
       val towerPos: Vector[(Double,Double)] = getPosition(mapPath.path("towerSpots"))
-      val towerBuilds: Vector[TowerBuild] = towerPos.map(TowerBuild(_))
+
+      val towerImage: BufferedImage = Tools.loadImage(s"build/${mapPath.path("towerImage").asText()}.png")
+      val towerBuilds: Vector[TowerBuild] = towerPos.map(TowerBuild(_, towerImage))
       var path: Vector[Vector[(Double,Double)]] = Vector()
       mapPath.path("path").forEach(data =>
         val pos: Vector[(Double,Double)] = getPosition(data)
         path = path :+ pos
       )
-      val towerImage: BufferedImage = Tools.loadImage(s"build/${mapPath.path("towerImage").asText()}.png")
 
-      val map: GameMap = GameMap(path, towerImage, towerBuilds)
+      val map: GameMap = GameMap(path, towerBuilds)
 
       root.path("waves").forEach(data =>
         val delay: Int = data.path("delay").asInt()
@@ -184,3 +186,6 @@ object Tools:
     catch
       case e: Exception =>
         throw new Exception(s"Failed to parse the file at $jsonPath and $imagePath with exception $e")
+
+  def fillMap(directions: Seq[Direction], state: State, animation: Animation): Map[(Direction, State), Animation] =
+    directions.map(dir => (dir, state) -> animation).toMap

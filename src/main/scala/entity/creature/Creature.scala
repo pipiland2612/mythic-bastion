@@ -3,11 +3,15 @@ package entity.creature
 import entity.{Direction, Entity, State}
 import game.GamePanel
 
+import java.awt.Graphics2D
+
 abstract class Creature(gp: GamePanel) extends Entity(gp):
   protected val maxHealth: Double
   protected var health: Double
 
   var isCollided: Boolean = false
+  var hasDied: Boolean = false
+
 
   def getMaxHealth: Double = maxHealth
   def getHealth: Double = health
@@ -28,3 +32,13 @@ abstract class Creature(gp: GamePanel) extends Entity(gp):
         case Direction.UP_RIGHT => this.move(this.speed, -this.speed)
         case Direction.DOWN_LEFT => this.move(-this.speed, this.speed)
         case Direction.DOWN_RIGHT => this.move(this.speed, this.speed)
+
+  override def update(): Unit =
+    super.update()
+    if health <= 0 then
+      this.state = State.DEAD
+
+  override def draw(g2d: Graphics2D): Unit =
+    super.draw(g2d)
+    if this.state == State.DEAD then
+      hasDied = true

@@ -38,7 +38,6 @@ case class Wave(
 
 case class GameMap(
   path: Vector[Vector[(Double,Double)]],
-  towerImage: BufferedImage,
   towerPos: Vector[TowerBuild],
 )
 

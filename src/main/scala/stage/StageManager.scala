@@ -12,7 +12,7 @@ class StageManager (gp: GamePanel):
 
   private var backgroundImage: BufferedImage = _
   private val transform = new AffineTransform()
-  val waveSpawner: WaveSpawner = WaveSpawner(this)
+  private val waveSpawner: WaveSpawner = WaveSpawner(this)
   var currentStage: Option[Stage] = None
   var currentPlayer: Option[PlayerStage] = None
 
@@ -35,17 +35,13 @@ class StageManager (gp: GamePanel):
       stage.map.towerPos.foreach(towerBuild =>
         towerBuild.currentTower.foreach(_.update())
       )
-      stage.enemyList.filterInPlace(enemy => !enemy.haveReachBase)
+      stage.enemyList.filterInPlace(enemy => !enemy.haveReachBase || enemy.hasDied)
     )
 
   def draw(g2d: Graphics2D): Unit =
     currentStage.foreach(stage =>
       g2d.drawImage(backgroundImage, 0, 0, None.orNull)
-      stage.map.towerPos.foreach(towerBuild =>
-        val (x,y) = Tools.getCenterCoords(towerBuild.pos._1, towerBuild.pos._2, stage.map.towerImage)
-        transform.setToTranslation(x, y)
-        g2d.drawImage(stage.map.towerImage, transform, None.orNull)
-      )
+      stage.map.towerPos.foreach(_.draw(g2d))
 
       // add enemylist, alliance list, and tower list to one entity list
       val sortedEntities: List[Entity] = (

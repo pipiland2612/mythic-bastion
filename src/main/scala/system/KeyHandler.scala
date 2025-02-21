@@ -13,9 +13,9 @@ class KeyHandler(gp: GamePanel) extends MouseListener:
   @Override
   def mouseClicked(e: MouseEvent): Unit =
     val (x,y) = (e.getX, e.getY - offSetY)
-//    System.out.println("Mouse clicked at: " + x + ", " + y)
+    System.out.println("Mouse clicked at: " + x + ", " + y)
     handleTowerBuildOnClick(x, y)
-//    gp.stageManager.startWave()
+    gp.stageManager.startWave()
 
 
   @Override

@@ -25,37 +25,17 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   def setPath(path: Vector[(Double, Double)]) = this.path = Some(path)
 
   override def setUpImages(): Unit =
-    this.images = Map(
-        // Idle animations
-        (Direction.RIGHT, State.IDLE) -> idleAnimation,
-        (Direction.DOWN, State.IDLE) -> idleAnimation,
-        (Direction.LEFT, State.IDLE) -> idleAnimation,
-        (Direction.UP, State.IDLE) -> idleAnimation,
-        (Direction.UP_LEFT, State.IDLE) -> idleAnimation,
-        (Direction.UP_RIGHT, State.IDLE) -> idleAnimation,
-        (Direction.DOWN_LEFT, State.IDLE) -> idleAnimation,
-        (Direction.DOWN_RIGHT, State.IDLE) -> idleAnimation,
-
-        // Running animations
-        (Direction.RIGHT, State.RUN) -> walkingAnimation,
+    val mirroredDirections = Seq(Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT)
+    this.images =
+      Tools.fillMap(Direction.allCreatureDirections, State.IDLE, idleAnimation) ++
+      Tools.fillMap(mirroredDirections, State.RUN, Tools.flipAnimation(walkingAnimation)) ++
+      Tools.fillMap(Direction.allCreatureDirections.diff(mirroredDirections), State.RUN, walkingAnimation) ++
+      Map(
         (Direction.DOWN, State.RUN) -> walkingDownAnimation,
-        (Direction.LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
-        (Direction.UP, State.RUN) -> walkingUpAnimation,
-        (Direction.UP_LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
-        (Direction.UP_RIGHT, State.RUN) -> walkingAnimation,
-        (Direction.DOWN_LEFT, State.RUN) -> Tools.flipAnimation(walkingAnimation),
-        (Direction.DOWN_RIGHT, State.RUN) -> walkingAnimation,
-
-        // Attack animations
-        (Direction.UP, State.ATTACK) -> fightingAnimation,
-        (Direction.DOWN, State.ATTACK) -> fightingAnimation,
-        (Direction.LEFT, State.ATTACK) -> fightingAnimation,
-        (Direction.RIGHT, State.ATTACK) -> fightingAnimation,
-        (Direction.UP_LEFT, State.ATTACK) -> fightingAnimation,
-        (Direction.UP_RIGHT, State.ATTACK) -> fightingAnimation,
-        (Direction.DOWN_LEFT, State.ATTACK) -> fightingAnimation,
-        (Direction.DOWN_RIGHT, State.ATTACK) -> fightingAnimation
-      )
+        (Direction.UP, State.RUN) -> walkingUpAnimation
+      ) ++
+      Tools.fillMap(Direction.allCreatureDirections, State.ATTACK, fightingAnimation) ++
+      Tools.fillMap(Direction.allCreatureDirections, State.DEAD, fightingAnimation)
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     walkingAnimation = Animation(value(0), 10)

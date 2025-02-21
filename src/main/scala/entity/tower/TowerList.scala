@@ -2,7 +2,7 @@ package entity.tower
 
 import entity.{Direction, State}
 import game.GamePanel
-import utils.Animation
+import utils.{Animation, Tools}
 
 import java.awt.image.BufferedImage
 
@@ -10,7 +10,7 @@ class ExploTower(gp: GamePanel, level: Int, val name: String) extends Tower(gp, 
 
   protected val apDmg: Double = 0
   protected val adDmg: Double = 10
-  protected val range: Double = 2
+  protected val range: Double = 20
   protected val speed: Double = 0.5
 
   protected val jsonPath: String = s"towers/ExploTower$level.json"
@@ -25,19 +25,10 @@ class ExploTower(gp: GamePanel, level: Int, val name: String) extends Tower(gp, 
     shootEndAnimation = Animation(value(2), 10)
 
   override def setUpImages(): Unit =
-    this.images = Map(
-      // Idle animations
-      (Direction.RIGHT, State.IDLE) -> idleAnimation,
-      (Direction.DOWN, State.IDLE) -> idleAnimation,
-      (Direction.LEFT, State.IDLE) -> idleAnimation,
-      (Direction.UP, State.IDLE) -> idleAnimation,
+    this.images =
+      Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
+      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation)
 
-      // Attack animations
-      (Direction.UP, State.ATTACK) -> shootAnimation,
-      (Direction.DOWN, State.ATTACK) -> shootAnimation,
-      (Direction.LEFT, State.ATTACK) -> shootAnimation,
-      (Direction.RIGHT, State.ATTACK) -> shootAnimation,
-    )
 object ExploTower :
   def apply(gp: GamePanel, level: Int): ExploTower = new ExploTower(gp, level, s"ExploTower0$level")
 
@@ -46,7 +37,7 @@ class ArrowTower(gp: GamePanel, level: Int, val name: String) extends Tower(gp, 
 
   protected val apDmg: Double = 0
   protected val adDmg: Double = 10
-  protected val range: Double = 2
+  protected val range: Double = 20
   protected val speed: Double = 0.5
   protected val jsonPath: String = s"towers/ArrowTower$level.json"
   protected val imagePath: String = s"towers/ArrowTower$level.png"
@@ -65,7 +56,7 @@ class MagicTower(gp: GamePanel, level: Int, val name: String) extends Tower(gp, 
 
   protected val apDmg: Double = 0
   protected val adDmg: Double = 10
-  protected val range: Double = 2
+  protected val range: Double = 20
   protected val speed: Double = 0.5
   protected val jsonPath: String = s"towers/MagicTower$level.json"
   protected val imagePath: String = s"towers/MagicTower$level.png"
