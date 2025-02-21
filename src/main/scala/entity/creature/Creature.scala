@@ -5,33 +5,13 @@ import game.GamePanel
 import utils.Animation
 
 abstract class Creature(gp: GamePanel) extends Entity(gp):
-  val speed: Double
-  val maxHealth: Double
-  var health: Double
+  protected val maxHealth: Double
+  protected var health: Double
 
-  var state: State = State.IDLE
-  var needsAnimationUpdate: Boolean = false
-  var direction: Direction = Direction.RIGHT
   var isCollided: Boolean = false
 
-  var images: Map[(Direction, State), Animation] = Map()
-//    Map(
-//      (Direction.RIGHT, State.IDLE) -> idleAnimations(Direction.RIGHT),
-//      (Direction.DOWN, State.IDLE) -> idleAnimations(Direction.DOWN),
-//      (Direction.LEFT, State.IDLE) -> idleAnimations(Direction.LEFT),
-//      (Direction.UP, State.IDLE) -> idleAnimations(Direction.UP),
-//
-//      (Direction.RIGHT, State.RUN) -> runAnimations(Direction.RIGHT),
-//      (Direction.DOWN, State.RUN) -> runAnimations(Direction.DOWN),
-//      (Direction.LEFT, State.RUN) -> runAnimations(Direction.LEFT),
-//      (Direction.UP, State.RUN) -> runAnimations(Direction.UP),
-//
-//      (Direction.UP, State.ATTACK) -> attackAnimations(Direction.UP),
-//      (Direction.DOWN, State.ATTACK) -> attackAnimations(Direction.DOWN),
-//      (Direction.LEFT, State.ATTACK) -> attackAnimations(Direction.LEFT),
-//      (Direction.RIGHT, State.ATTACK) -> attackAnimations(Direction.RIGHT),
-//
-//    )
+  def getMaxHealth: Double = maxHealth
+  def getHealth: Double = health
 
   def move(dx: Double, dy: Double): Unit =
     state = State.RUN
@@ -49,12 +29,3 @@ abstract class Creature(gp: GamePanel) extends Entity(gp):
         case Direction.UP_RIGHT => this.move(this.speed, -this.speed)
         case Direction.DOWN_LEFT => this.move(-this.speed, this.speed)
         case Direction.DOWN_RIGHT => this.move(this.speed, this.speed)
-
-  def checkAnimationUpdate(): Unit =
-    if(needsAnimationUpdate) then
-      needsAnimationUpdate = false
-      currentAnimation = images.get(this.direction, this.state)
-      currentAnimation.foreach(animation => animation.update())
-
-  override def update(): Unit =
-    checkAnimationUpdate()

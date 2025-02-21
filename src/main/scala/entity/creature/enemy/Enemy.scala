@@ -8,7 +8,7 @@ import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
 abstract class Enemy(gp: GamePanel) extends Creature(gp):
-  val playerDamage: Double
+  protected val playerDamage: Double
 
   var haveReachBase: Boolean = false
   var walkingAnimation: Animation = _
@@ -24,7 +24,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
 
   def setPath(path: Vector[(Double, Double)]) = this.path = Some(path)
 
-  def setUpImages(): Unit =
+  override def setUpImages(): Unit =
     this.images = Map(
         // Idle animations
         (Direction.RIGHT, State.IDLE) -> idleAnimation,
@@ -126,4 +126,4 @@ object Enemy:
     )
 
   def clone(enemy: Enemy): Enemy =
-    Creep(enemy.name, enemy.maxHealth, enemy.health, enemy.playerDamage, enemy.apDmg, enemy.adDmg, enemy.range, enemy.speed, enemy.jsonPath, enemy.imagePath, gp)
+    Creep(enemy.getName, enemy.getMaxHealth, enemy.getHealth, enemy.playerDamage, enemy.getApDmg, enemy.getAdDmg, enemy.getRange, enemy.getSpeed, enemy.getJsonPath, enemy.getImagePath, gp)

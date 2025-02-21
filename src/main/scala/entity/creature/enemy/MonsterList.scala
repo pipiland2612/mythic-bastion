@@ -17,8 +17,7 @@ case class Creep(
 ) extends Enemy(gp):
 
   var pos: (Double, Double) = (0, 0)
-  haveReachBase = false
-  setUpImages()
+  this.haveReachBase = false
   currentAnimation = Some(idleAnimation)
 end Creep
 
