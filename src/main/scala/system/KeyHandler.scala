@@ -44,8 +44,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener:
         case Some(value) =>
           gp.stageManager.currentStage.foreach(stage =>
             if value.currentTower.isEmpty then
-              val tower = ExploTower(gp, 1)
-              tower.pos = value.pos
+              val tower = ExploTower(gp, 1, value.pos)
               value.currentTower = Some(tower)
           )
         case _ =>

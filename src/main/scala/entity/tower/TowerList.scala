@@ -11,13 +11,13 @@ class ExploTower(
   gp: GamePanel,
   level: Int,
   val name: String,
-  val weaponType: Weapon
-) extends Tower(gp, level):
-
-  protected val apDmg: Double = 0
-  protected val adDmg: Double = 10
-  protected val range: Double = 20
+  val weaponType: Weapon,
+  var pos: (Double, Double),
+  protected val apDmg: Double = 0,
+  protected val adDmg: Double = 10,
+  protected val range: Double = 120,
   protected val speed: Double = 0.5
+) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/ExploTower$level.json"
   protected val imagePath: String = s"towers/ExploTower$level.png"
@@ -35,16 +35,23 @@ class ExploTower(
       Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
       Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation)
 
+
 object ExploTower :
-  def apply(gp: GamePanel, level: Int): ExploTower =
-    new ExploTower(gp, level, s"ExploTower0$level", Explo(gp))
+  def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ExploTower =
+    new ExploTower(gp, level, s"ExploTower0$level", Explo(gp), pos)
 
-class ArrowTower(gp: GamePanel, level: Int, val name: String, val weaponType: Weapon) extends Tower(gp, level):
-
-  protected val apDmg: Double = 0
-  protected val adDmg: Double = 10
-  protected val range: Double = 20
+class ArrowTower(
+  gp: GamePanel,
+  level: Int,
+  val name: String,
+  val weaponType: Weapon,
+  var pos: (Double, Double),
+  protected val apDmg: Double = 0,
+  protected val adDmg: Double = 10,
+  protected val range: Double = 200,
   protected val speed: Double = 0.5
+) extends Tower(gp, level):
+
   protected val jsonPath: String = s"towers/ArrowTower$level.json"
   protected val imagePath: String = s"towers/ArrowTower$level.png"
 
@@ -54,15 +61,21 @@ class ArrowTower(gp: GamePanel, level: Int, val name: String, val weaponType: We
   override def setUpImages(): Unit = {}
 
 object ArrowTower :
-  def apply(gp: GamePanel, level: Int): ArrowTower =
-    new ArrowTower(gp, level, s"ArrowTower0$level", Arrow(gp))
+  def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ArrowTower =
+    new ArrowTower(gp, level, s"ArrowTower0$level", Arrow(gp), pos: (Double, Double))
 
-class MagicTower(gp: GamePanel, level: Int, val name: String, val weaponType: Weapon) extends Tower(gp, level):
-
-  protected val apDmg: Double = 0
-  protected val adDmg: Double = 10
-  protected val range: Double = 20
+class MagicTower(
+  gp: GamePanel,
+  level: Int,
+  val name: String,
+  val weaponType: Weapon,
+  var pos: (Double, Double),
+  protected val apDmg: Double = 0,
+  protected val adDmg: Double = 10,
+  protected val range: Double = 20,
   protected val speed: Double = 0.5
+) extends Tower(gp, level):
+
   protected val jsonPath: String = s"towers/MagicTower$level.json"
   protected val imagePath: String = s"towers/MagicTower$level.png"
 
@@ -73,5 +86,5 @@ class MagicTower(gp: GamePanel, level: Int, val name: String, val weaponType: We
   override def setUpImages(): Unit = {}
 
 object MagicTower :
-  def apply(gp: GamePanel, level: Int): MagicTower =
-    new MagicTower(gp, level, s"MagicTower0$level", MagicBullet(gp))
+  def apply(gp: GamePanel, level: Int, pos: (Double, Double)): MagicTower =
+    new MagicTower(gp, level, s"MagicTower0$level", MagicBullet(gp), pos)

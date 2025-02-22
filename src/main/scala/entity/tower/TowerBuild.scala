@@ -10,9 +10,10 @@ case class TowerBuild(pos: (Double, Double), towerBuildImage: BufferedImage):
   private val transform: AffineTransform = AffineTransform()
   private val radius: Int = 30
   private val drawCoords: (Double, Double) = Tools.getCenterCoords(pos, towerBuildImage)
-  private val range: Ellipse2D = new Ellipse2D.Double(drawCoords._1 + 10, drawCoords._2 + 10, radius * 2, radius)
+  private val offsetX: Int = 10
+  private val offsetY: Int = 10
+  private val range: Ellipse2D = new Ellipse2D.Double(drawCoords._1 + offsetX, drawCoords._2 + offsetY, radius * 2, radius)
   var currentTower: Option[Tower] = None
-
 
   def draw(g2d: Graphics2D): Unit =
     Tools.drawFrame(g2d, towerBuildImage, transform, drawCoords)
