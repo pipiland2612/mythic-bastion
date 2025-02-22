@@ -2,9 +2,7 @@ package stage
 
 import entity.creature.Alliance
 import entity.creature.enemy.Enemy
-import entity.tower.{Tower, TowerBuild}
-
-import java.awt.image.BufferedImage
+import entity.tower.TowerBuild
 import scala.collection.mutable.ListBuffer
 
 case class Stage(

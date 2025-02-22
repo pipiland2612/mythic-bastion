@@ -11,20 +11,16 @@ abstract class Entity(gp: GamePanel):
   var pos: (Double, Double)
   protected val name: String
   protected val jsonPath, imagePath: String
-  protected val apDmg: Double
-  protected val adDmg: Double
-  protected val range: Double
-  protected val speed: Double
 
   private val transform = new AffineTransform()
   protected var currentAnimation: Option[Animation] = None
   protected var scaleFactor: Double = 1
   protected var needsAnimationUpdate: Boolean = false
-  protected var state: State = State.IDLE
-  protected var direction: Direction = Direction.RIGHT
   protected var images: Map[(Direction, State), Animation] = Map()
 
   protected var idleAnimation: Animation = _
+  protected var state: State = State.IDLE
+  protected var direction: Direction = Direction.RIGHT
 
   parse()
   setUpImages()
@@ -32,10 +28,6 @@ abstract class Entity(gp: GamePanel):
   def getName: String = name
   def getJsonPath: String = jsonPath
   def getImagePath: String = imagePath
-  def getApDmg: Double = apDmg
-  def getAdDmg: Double = adDmg
-  def getRange: Double = range
-  def getSpeed: Double = speed
 
   def setUpImages(): Unit
   def parseInformation(value: Vector[Vector[BufferedImage]]): Unit

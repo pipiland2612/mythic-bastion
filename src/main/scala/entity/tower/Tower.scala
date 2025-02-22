@@ -1,16 +1,15 @@
 package entity.tower
 
-import entity.Entity
+import entity.{Attacker, Entity}
 import entity.creature.enemy.Enemy
 import game.GamePanel
 import utils.Tools
 
-import java.awt.{Graphics2D, Image}
+import java.awt.Graphics2D
 import java.awt.geom.AffineTransform
-import java.awt.image.BufferedImage
 
 
-abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
+abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp) with Attacker:
   var pos: (Double, Double) = (0,0)
 
   protected val apDmg: Double

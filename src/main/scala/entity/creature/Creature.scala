@@ -1,17 +1,16 @@
 package entity.creature
 
-import entity.{Direction, Entity, State}
+import entity.{Attacker, Direction, Entity, State}
 import game.GamePanel
 
 import java.awt.Graphics2D
 
-abstract class Creature(gp: GamePanel) extends Entity(gp):
+abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker:
   protected val maxHealth: Double
   protected var health: Double
 
   var isCollided: Boolean = false
   var hasDied: Boolean = false
-
 
   def getMaxHealth: Double = maxHealth
   def getHealth: Double = health
