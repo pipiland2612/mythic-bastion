@@ -25,6 +25,7 @@ abstract class Entity(gp: GamePanel):
   def getName: String = name
   def getJsonPath: String = jsonPath
   def getImagePath: String = imagePath
+  def getCenterCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
 
   parse()
   setUpImages()

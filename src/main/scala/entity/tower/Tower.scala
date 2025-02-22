@@ -48,8 +48,8 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp) with Atta
   override def update(): Unit =
     super.update()
     gp.stageManager.currentStage.foreach(stage =>
-      for enemy <- stage.enemyList do
-        if attackCircle.contains(enemy.pos._1, enemy.pos._2) then
+      for enemy <- stage.enemyList.toList do
+        if attackCircle.intersects(enemy.attackBox) then
           println(s"Enemy ${enemy.getName} enters")
     )
 

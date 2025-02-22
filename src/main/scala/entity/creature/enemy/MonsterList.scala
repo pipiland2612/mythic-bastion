@@ -15,10 +15,10 @@ case class Creep(
   speed: Double,
   jsonPath: String,
   imagePath: String,
-  gp: GamePanel
+  gp: GamePanel,
+  var pos: (Double, Double) = (0, 0)
 ) extends Enemy(gp):
 
-  var pos: (Double, Double) = (0, 0)
   this.haveReachBase = false
   currentAnimation = Some(idleAnimation)
 end Creep
