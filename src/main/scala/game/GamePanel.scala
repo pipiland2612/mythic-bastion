@@ -1,6 +1,8 @@
 package game
 
 import entity.creature.enemy.Enemy
+import entity.tower.Tower
+import entity.weapon.Weapon
 import stage.{Stage, StageManager}
 import system.SystemHandler
 import utils.Tools
@@ -32,6 +34,7 @@ class GamePanel extends JPanel with Runnable:
   def setUpGame(): Unit =
     val stage: Stage = Tools.loadStage("stages/Stage01.json")
     Enemy.gp = this
+    Weapon.gp = this
     stageManager.setStage(stage)
     stageManager.setUpBackgroundImage()
 
@@ -50,11 +53,7 @@ class GamePanel extends JPanel with Runnable:
 
     val startTime: Long = System.nanoTime()
 
-    if currentGameState == GameState.PlayState then
-      stageManager.draw(g2d)
-    else if currentGameState == GameState.TitleState then
-      {}
-
+    stageManager.draw(g2d)
 
     val x = 10
     val y = 400

@@ -11,13 +11,11 @@ import java.awt.geom.{AffineTransform, Ellipse2D}
 import scala.collection.mutable.ListBuffer
 
 
-abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp) with Attacker:
+abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
 
   override def getName: String = s"$name"
   override def getImagePath: String = s"towers/${getName}.png"
   override def getJsonPath: String = s"towers/${getName}.json"
-  override def getAdDmg: Double = adDmg * level
-  override def getApDmg: Double = apDmg * level
   override def getRange: Double = range * level
   private val offsetX: Double = 0
   private val offsetY: Double = -10
@@ -29,17 +27,11 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp) with Atta
       centerCoords._2 - (getRange*4/3 - idleAnimation.getCurrentFrame.getHeight())/2,
       getRange*2, getRange*4/3
     )
-  var isShowingRange: Boolean = true
 
-//  protected val attackCircle: Circle
-  protected val weaponType: Weapon
-
+  var isShowingRange: Boolean = false
   var bulletList: ListBuffer[Weapon] = ListBuffer()
 
-  def dealDamage(enemy: Enemy): Unit =
-    val adDamage = getAdDmg - enemy.getAdDefense
-    val apDamge = getApDmg - enemy.getApDefense
-    enemy.takeDamage(adDamage + apDamge)
+  protected val weaponType: Weapon
 
   def attack(enemy: Enemy): Unit =
     if this.state != State.ATTACK && attackCoolDown <= 0 then
@@ -47,7 +39,8 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp) with Atta
       needsAnimationUpdate = true
       attackCoolDown = maxAttackCoolDown
 
-      dealDamage(enemy)
+      bulletList += Weapon.clone(this.weaponType)
+      bulletList.foreach(_.attack(enemy))
       this.state = State.IDLE
 
   override def update(): Unit =

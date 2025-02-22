@@ -13,10 +13,7 @@ class ExploTower(
   val name: String,
   val weaponType: Weapon,
   var pos: (Double, Double),
-  protected val apDmg: Double = 0,
-  protected val adDmg: Double = 20,
-  protected val range: Double = 120,
-  protected val speed: Double = 0.5,
+  val range: Double = 120,
   val maxAttackCoolDown: Double = 3 * 60
 ) extends Tower(gp, level):
 
@@ -47,10 +44,7 @@ class ArrowTower(
   val name: String,
   val weaponType: Weapon,
   var pos: (Double, Double),
-  protected val apDmg: Double = 0,
-  protected val adDmg: Double = 10,
-  protected val range: Double = 200,
-  protected val speed: Double = 0.5,
+  val range: Double = 200,
   val maxAttackCoolDown: Double = 1 * 60
 ) extends Tower(gp, level):
 
@@ -72,10 +66,7 @@ class MagicTower(
   val name: String,
   val weaponType: Weapon,
   var pos: (Double, Double),
-  protected val apDmg: Double = 0,
-  protected val adDmg: Double = 10,
-  protected val range: Double = 20,
-  protected val speed: Double = 0.5,
+  val range: Double = 100,
   val maxAttackCoolDown: Double = 2 * 60
 ) extends Tower(gp, level):
 

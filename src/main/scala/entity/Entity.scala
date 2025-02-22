@@ -21,7 +21,11 @@ abstract class Entity(gp: GamePanel):
   protected var idleAnimation: Animation = _
   protected var state: State = State.IDLE
   protected var direction: Direction = Direction.RIGHT
-
+  protected val range: Double
+  val maxAttackCoolDown: Double
+  var attackCoolDown: Double = 0
+  
+  def getRange: Double = range
   def getName: String = name
   def getJsonPath: String = jsonPath
   def getImagePath: String = imagePath

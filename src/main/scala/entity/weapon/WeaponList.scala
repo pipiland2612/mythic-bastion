@@ -8,11 +8,14 @@ case class Explo(
   gp: GamePanel,
   name: String,
   jsonPath: String,
-  imagePath: String
+  imagePath: String,
+  protected val apDmg: Double = 0,
+  protected val adDmg: Double = 20,
+  protected val speed: Double = 0.5,
 ) extends Weapon(gp)
 
 object Explo:
-  private val name = s"Explo01"
+  val name = s"Explo01"
   private val jsonPath: String = s"weapons/Explo01.json"
   private val imagePath: String = s"weapons/Explo01.png"
   def apply(gp: GamePanel): Explo =
@@ -22,7 +25,10 @@ case class Arrow(
   gp: GamePanel,
   name: String,
   jsonPath: String,
-  imagePath: String
+  imagePath: String,
+  protected val apDmg: Double = 0,
+  protected val adDmg: Double = 10,
+  protected val speed: Double = 0.5,
 ) extends Weapon(gp):
   var missAnimation: Animation = _
   var missEndAnimation: Animation = _
@@ -33,7 +39,7 @@ case class Arrow(
     missEndAnimation = Animation(value(3), 10)
 
 object Arrow:
-  private val name = s"Arrow01"
+  val name = s"Arrow01"
   private val jsonPath: String = s"weapons/Arrow01.json"
   private val imagePath: String = s"weapons/Arrow01.png"
   def apply(gp: GamePanel): Arrow = new Arrow(gp, name, jsonPath, imagePath)
@@ -42,7 +48,10 @@ case class MagicBullet(
   gp: GamePanel,
   val name: String,
   jsonPath: String,
-  imagePath: String
+  imagePath: String,
+  val apDmg: Double = 0,
+  protected val adDmg: Double = 10,
+  protected val speed: Double = 0.5,
 ) extends Weapon(gp):
   var travelEnd: Animation = _
 
@@ -53,7 +62,7 @@ case class MagicBullet(
     hitEndAnimation = Animation(value(3), 10)
 
 object MagicBullet:
-  private val name = "MagicBullet"
+  val name = "MagicBullet"
   private val jsonPath: String = s"weapons/MagicBullet.json"
   private val imagePath: String = s"weapons/MagicBullet.png"
   def apply(gp: GamePanel): MagicBullet = new MagicBullet(gp, name, jsonPath, imagePath)

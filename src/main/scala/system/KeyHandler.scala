@@ -29,7 +29,6 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
   override def keyPressed(e: KeyEvent): Unit =
     e.getKeyCode match
       case KeyEvent.VK_P =>
-        println("pressed")
         gp.currentGameState =
           if gp.currentGameState == GameState.PlayState then GameState.PauseState
           else GameState.PlayState
@@ -49,6 +48,11 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
             if value.currentTower.isEmpty then
               val tower = ExploTower(gp, 1, value.pos)
               value.currentTower = Some(tower)
+            else
+              value.currentTower.foreach(stage =>
+                stage.isShowingRange = if stage.isShowingRange then false
+                else true
+              )
           )
         case _ =>
     )

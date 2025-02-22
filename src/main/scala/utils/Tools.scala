@@ -192,3 +192,6 @@ object Tools:
   def drawFrame(g2d: Graphics2D, frame: BufferedImage, transform: AffineTransform, coords: (Double, Double), offsetX: Double = 0, offsetY: Double = 0): Unit =
     transform.setToTranslation(coords._1 + offsetX, coords._2 + offsetY)
     g2d.drawImage(frame, transform, None.orNull)
+
+  def getAngle(pos: (Double, Double), goal: (Double, Double)): Double =
+    Math.toDegrees(Math.atan2(goal._2-pos._2, goal._1-pos._1))
