@@ -1,11 +1,11 @@
 package entity.creature
 
-import entity.{Attacker, Direction, Entity, State}
+import entity.{Attacker, Defender, Direction, Entity, State}
 import game.GamePanel
 
 import java.awt.Graphics2D
 
-abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker:
+abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
   protected val maxHealth: Double
   protected var health: Double
 
@@ -14,6 +14,8 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker:
 
   def getMaxHealth: Double = maxHealth
   def getHealth: Double = health
+
+  def takeDamage(damage: Double) = health -= damage
 
   def move(dx: Double, dy: Double): Unit =
     state = State.RUN

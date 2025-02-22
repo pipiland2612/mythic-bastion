@@ -1,22 +1,29 @@
 package entity.weapon
-
 import game.GamePanel
 import utils.Animation
 
 import java.awt.image.BufferedImage
 
-class Explo(gp: GamePanel) extends Weapon(gp):
+case class Explo(
+  gp: GamePanel,
+  name: String,
+  jsonPath: String,
+  imagePath: String
+) extends Weapon(gp)
 
-  protected val name: String = "Explo01"
-  protected val jsonPath: String = s"weapons/Explo01.json"
-  protected val imagePath: String = s"weapons/Explo01.png"
+object Explo:
+  private val name = s"Explo01"
+  private val jsonPath: String = s"weapons/Explo01.json"
+  private val imagePath: String = s"weapons/Explo01.png"
+  def apply(gp: GamePanel): Explo =
+    new Explo(gp, name, jsonPath, imagePath)
 
-class Arrow(gp: GamePanel) extends Weapon(gp):
-
-  protected val name: String = "Arrow01"
-  protected val jsonPath: String = s"weapons/Arrow01.json"
-  protected val imagePath: String = s"weapons/Arrow01.png"
-
+case class Arrow(
+  gp: GamePanel,
+  name: String,
+  jsonPath: String,
+  imagePath: String
+) extends Weapon(gp):
   var missAnimation: Animation = _
   var missEndAnimation: Animation = _
 
@@ -25,11 +32,18 @@ class Arrow(gp: GamePanel) extends Weapon(gp):
     missAnimation = Animation(value(3), 10)
     missEndAnimation = Animation(value(3), 10)
 
-class MagicBullet(gp: GamePanel) extends Weapon(gp):
+object Arrow:
+  private val name = s"Arrow01"
+  private val jsonPath: String = s"weapons/Arrow01.json"
+  private val imagePath: String = s"weapons/Arrow01.png"
+  def apply(gp: GamePanel): Arrow = new Arrow(gp, name, jsonPath, imagePath)
 
-  protected val name: String = "MagicBullet"
-  protected val jsonPath: String = s"weapons/MagicBullet.json"
-  protected val imagePath: String = s"weapons/MagicBullet.png"
+case class MagicBullet(
+  gp: GamePanel,
+  val name: String,
+  jsonPath: String,
+  imagePath: String
+) extends Weapon(gp):
   var travelEnd: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
@@ -37,3 +51,9 @@ class MagicBullet(gp: GamePanel) extends Weapon(gp):
     travelEnd = Animation(value(1), 10)
     hitAnimation = Animation(value(2), 10)
     hitEndAnimation = Animation(value(3), 10)
+
+object MagicBullet:
+  private val name = "MagicBullet"
+  private val jsonPath: String = s"weapons/MagicBullet.json"
+  private val imagePath: String = s"weapons/MagicBullet.png"
+  def apply(gp: GamePanel): MagicBullet = new MagicBullet(gp, name, jsonPath, imagePath)

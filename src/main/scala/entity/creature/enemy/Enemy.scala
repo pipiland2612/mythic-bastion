@@ -102,8 +102,12 @@ object Enemy:
 
     enemyData.get(key).map ((initialData, jsonData, imageData) =>
       val data: Vector[Double] = initialData.map(_ * difficulty)
-      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6) / difficulty, jsonData, imageData, gp)
+      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6), data(7), data(8) / difficulty, jsonData, imageData, gp)
     )
 
   def clone(enemy: Enemy): Enemy =
-    Creep(enemy.getName, enemy.getMaxHealth, enemy.getHealth, enemy.playerDamage, enemy.getApDmg, enemy.getAdDmg, enemy.getRange, enemy.getSpeed, enemy.getJsonPath, enemy.getImagePath, gp)
+    Creep(
+      enemy.getName, enemy.getMaxHealth, enemy.getHealth, enemy.playerDamage,
+      enemy.getApDmg, enemy.getApDefense,enemy.getAdDmg, enemy.getAdDefense,
+      enemy.getRange, enemy.getSpeed, enemy.getJsonPath, enemy.getImagePath, gp
+    )

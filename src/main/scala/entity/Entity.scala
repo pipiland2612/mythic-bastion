@@ -22,12 +22,12 @@ abstract class Entity(gp: GamePanel):
   protected var state: State = State.IDLE
   protected var direction: Direction = Direction.RIGHT
 
-  parse()
-  setUpImages()
-
   def getName: String = name
   def getJsonPath: String = jsonPath
   def getImagePath: String = imagePath
+
+  parse()
+  setUpImages()
 
   def setUpImages(): Unit
   def parseInformation(value: Vector[Vector[BufferedImage]]): Unit

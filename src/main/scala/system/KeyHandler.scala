@@ -38,9 +38,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener:
       case _ => None
 
     towerBuildList.foreach(towerBuildList =>
-      val pos: Option[TowerBuild] = towerBuildList.filter(towerBuild =>
-        Math.pow((x - towerBuild.pos._1) / (radius), 2) + Math.pow((y - towerBuild.pos._2) / (radius/2), 2) <= 1
-      ).sortBy(towerBuild => Math.pow(x - towerBuild.pos._1, 2) + Math.pow(y - towerBuild.pos._2, 2)).headOption
+      val pos: Option[TowerBuild] = towerBuildList.find(_.isInBuildRange(x, y))
 
       pos match
         case Some(value) =>
