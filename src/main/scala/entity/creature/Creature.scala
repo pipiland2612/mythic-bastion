@@ -9,21 +9,20 @@ import java.awt.{Color, Graphics2D}
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
   protected val maxHealth: Double
   protected var health: Double
+  val rect: Rectangle2D
+  val maxDeadCounter: Double
   private var deadCounter: Int = 0
 
   var isCollided: Boolean = false
   var hasDied: Boolean = false
-
   def attackBox: Rectangle2D = new Rectangle2D.Double(
-    pos._1 + idleAnimation.getCurrentFrame.getWidth() / 2, pos._2,
-    idleAnimation.getCurrentFrame.getWidth() / 2, idleAnimation.getCurrentFrame.getHeight()/1.5
+    pos._1 + rect.getX, pos._2 + rect.getY,
+    rect.getWidth, rect.getHeight
   )
-
   def getMaxHealth: Double = maxHealth
   def getHealth: Double = health
 
   def takeDamage(damage: Double) = health -= damage
-
 
   def move(dx: Double, dy: Double): Unit =
     state = State.RUN
@@ -47,7 +46,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
       needsAnimationUpdate = true
       this.state = State.DEAD
       deadCounter += 1
-      if deadCounter >= 60 then hasDied = true
+      if deadCounter >= maxDeadCounter then hasDied = true
     super.update()
 
   override def draw(g2d: Graphics2D): Unit =

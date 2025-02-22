@@ -5,7 +5,6 @@ import game.GamePanel
 import utils.{Animation, Tools}
 import entity.{Direction, State}
 
-import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
 abstract class Enemy(gp: GamePanel) extends Creature(gp):
@@ -94,19 +93,19 @@ object Enemy:
 
   def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
     val enemyData = Map(
-      Monster01.name -> (Monster01.data, Monster01.jsonPath, Monster01.imagePath),
-      Monster02.name -> (Monster02.data, Monster02.jsonPath, Monster02.imagePath),
-      Monster03.name -> (Monster03.data, Monster03.jsonPath, Monster03.imagePath)
+      Monster01.name -> (Monster01.data, Monster01.jsonPath, Monster01.imagePath, Monster01.rect),
+      Monster02.name -> (Monster02.data, Monster02.jsonPath, Monster02.imagePath, Monster02.rect),
+      Monster03.name -> (Monster03.data, Monster03.jsonPath, Monster03.imagePath, Monster03.rect)
     )
 
-    enemyData.get(key).map ((initialData, jsonData, imageData) =>
+    enemyData.get(key).map ((initialData, jsonData, imageData, rect) =>
       val data: Vector[Double] = initialData.map(_ * difficulty)
-      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6), data(7), data(8) / difficulty, data(9), jsonData, imageData, gp)
+      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6), data(7), data(8) / difficulty, data(9), data(10), jsonData, imageData, rect, gp)
     )
 
   def clone(enemy: Enemy): Enemy =
     Creep(
       enemy.getName, enemy.getMaxHealth, enemy.getHealth, enemy.playerDamage,
       enemy.getApDmg, enemy.getApDefense,enemy.getAdDmg, enemy.getAdDefense,
-      enemy.getRange, enemy.getSpeed, enemy.maxAttackCoolDown, enemy.getJsonPath, enemy.getImagePath, gp
+      enemy.getRange, enemy.getSpeed, enemy.maxAttackCoolDown, enemy.maxDeadCounter, enemy.getJsonPath, enemy.getImagePath, enemy.rect, gp
     )

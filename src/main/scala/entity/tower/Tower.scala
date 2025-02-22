@@ -56,7 +56,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp) with Atta
     super.update()
     gp.stageManager.currentStage.foreach(stage =>
       for enemy <- stage.enemyList.toList do
-        if attackCircle.intersects(enemy.attackBox) then
+        if attackCircle.contains(enemy.attackBox.getCenterX, enemy.attackBox.getCenterY) then
           attack(enemy)
     )
 
