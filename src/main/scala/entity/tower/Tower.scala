@@ -42,15 +42,22 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp) with Atta
     enemy.takeDamage(adDamage + apDamge)
 
   def attack(enemy: Enemy): Unit =
-    this.state = State.ATTACK
-    needsAnimationUpdate = true
+    if this.state != State.ATTACK && attackCoolDown <= 0 then
+      this.state = State.ATTACK
+      needsAnimationUpdate = true
+      attackCoolDown = maxAttackCoolDown
+
+      dealDamage(enemy)
+      this.state = State.IDLE
 
   override def update(): Unit =
+    if attackCoolDown > 0 then
+      attackCoolDown -= 1
     super.update()
     gp.stageManager.currentStage.foreach(stage =>
       for enemy <- stage.enemyList.toList do
         if attackCircle.intersects(enemy.attackBox) then
-          println(s"Enemy ${enemy.getName} enters")
+          attack(enemy)
     )
 
   override def draw(g2d: Graphics2D): Unit =

@@ -14,9 +14,10 @@ class ExploTower(
   val weaponType: Weapon,
   var pos: (Double, Double),
   protected val apDmg: Double = 0,
-  protected val adDmg: Double = 10,
+  protected val adDmg: Double = 20,
   protected val range: Double = 120,
-  protected val speed: Double = 0.5
+  protected val speed: Double = 0.5,
+  val maxAttackCoolDown: Double = 3 * 60
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/ExploTower$level.json"
@@ -49,7 +50,8 @@ class ArrowTower(
   protected val apDmg: Double = 0,
   protected val adDmg: Double = 10,
   protected val range: Double = 200,
-  protected val speed: Double = 0.5
+  protected val speed: Double = 0.5,
+  val maxAttackCoolDown: Double = 1 * 60
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/ArrowTower$level.json"
@@ -73,7 +75,8 @@ class MagicTower(
   protected val apDmg: Double = 0,
   protected val adDmg: Double = 10,
   protected val range: Double = 20,
-  protected val speed: Double = 0.5
+  protected val speed: Double = 0.5,
+  val maxAttackCoolDown: Double = 2 * 60
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/MagicTower$level.json"

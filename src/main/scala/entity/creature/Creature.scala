@@ -9,6 +9,7 @@ import java.awt.{Color, Graphics2D}
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
   protected val maxHealth: Double
   protected var health: Double
+  private var deadCounter: Int = 0
 
   var isCollided: Boolean = false
   var hasDied: Boolean = false
@@ -42,13 +43,14 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
         case Direction.DOWN_RIGHT => this.move(this.speed, this.speed)
 
   override def update(): Unit =
-    super.update()
     if health <= 0 then
+      needsAnimationUpdate = true
       this.state = State.DEAD
+      deadCounter += 1
+      if deadCounter >= 60 then hasDied = true
+    super.update()
 
   override def draw(g2d: Graphics2D): Unit =
     super.draw(g2d)
     g2d.setColor(Color.GREEN)
     g2d.drawRect(attackBox.getX.toInt, attackBox.getY.toInt, attackBox.getWidth.toInt, attackBox.getHeight.toInt)
-    if this.state == State.DEAD then
-      hasDied = true

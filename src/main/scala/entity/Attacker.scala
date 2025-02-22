@@ -6,6 +6,9 @@ trait Attacker:
   protected val range: Double
   protected val speed: Double
 
+  val maxAttackCoolDown: Double
+  var attackCoolDown: Double = 0
+
   def getApDmg: Double = apDmg
   def getAdDmg: Double = adDmg
   def getRange: Double = range

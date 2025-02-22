@@ -35,7 +35,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
         (Direction.UP, State.RUN) -> walkingUpAnimation
       ) ++
       Tools.fillMap(Direction.allCreatureDirections, State.ATTACK, fightingAnimation) ++
-      Tools.fillMap(Direction.allCreatureDirections, State.DEAD, fightingAnimation)
+      Tools.fillMap(Direction.allCreatureDirections, State.DEAD, deadAnimation)
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     walkingAnimation = Animation(value(0), 10)
@@ -75,17 +75,16 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
 
   override def update(): Unit =
     super.update()
-    path.foreach(path =>
-      if index < path.length then
-        followPath(path(index))
-        continueMove()
-      else this.haveReachBase = true
-    )
+    if this.state != State.DEAD then
+      path.foreach(path =>
+        if index < path.length then
+          followPath(path(index))
+          continueMove()
+        else this.haveReachBase = true
+      )
 
-    if this.haveReachBase then attackPlayer()
+      if this.haveReachBase then attackPlayer()
 
-  override def draw(g2d: Graphics2D): Unit =
-    super.draw(g2d)
 
 end Enemy
 
@@ -102,12 +101,12 @@ object Enemy:
 
     enemyData.get(key).map ((initialData, jsonData, imageData) =>
       val data: Vector[Double] = initialData.map(_ * difficulty)
-      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6), data(7), data(8) / difficulty, jsonData, imageData, gp)
+      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6), data(7), data(8) / difficulty, data(9), jsonData, imageData, gp)
     )
 
   def clone(enemy: Enemy): Enemy =
     Creep(
       enemy.getName, enemy.getMaxHealth, enemy.getHealth, enemy.playerDamage,
       enemy.getApDmg, enemy.getApDefense,enemy.getAdDmg, enemy.getAdDefense,
-      enemy.getRange, enemy.getSpeed, enemy.getJsonPath, enemy.getImagePath, gp
+      enemy.getRange, enemy.getSpeed, enemy.maxAttackCoolDown, enemy.getJsonPath, enemy.getImagePath, gp
     )

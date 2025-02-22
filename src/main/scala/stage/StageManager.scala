@@ -35,7 +35,7 @@ class StageManager (gp: GamePanel):
       stage.map.towerPos.foreach(towerBuild =>
         towerBuild.currentTower.foreach(_.update())
       )
-      stage.enemyList.filterInPlace(enemy => !enemy.haveReachBase || enemy.hasDied)
+      stage.enemyList.filterInPlace(enemy => !enemy.haveReachBase && !enemy.hasDied)
     )
 
   def draw(g2d: Graphics2D): Unit =
