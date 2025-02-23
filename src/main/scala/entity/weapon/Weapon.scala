@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
 
 abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel) with Attacker:
   val maxAttackCoolDown: Double = 0
-  val range: Double = 0
+  val range: Double = 5  // Adjust based on desired hit proximity
   var hitAnimation: Animation = _
   var hitEndAnimation: Animation = _
   private var deadCounter: Int = 0
@@ -57,6 +57,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       if deadCounter >= deadDuration then hasHit = true
     else attack()
 
+// In the Weapon companion object, initialize velocities after creation
 object Weapon:
   var gp: GamePanel = _
 

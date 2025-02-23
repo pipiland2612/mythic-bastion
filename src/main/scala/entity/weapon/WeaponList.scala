@@ -1,7 +1,8 @@
 package entity.weapon
+import entity.State
 import entity.creature.enemy.Enemy
 import game.GamePanel
-import utils.Animation
+import utils.{Animation, Tools}
 
 import java.awt.image.BufferedImage
 
@@ -15,7 +16,57 @@ case class Explo(
   protected val apDmg: Double = 0,
   protected val adDmg: Double = 20,
   protected val speed: Double = 5,
-) extends Weapon(gp, enemy)
+) extends Weapon(gp, enemy):
+
+  private var attackT: Double = 0.0
+  private var attackInProgress: Boolean = false
+  private var attackCurve: Option[((Double, Double), (Double, Double), (Double, Double))] = None
+  private var angleOffset: Double = 0
+
+  private def initializeAttackCurve(): Unit =
+    val start = pos
+    val end = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
+    val mid = calculateMidPoint(start, end)
+
+    attackCurve = Some((start, mid, end))
+    attackT = 0.0
+    attackInProgress = true
+    angleOffset = Math.toRadians(40)
+
+  private def calculateMidPoint(start: (Double, Double), end: (Double, Double)): (Double, Double) =
+    val xOffset = Math.random() * 40 - 20
+    val yOffset = -100
+    ((start._1 + end._1) / 2 + xOffset, (start._2 + end._2) / 2 + yOffset)
+
+  private def moveAlongCurve(): Unit =
+    attackCurve match
+      case Some((start, mid, _)) =>
+        attackT = (attackT + 0.02).min(1.0)
+        pos = Tools.bezier(attackT, start, mid, (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY))
+      case None =>
+        attackInProgress = false
+
+  private def updateProjectileMovement(): Unit =
+    val angle = Tools.getAngle(pos, enemy.pos) - angleOffset
+    move(angle)
+    angleOffset *= 0.98 // Gradually reduce the angle for the projectile to straighten
+
+  private def finalizeAttack(): Unit =
+    if (attackT >= 1.0)
+      attackInProgress = false
+      dealDamage()
+      this.state = State.ATTACK
+      needsAnimationUpdate = true
+      checkAnimationUpdate()
+      this.pos = (enemy.pos._1, enemy.pos._2 - 45) // Set the final position to the enemy's position
+
+  override def attack(): Unit =
+    if (!attackInProgress) then
+      initializeAttackCurve()
+    else
+      moveAlongCurve()
+      updateProjectileMovement()
+      finalizeAttack()
 
 object Explo:
   val name = s"Explo01"

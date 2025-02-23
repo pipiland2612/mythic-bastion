@@ -195,3 +195,8 @@ object Tools:
 
   def getAngle(pos: (Double, Double), goal: (Double, Double)): Double =
     Math.toDegrees(Math.atan2(goal._2-pos._2, goal._1-pos._1))
+
+  def bezier(t: Double, p0: (Double, Double), p1: (Double, Double), p2: (Double, Double)): (Double, Double) =
+    val x = (1 - t) * (1 - t) * p0._1 + 2 * (1 - t) * t * p1._1 + t * t * p2._1
+    val y = (1 - t) * (1 - t) * p0._2 + 2 * (1 - t) * t * p1._2 + t * t * p2._2
+    (x, y)
