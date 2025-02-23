@@ -16,11 +16,7 @@ class ExploTower(
   val range: Double = 120,
   val attackDuration: Int = 100,
   val prepareDuration: Int = 70,
-  private val idleIndex: Int = 0,
-  private val shootIndex: Int = 1,
-  private val prepareIndex: Int = 2,
-  private val frameDuration: Int = 10,
-  private val attackFrame: (Int, Int) = (4,6),
+  val maxAttackCoolDown: Double = 0
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/ExploTower$level.json"
@@ -29,9 +25,10 @@ class ExploTower(
   var prepareAnimation: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(idleIndex), frameDuration)
-    shootAnimation = Animation(value(shootIndex), frameDuration, attackFrame._1, attackFrame._2)
-    prepareAnimation = Animation(value(prepareIndex), frameDuration)
+    value.foreach(ani => println(ani.length))
+    idleAnimation = Animation(value(0), 10)
+    shootAnimation = Animation(value(1), 10, 4, 6)
+    prepareAnimation = Animation(value(2), 10)
 
   override def setUpImages(): Unit =
     this.images =
@@ -50,8 +47,7 @@ class ArrowTower(
   val weaponType: String,
   var pos: (Double, Double),
   val range: Double = 200,
-  val attackDuration: Int = 100,
-  val prepareDuration: Int = 70,
+  val maxAttackCoolDown: Double = 1 * 60
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/ArrowTower$level.json"
@@ -72,8 +68,7 @@ class MagicTower(
   val weaponType: String,
   var pos: (Double, Double),
   val range: Double = 100,
-  val attackDuration: Int = 100,
-  val prepareDuration: Int = 70,
+  val maxAttackCoolDown: Double = 2 * 60
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/MagicTower$level.json"

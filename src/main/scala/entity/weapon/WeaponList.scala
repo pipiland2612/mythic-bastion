@@ -43,8 +43,8 @@ case class Arrow(
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     super.parseInformation(value)
-    missAnimation = Animation(value(missIndex), frameDuration)
-    missEndAnimation = Animation(value(missEndIndex), frameDuration)
+    missAnimation = Animation(value(3), 10)
+    missEndAnimation = Animation(value(4), 10)
 
 object Arrow:
   val name = s"Arrow01"
@@ -70,10 +70,10 @@ case class MagicBullet(
   private val hitEndIndex = 3
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(idleIndex), frameDuration)
-    travelEnd = Animation(value(travelEndIndex), frameDuration)
-    hitAnimation = Animation(value(hitIndex), frameDuration)
-    hitEndAnimation = Animation(value(hitEndIndex), frameDuration)
+    idleAnimation = Animation(value(0), 10)
+    travelEnd = Animation(value(1), 10)
+    hitAnimation = Animation(value(2), 10)
+    hitEndAnimation = Animation(value(3), 10)
 
 object MagicBullet:
   val name = "MagicBullet"
