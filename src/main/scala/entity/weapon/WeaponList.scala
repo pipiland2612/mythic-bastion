@@ -14,7 +14,7 @@ case class Explo(
   var pos: (Double, Double),
   protected val apDmg: Double = 0,
   protected val adDmg: Double = 20,
-  protected val speed: Double = 0.5,
+  protected val speed: Double = 5,
 ) extends Weapon(gp, enemy)
 
 object Explo:
@@ -33,7 +33,7 @@ case class Arrow(
   var pos: (Double, Double),
   protected val apDmg: Double = 0,
   protected val adDmg: Double = 10,
-  protected val speed: Double = 0.5,
+  protected val speed: Double = 5,
 ) extends Weapon(gp, enemy):
   var missAnimation: Animation = _
   var missEndAnimation: Animation = _
@@ -58,7 +58,7 @@ case class MagicBullet(
   var pos: (Double, Double),
   val apDmg: Double = 0,
   protected val adDmg: Double = 10,
-  protected val speed: Double = 0.5,
+  protected val speed: Double = 5,
 ) extends Weapon(gp, enemy):
   var travelEnd: Animation = _
 

@@ -43,6 +43,8 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
     TowerScan.findEnemy().foreach(attack(_))
     bulletList.toList.foreach(_.update())
 
+    bulletList.filterInPlace(bullet => !bullet.hasHit)
+
   override def draw(g2d: Graphics2D): Unit =
     TowerScan.draw(g2d)
     bulletList.toList.foreach(_.draw(g2d))

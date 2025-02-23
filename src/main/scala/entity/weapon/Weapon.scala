@@ -39,7 +39,8 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   def attack(): Unit =
     val angle = Tools.getAngle(pos, enemy.pos)
     move(angle)
-    if this.pos == enemy.pos then
+    val (xDist, yDist) = (enemy.pos._1 - this.pos._1, enemy.pos._2 - this.pos._2)
+    if (Math.abs(xDist) <= this.speed && Math.abs(yDist) <= this.speed) then
       dealDamage()
       hasHit = true
 
