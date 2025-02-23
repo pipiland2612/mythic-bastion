@@ -35,21 +35,23 @@ case class Explo(
 
   private def calculateMidPoint(start: (Double, Double), end: (Double, Double)): (Double, Double) =
     val xOffset = Math.random() * 40 - 20
-    val yOffset = -100
+    val distance = Math.sqrt(Math.pow(end._1 - start._1, 2) + Math.pow(end._2 - start._2, 2))
+    val yOffset = -distance * 1.2  // make the curve higher in the middle (adjust for more or less curve)
+
     ((start._1 + end._1) / 2 + xOffset, (start._2 + end._2) / 2 + yOffset)
 
   private def moveAlongCurve(): Unit =
     attackCurve match
-      case Some((start, mid, _)) =>
+      case Some((start, mid, end)) =>
         attackT = (attackT + 0.02).min(1.0)
-        pos = Tools.bezier(attackT, start, mid, (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY))
+        pos = Tools.bezier(attackT, start, mid, end)
       case None =>
         attackInProgress = false
 
   private def updateProjectileMovement(): Unit =
     val angle = Tools.getAngle(pos, enemy.pos) - angleOffset
     move(angle)
-    angleOffset *= 0.98 // Gradually reduce the angle for the projectile to straighten
+    angleOffset *= 0.98 // gradually reduce the angle for the projectile to straighten
 
   private def finalizeAttack(): Unit =
     if (attackT >= 1.0)
@@ -58,7 +60,7 @@ case class Explo(
       this.state = State.ATTACK
       needsAnimationUpdate = true
       checkAnimationUpdate()
-      this.pos = (enemy.pos._1, enemy.pos._2 - 45) // Set the final position to the enemy's position
+      this.pos = (enemy.pos._1, enemy.pos._2 - 45) // set the final position to the enemy's position to play the boom animation
 
   override def attack(): Unit =
     if (!attackInProgress) then
@@ -73,7 +75,7 @@ object Explo:
   private val jsonPath: String = s"weapons/Explo01.json"
   private val imagePath: String = s"weapons/Explo01.png"
 
-  def apply(gp: GamePanel, enemy: Enemy, pos: (Double, Double)): Explo = new Explo(gp, name, jsonPath, imagePath, enemy,pos)
+  def apply(gp: GamePanel, enemy: Enemy, pos: (Double, Double)): Explo = new Explo(gp, name, jsonPath, imagePath, enemy, pos)
 
 case class Arrow(
   gp: GamePanel,

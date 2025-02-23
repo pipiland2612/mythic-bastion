@@ -1,6 +1,5 @@
 package entity.tower
 
-import entity.State.ATTACK
 import entity.{Entity, State}
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
@@ -38,6 +37,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       needsAnimationUpdate = true
 
       if shootAnimation.isInAttackInterval && !hasShoot then
+        val pos = (centerCoords._1 + idleAnimation.getCurrentFrame.getWidth() / 2, centerCoords._2 + idleAnimation.getCurrentFrame.getHeight() / 4)
         val bullet = Weapon.clone(weaponType, enemy, pos)
         bulletList += bullet
         hasShoot = true

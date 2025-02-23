@@ -25,7 +25,6 @@ class ExploTower(
   var prepareAnimation: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    value.foreach(ani => println(ani.length))
     idleAnimation = Animation(value(0), 10)
     shootAnimation = Animation(value(1), 10, 4, 6)
     prepareAnimation = Animation(value(2), 10)
