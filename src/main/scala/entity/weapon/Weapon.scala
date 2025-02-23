@@ -16,15 +16,10 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   private val deadDuration: Int = 100
   var hasHit: Boolean = false
 
-  protected val idleIndex = 0
-  protected val hitIndex = 1
-  protected val hitEndIndex = 2
-  protected val frameDuration = 10
-
   def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(idleIndex), frameDuration)
-    hitAnimation = Animation(value(hitIndex), frameDuration)
-    hitEndAnimation = Animation(value(hitEndIndex), frameDuration)
+    idleAnimation = Animation(value(0), 10)
+    hitAnimation = Animation(value(1), 10)
+    hitEndAnimation = Animation(value(2), 10)
 
   def setUpImages(): Unit =
     this.images =
