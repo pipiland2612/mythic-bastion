@@ -16,16 +16,15 @@ class ExploTower(
   val range: Double = 120,
   val attackDuration: Int = 100,
   val prepareDuration: Int = 70,
+  private val idleIndex: Int = 0,
+  private val shootIndex: Int = 1,
+  private val prepareIndex: Int = 2,
+  private val frameDuration: Int = 10,
+  private val attackFrame: (Int, Int) = (4,6),
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/ExploTower$level.json"
   protected val imagePath: String = s"towers/ExploTower$level.png"
-
-  private val idleIndex = 0
-  private val shootIndex = 1
-  private val prepareIndex = 2
-  private val frameDuration = 10
-  private val attackFrame = (4,6)
 
   var prepareAnimation: Animation = _
 

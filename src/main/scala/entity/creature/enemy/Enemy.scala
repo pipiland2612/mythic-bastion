@@ -18,14 +18,6 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   var deadAnimation: Animation = _
   scaleFactor = 1.25
 
-  private val walkingIndex = 0
-  private val walkingUpIndex = 0
-  private val walkingDownIndex = 0
-  private val idleIndex = 0
-  private val fightingIndex = 0
-  private val deadIndex = 0
-  private val frameDuration = 10
-
   private var path: Option[Vector[(Double, Double)]] = None
   private var index = 0
 
@@ -45,12 +37,12 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       Tools.fillMap(Direction.allCreatureDirections, State.DEAD, deadAnimation)
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    walkingAnimation = Animation(value(walkingIndex), frameDuration)
-    walkingUpAnimation = Animation(value(walkingUpIndex), frameDuration)
-    walkingDownAnimation = Animation(value(walkingDownIndex), frameDuration)
-    idleAnimation = Animation(value(idleIndex), frameDuration)
-    fightingAnimation = Animation(value(fightingIndex), frameDuration)
-    deadAnimation = Animation(value(deadIndex), frameDuration)
+    walkingAnimation = Animation(value(0), 10)
+    walkingUpAnimation = Animation(value(1), 10)
+    walkingDownAnimation = Animation(value(2), 10)
+    idleAnimation = Animation(value(3), 10)
+    fightingAnimation = Animation(value(4), 10)
+    deadAnimation = Animation(value(5), 10)
 
   def attackPlayer(): Unit =
     gp.stageManager.currentPlayer.foreach(player =>
