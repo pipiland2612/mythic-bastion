@@ -5,7 +5,6 @@ import entity.{Attacker, Direction, Entity, State}
 import game.GamePanel
 import utils.{Animation, Tools}
 
-import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
 abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel) with Attacker:
@@ -13,13 +12,19 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   val range: Double = 0
   var hitAnimation: Animation = _
   var hitEndAnimation: Animation = _
+  private var deadCounter: Int = 0
+  private val deadDuration: Int = 100
   var hasHit: Boolean = false
-  var deadCounter: Int = 0
+
+  protected val idleIndex = 0
+  protected val hitIndex = 1
+  protected val hitEndIndex = 2
+  protected val frameDuration = 10
 
   def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(0), 10)
-    hitAnimation = Animation(value(1), 10)
-    hitEndAnimation = Animation(value(2), 10)
+    idleAnimation = Animation(value(idleIndex), frameDuration)
+    hitAnimation = Animation(value(hitIndex), frameDuration)
+    hitEndAnimation = Animation(value(hitEndIndex), frameDuration)
 
   def setUpImages(): Unit =
     this.images =
@@ -52,7 +57,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     if this.state == State.ATTACK then
       deadCounter += 1
       needsAnimationUpdate = true
-      if deadCounter >= 100 then hasHit = true
+      if deadCounter >= deadDuration then hasHit = true
     else attack()
 
 object Weapon:

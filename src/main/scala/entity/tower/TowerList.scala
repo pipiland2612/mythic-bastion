@@ -21,18 +21,24 @@ class ExploTower(
   protected val jsonPath: String = s"towers/ExploTower$level.json"
   protected val imagePath: String = s"towers/ExploTower$level.png"
 
-  var shootEndAnimation: Animation = _
+  private val idleIndex = 0
+  private val shootIndex = 1
+  private val prepareIndex = 2
+  private val frameDuration = 10
+  private val attackFrame = (4,6)
+
+  var prepareAnimation: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(0), 10)
-    shootAnimation = Animation(value(1), 10, 4, 6)
-    shootEndAnimation = Animation(value(2), 10)
+    idleAnimation = Animation(value(idleIndex), frameDuration)
+    shootAnimation = Animation(value(shootIndex), frameDuration, attackFrame._1, attackFrame._2)
+    prepareAnimation = Animation(value(prepareIndex), frameDuration)
 
   override def setUpImages(): Unit =
     this.images =
       Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
       Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation) ++
-      Tools.fillMap(Direction.allEntityDirections, State.PREPARE, shootEndAnimation)
+      Tools.fillMap(Direction.allEntityDirections, State.PREPARE, prepareAnimation)
 
 object ExploTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ExploTower =

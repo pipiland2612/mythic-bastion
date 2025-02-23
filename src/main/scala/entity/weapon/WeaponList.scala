@@ -35,13 +35,16 @@ case class Arrow(
   protected val adDmg: Double = 10,
   protected val speed: Double = 5,
 ) extends Weapon(gp, enemy):
+
   var missAnimation: Animation = _
   var missEndAnimation: Animation = _
+  private val missIndex = 3
+  private val missEndIndex = 4
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     super.parseInformation(value)
-    missAnimation = Animation(value(3), 10)
-    missEndAnimation = Animation(value(3), 10)
+    missAnimation = Animation(value(missIndex), frameDuration)
+    missEndAnimation = Animation(value(missEndIndex), frameDuration)
 
 object Arrow:
   val name = s"Arrow01"
@@ -62,11 +65,15 @@ case class MagicBullet(
 ) extends Weapon(gp, enemy):
   var travelEnd: Animation = _
 
+  private val travelEndIndex = 1
+  private val hitIndex = 2
+  private val hitEndIndex = 3
+
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(0), 10)
-    travelEnd = Animation(value(1), 10)
-    hitAnimation = Animation(value(2), 10)
-    hitEndAnimation = Animation(value(3), 10)
+    idleAnimation = Animation(value(idleIndex), frameDuration)
+    travelEnd = Animation(value(travelEndIndex), frameDuration)
+    hitAnimation = Animation(value(hitIndex), frameDuration)
+    hitEndAnimation = Animation(value(hitEndIndex), frameDuration)
 
 object MagicBullet:
   val name = "MagicBullet"

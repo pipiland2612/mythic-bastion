@@ -66,10 +66,10 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
     if attackCoolDown > 0 then
       attackCoolDown -= 1
     super.update()
-    TowerScan.findEnemy().foreach(attack(_))
+    TowerScan.findEnemy().foreach(this.attack(_))
     handleAttackState()
     bulletList.toList.foreach(_.update())
-    bulletList.filterInPlace(bullet => !bullet.hasHit)
+    bulletList.filterInPlace(!_.hasHit)
     handlePrepareState()
 
   override def draw(g2d: Graphics2D): Unit =
