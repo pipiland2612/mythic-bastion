@@ -1,6 +1,5 @@
 package entity.tower
 
-import entity.State.ATTACK
 import entity.{Entity, State}
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
@@ -21,18 +20,20 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private val offsetX: Double = 0
   private val offsetY: Double = -10
   private val transform: AffineTransform = AffineTransform()
+  protected val attackDuration: Int
+  protected val prepareDuration: Int
+  val maxAttackCoolDown = 0
   val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
-
   var bulletList: ListBuffer[Weapon] = ListBuffer()
 
   protected val weaponType: String
-  var attackCounter: Int = 0
-  var prepareCounter: Int = 0
-  var shootAnimation: Animation = _
-  var hasShoot = false
+  private var attackCounter: Int = 0
+  private var prepareCounter: Int = 0
+  private var hasShoot = false
+  protected var shootAnimation: Animation = _
 
   def attack(enemy: Enemy): Unit =
-    if  attackCoolDown <= 0 && this.state != State.PREPARE then
+    if attackCoolDown <= 0 && this.state != State.PREPARE then
       state = State.ATTACK
       attackCoolDown = maxAttackCoolDown
       needsAnimationUpdate = true
@@ -45,7 +46,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   def handleAttackState(): Unit =
     if this.state == State.ATTACK then
       attackCounter += 1
-      if (attackCounter >= 100) then
+      if (attackCounter >= attackDuration) then
         attackCounter = 0
         currentAnimation.foreach(_.reset())
         state = State.PREPARE
@@ -55,7 +56,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   def handlePrepareState(): Unit =
     if this.state == State.PREPARE then
       prepareCounter += 1
-      if prepareCounter >= 70 then
+      if prepareCounter >= prepareDuration then
         currentAnimation.foreach(_.reset())
         prepareCounter = 0
         this.state = State.IDLE
@@ -85,6 +86,8 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   object TowerScan:
     private val attackCircle: Ellipse2D =
       new Ellipse2D.Double(
+        // The shape is an ellipse with height = 2/3 * width
+        // Set the center coords back to make the range in the middle of the tower
         centerCoords._1 - (getRange*2 - idleAnimation.getCurrentFrame.getWidth())/2,
         centerCoords._2 - (getRange*4/3 - idleAnimation.getCurrentFrame.getHeight())/2,
         getRange*2, getRange*4/3
