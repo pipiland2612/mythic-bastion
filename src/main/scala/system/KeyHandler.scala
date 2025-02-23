@@ -50,7 +50,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
               value.currentTower = Some(tower)
             else
               value.currentTower.foreach(stage =>
-                stage.isShowingRange = if stage.isShowingRange then false
+                stage.TowerScan.isShowingRange = if stage.TowerScan.isShowingRange then false
                 else true
               )
           )

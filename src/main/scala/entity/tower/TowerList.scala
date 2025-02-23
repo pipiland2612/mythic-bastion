@@ -11,7 +11,7 @@ class ExploTower(
   gp: GamePanel,
   level: Int,
   val name: String,
-  val weaponType: Weapon,
+  val weaponType: String,
   var pos: (Double, Double),
   val range: Double = 120,
   val maxAttackCoolDown: Double = 3 * 60
@@ -36,13 +36,13 @@ class ExploTower(
 
 object ExploTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ExploTower =
-    new ExploTower(gp, level, s"ExploTower0$level", Explo(gp), pos)
+    new ExploTower(gp, level, s"ExploTower0$level", Explo.name, pos)
 
 class ArrowTower(
   gp: GamePanel,
   level: Int,
   val name: String,
-  val weaponType: Weapon,
+  val weaponType: String,
   var pos: (Double, Double),
   val range: Double = 200,
   val maxAttackCoolDown: Double = 1 * 60
@@ -58,13 +58,13 @@ class ArrowTower(
 
 object ArrowTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ArrowTower =
-    new ArrowTower(gp, level, s"ArrowTower0$level", Arrow(gp), pos: (Double, Double))
+    new ArrowTower(gp, level, s"ArrowTower0$level", Arrow.name, pos)
 
 class MagicTower(
   gp: GamePanel,
   level: Int,
   val name: String,
-  val weaponType: Weapon,
+  val weaponType: String,
   var pos: (Double, Double),
   val range: Double = 100,
   val maxAttackCoolDown: Double = 2 * 60
@@ -81,4 +81,4 @@ class MagicTower(
 
 object MagicTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): MagicTower =
-    new MagicTower(gp, level, s"MagicTower0$level", MagicBullet(gp), pos)
+    new MagicTower(gp, level, s"MagicTower0$level", MagicBullet.name, pos)

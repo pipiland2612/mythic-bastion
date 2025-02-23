@@ -18,9 +18,10 @@ abstract class Entity(gp: GamePanel):
   protected var needsAnimationUpdate: Boolean = false
   protected var images: Map[(Direction, State), Animation] = Map()
 
-  protected var idleAnimation: Animation = _
   protected var state: State = State.IDLE
   protected var direction: Direction = Direction.RIGHT
+  protected var idleAnimation: Animation = _
+
   protected val range: Double
   val maxAttackCoolDown: Double
   var attackCoolDown: Double = 0

@@ -7,8 +7,7 @@ import utils.{Animation, Tools}
 
 import java.awt.image.BufferedImage
 
-abstract class Weapon(gp: GamePanel) extends Entity(gp: GamePanel) with Attacker:
-  var pos: (Double, Double) = (0,0)
+abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel) with Attacker:
   val maxAttackCoolDown: Double = 0
   val range: Double = 0
   var hitAnimation: Animation = _
@@ -25,7 +24,7 @@ abstract class Weapon(gp: GamePanel) extends Entity(gp: GamePanel) with Attacker
       Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
       Tools.fillMap(Direction.allEntityDirections, State.ATTACK, hitAnimation)
 
-  def dealDamage(enemy: Enemy): Unit =
+  def dealDamage(): Unit =
     val adDamage = getAdDmg - enemy.getAdDefense
     val apDamge = getApDmg - enemy.getApDefense
     enemy.takeDamage(adDamage + apDamge)
@@ -35,22 +34,24 @@ abstract class Weapon(gp: GamePanel) extends Entity(gp: GamePanel) with Attacker
     val x = pos._1 + speed * Math.cos(radians)
     val y = pos._2 + speed * Math.sin(radians)
     this.pos = (x, y)
+    needsAnimationUpdate = true
 
-  def attack(enemy: Enemy): Unit =
+  def attack(): Unit =
     val angle = Tools.getAngle(pos, enemy.pos)
     move(angle)
     if this.pos == enemy.pos then
-      dealDamage(enemy)
+      dealDamage()
       hasHit = true
 
   override def update(): Unit =
     super.update()
+    attack()
 
 object Weapon:
   var gp: GamePanel = _
 
-  def clone(weapon: Weapon): Weapon =
-    weapon.getName match
-      case Explo.name => Explo(gp)
-      case Arrow.name => Arrow(gp)
-      case MagicBullet.name => MagicBullet(gp)
+  def clone(weapon: String, enemy: Enemy, pos: (Double, Double)): Weapon =
+    weapon match
+      case Explo.name => Explo(gp, enemy, pos)
+      case Arrow.name => Arrow(gp, enemy, pos)
+      case MagicBullet.name => MagicBullet(gp, enemy, pos)

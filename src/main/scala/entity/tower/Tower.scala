@@ -20,18 +20,11 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private val offsetX: Double = 0
   private val offsetY: Double = -10
   private val transform: AffineTransform = AffineTransform()
-  private val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
-  private val attackCircle: Ellipse2D =
-    new Ellipse2D.Double(
-      centerCoords._1 - (getRange*2 - idleAnimation.getCurrentFrame.getWidth())/2,
-      centerCoords._2 - (getRange*4/3 - idleAnimation.getCurrentFrame.getHeight())/2,
-      getRange*2, getRange*4/3
-    )
+  val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
 
-  var isShowingRange: Boolean = false
   var bulletList: ListBuffer[Weapon] = ListBuffer()
 
-  protected val weaponType: Weapon
+  protected val weaponType: String
 
   def attack(enemy: Enemy): Unit =
     if this.state != State.ATTACK && attackCoolDown <= 0 then
@@ -39,21 +32,20 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       needsAnimationUpdate = true
       attackCoolDown = maxAttackCoolDown
 
-      bulletList += Weapon.clone(this.weaponType)
-      bulletList.foreach(_.attack(enemy))
+      val bullet: Weapon = Weapon.clone(weaponType, enemy, pos)
+      bulletList += bullet
       this.state = State.IDLE
 
   override def update(): Unit =
     if attackCoolDown > 0 then
       attackCoolDown -= 1
     super.update()
-    gp.stageManager.currentStage.foreach(stage =>
-      for enemy <- stage.enemyList.toList do
-        if attackCircle.contains(enemy.attackBox.getCenterX, enemy.attackBox.getCenterY) then
-          attack(enemy)
-    )
+    TowerScan.findEnemy().foreach(attack(_))
+    bulletList.toList.foreach(_.update())
 
   override def draw(g2d: Graphics2D): Unit =
+    TowerScan.draw(g2d)
+    bulletList.toList.foreach(_.draw(g2d))
     currentAnimation match
       case Some(animation) =>
         Tools.drawFrame(g2d, animation.getCurrentFrame, transform,
@@ -62,6 +54,24 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
         Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform,
           centerCoords, offsetX, offsetY)
 
-    if isShowingRange then
-      g2d.setColor(Color.RED)
-      g2d.draw(attackCircle)
+  object TowerScan:
+    private val attackCircle: Ellipse2D =
+      new Ellipse2D.Double(
+        centerCoords._1 - (getRange*2 - idleAnimation.getCurrentFrame.getWidth())/2,
+        centerCoords._2 - (getRange*4/3 - idleAnimation.getCurrentFrame.getHeight())/2,
+        getRange*2, getRange*4/3
+      )
+    var isShowingRange: Boolean = false
+
+    def findEnemy(): Option[Enemy] =
+      gp.stageManager.currentStage.flatMap(stage =>
+        stage.enemyList.find(enemy =>
+          val (x, y) = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
+          attackCircle.contains(x, y)
+        )
+      )
+
+    def draw(g2d: Graphics2D): Unit =
+      if isShowingRange then
+        g2d.setColor(Color.RED)
+        g2d.draw(attackCircle)

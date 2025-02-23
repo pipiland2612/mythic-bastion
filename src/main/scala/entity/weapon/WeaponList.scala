@@ -1,4 +1,5 @@
 package entity.weapon
+import entity.creature.enemy.Enemy
 import game.GamePanel
 import utils.Animation
 
@@ -9,27 +10,31 @@ case class Explo(
   name: String,
   jsonPath: String,
   imagePath: String,
+  enemy: Enemy,
+  var pos: (Double, Double),
   protected val apDmg: Double = 0,
   protected val adDmg: Double = 20,
   protected val speed: Double = 0.5,
-) extends Weapon(gp)
+) extends Weapon(gp, enemy)
 
 object Explo:
   val name = s"Explo01"
   private val jsonPath: String = s"weapons/Explo01.json"
   private val imagePath: String = s"weapons/Explo01.png"
-  def apply(gp: GamePanel): Explo =
-    new Explo(gp, name, jsonPath, imagePath)
+
+  def apply(gp: GamePanel, enemy: Enemy, pos: (Double, Double)): Explo = new Explo(gp, name, jsonPath, imagePath, enemy,pos)
 
 case class Arrow(
   gp: GamePanel,
   name: String,
   jsonPath: String,
   imagePath: String,
+  enemy: Enemy,
+  var pos: (Double, Double),
   protected val apDmg: Double = 0,
   protected val adDmg: Double = 10,
   protected val speed: Double = 0.5,
-) extends Weapon(gp):
+) extends Weapon(gp, enemy):
   var missAnimation: Animation = _
   var missEndAnimation: Animation = _
 
@@ -42,17 +47,19 @@ object Arrow:
   val name = s"Arrow01"
   private val jsonPath: String = s"weapons/Arrow01.json"
   private val imagePath: String = s"weapons/Arrow01.png"
-  def apply(gp: GamePanel): Arrow = new Arrow(gp, name, jsonPath, imagePath)
+  def apply(gp: GamePanel, enemy: Enemy, pos: (Double, Double)): Arrow = new Arrow(gp, name, jsonPath, imagePath, enemy,pos)
 
 case class MagicBullet(
   gp: GamePanel,
   val name: String,
   jsonPath: String,
   imagePath: String,
+  enemy: Enemy,
+  var pos: (Double, Double),
   val apDmg: Double = 0,
   protected val adDmg: Double = 10,
   protected val speed: Double = 0.5,
-) extends Weapon(gp):
+) extends Weapon(gp, enemy):
   var travelEnd: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
@@ -65,4 +72,4 @@ object MagicBullet:
   val name = "MagicBullet"
   private val jsonPath: String = s"weapons/MagicBullet.json"
   private val imagePath: String = s"weapons/MagicBullet.png"
-  def apply(gp: GamePanel): MagicBullet = new MagicBullet(gp, name, jsonPath, imagePath)
+  def apply(gp: GamePanel, enemy: Enemy, pos: (Double, Double)): MagicBullet = new MagicBullet(gp, name, jsonPath, imagePath, enemy,pos)
