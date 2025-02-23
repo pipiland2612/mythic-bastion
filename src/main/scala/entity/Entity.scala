@@ -25,7 +25,7 @@ abstract class Entity(gp: GamePanel):
   protected val range: Double
   val maxAttackCoolDown: Double
   var attackCoolDown: Double = 0
-  
+
   def getRange: Double = range
   def getName: String = name
   def getJsonPath: String = jsonPath
@@ -53,7 +53,7 @@ abstract class Entity(gp: GamePanel):
     if(needsAnimationUpdate) then
       needsAnimationUpdate = false
       currentAnimation = images.get(this.direction, this.state)
-      currentAnimation.foreach(animation => animation.update())
+      currentAnimation.foreach(_.update())
 
   def update(): Unit =
     checkAnimationUpdate()

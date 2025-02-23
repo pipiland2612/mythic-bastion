@@ -14,25 +14,25 @@ class ExploTower(
   val weaponType: String,
   var pos: (Double, Double),
   val range: Double = 120,
-  val maxAttackCoolDown: Double = 3 * 60
+  val maxAttackCoolDown: Double = 0
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/ExploTower$level.json"
   protected val imagePath: String = s"towers/ExploTower$level.png"
 
-  var shootAnimation: Animation = _
   var shootEndAnimation: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
+    value.foreach(ani => println(ani.length))
     idleAnimation = Animation(value(0), 10)
-    shootAnimation = Animation(value(1), 10)
+    shootAnimation = Animation(value(1), 10, 4, 6)
     shootEndAnimation = Animation(value(2), 10)
 
   override def setUpImages(): Unit =
     this.images =
       Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
-      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation)
-
+      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation) ++
+      Tools.fillMap(Direction.allEntityDirections, State.PREPARE, shootEndAnimation)
 
 object ExploTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ExploTower =
@@ -51,7 +51,6 @@ class ArrowTower(
   protected val jsonPath: String = s"towers/ArrowTower$level.json"
   protected val imagePath: String = s"towers/ArrowTower$level.png"
 
-  var shootAnimation: Animation = _
   var shootEndAnimation: Animation = _
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit = {}
   override def setUpImages(): Unit = {}
@@ -73,7 +72,6 @@ class MagicTower(
   protected val jsonPath: String = s"towers/MagicTower$level.json"
   protected val imagePath: String = s"towers/MagicTower$level.png"
 
-  var shootAnimation: Animation = _
   var shootEndAnimation: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit = {}

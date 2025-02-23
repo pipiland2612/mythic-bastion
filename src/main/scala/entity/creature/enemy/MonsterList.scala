@@ -44,7 +44,7 @@ object Monster02:
   val rect: Rectangle2D = Rectangle2D.Double(20, 10, 20, 10)
 
 object Monster03:
-  val data: Vector[Double] = Vector(50, 50, 1, 0, 0 , 10, 5, 1, 0.5, 1 * 60, 60)
+  val data: Vector[Double] = Vector(50, 50, 1, 0, 0 , 10, 5, 1, 0.5, 1 * 60, 45)
   val name: String = "Monster03"
   val jsonPath: String = "enemies/Monster03.json"
   val imagePath: String = "enemies/Monster03.png"

@@ -4,7 +4,7 @@
 		"labels":[
 			{"name":"idle","frame":1}
 			,{"name":"shoot","frame":2}
-			,{"name":"shootEnd","frame":34}
+			,{"name":"shootEnd","frame":22}
 			
 			],
 		"frames":[

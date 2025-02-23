@@ -13,7 +13,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
     val (x,y) = (e.getX, e.getY - offSetY)
     System.out.println("Mouse clicked at: " + x + ", " + y)
     handleTowerBuildOnClick(x, y)
-    if x >= 210 && y <= 255 then
+    if x <= 210 && y <= 255 then
       gp.stageManager.startWave()
 
   override def mousePressed(e: MouseEvent): Unit = {}

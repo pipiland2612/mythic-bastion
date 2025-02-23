@@ -1,10 +1,11 @@
 package entity.tower
 
-import entity.{Attacker, Entity, State}
+import entity.State.ATTACK
+import entity.{Entity, State}
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
 import game.GamePanel
-import utils.Tools
+import utils.{Animation, Tools}
 
 import java.awt.{Color, Graphics2D}
 import java.awt.geom.{AffineTransform, Ellipse2D}
@@ -25,25 +26,50 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   var bulletList: ListBuffer[Weapon] = ListBuffer()
 
   protected val weaponType: String
+  var attackCounter: Int = 0
+  var prepareCounter: Int = 0
+  var shootAnimation: Animation = _
+  var hasShoot = false
 
   def attack(enemy: Enemy): Unit =
-    if this.state != State.ATTACK && attackCoolDown <= 0 then
-      this.state = State.ATTACK
-      needsAnimationUpdate = true
+    if  attackCoolDown <= 0 && this.state != State.PREPARE then
+      state = State.ATTACK
       attackCoolDown = maxAttackCoolDown
+      needsAnimationUpdate = true
 
-      val bullet: Weapon = Weapon.clone(weaponType, enemy, pos)
-      bulletList += bullet
-      this.state = State.IDLE
+      if shootAnimation.isInAttackInterval && !hasShoot then
+        val bullet = Weapon.clone(weaponType, enemy, pos)
+        bulletList += bullet
+        hasShoot = true
+
+  def handleAttackState(): Unit =
+    if this.state == State.ATTACK then
+      attackCounter += 1
+      if (attackCounter >= 100) then
+        attackCounter = 0
+        currentAnimation.foreach(_.reset())
+        state = State.PREPARE
+        hasShoot = false
+      needsAnimationUpdate = true
+
+  def handlePrepareState(): Unit =
+    if this.state == State.PREPARE then
+      prepareCounter += 1
+      if prepareCounter >= 70 then
+        currentAnimation.foreach(_.reset())
+        prepareCounter = 0
+        this.state = State.IDLE
+      needsAnimationUpdate = true
 
   override def update(): Unit =
     if attackCoolDown > 0 then
       attackCoolDown -= 1
     super.update()
     TowerScan.findEnemy().foreach(attack(_))
+    handleAttackState()
     bulletList.toList.foreach(_.update())
-
     bulletList.filterInPlace(bullet => !bullet.hasHit)
+    handlePrepareState()
 
   override def draw(g2d: Graphics2D): Unit =
     TowerScan.draw(g2d)
@@ -67,7 +93,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
 
     def findEnemy(): Option[Enemy] =
       gp.stageManager.currentStage.flatMap(stage =>
-        stage.enemyList.find(enemy =>
+        stage.enemyList.toList.find(enemy =>
           val (x, y) = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
           attackCircle.contains(x, y)
         )
