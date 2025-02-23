@@ -30,8 +30,16 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   var shootAnimation: Animation = _
   var hasShoot = false
 
+  val attackCircle: Ellipse2D =
+    new Ellipse2D.Double(
+      centerCoords._1 - (getRange*2 - idleAnimation.getCurrentFrame.getWidth())/2,
+      centerCoords._2 - (getRange*4/3 - idleAnimation.getCurrentFrame.getHeight())/2,
+      getRange*2, getRange*4/3
+    )
+  var isShowingRange: Boolean = false
+
   def attack(enemy: Enemy): Unit =
-    if  attackCoolDown <= 0 && this.state != State.PREPARE then
+    if attackCoolDown <= 0 && this.state != State.PREPARE then
       state = State.ATTACK
       attackCoolDown = maxAttackCoolDown
       needsAnimationUpdate = true
@@ -65,15 +73,17 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
     if attackCoolDown > 0 then
       attackCoolDown -= 1
     super.update()
-    TowerScan.findEnemy().foreach(this.attack(_))
+    findEnemy().headOption.foreach(attack(_))
     handleAttackState()
     bulletList.toList.foreach(_.update())
     bulletList.filterInPlace(!_.hasHit)
     handlePrepareState()
 
   override def draw(g2d: Graphics2D): Unit =
-    TowerScan.draw(g2d)
     bulletList.toList.foreach(_.draw(g2d))
+    if isShowingRange then
+      g2d.setColor(Color.RED)
+      g2d.draw(attackCircle)
     currentAnimation match
       case Some(animation) =>
         Tools.drawFrame(g2d, animation.getCurrentFrame, transform,
@@ -81,25 +91,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       case _ =>
         Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform,
           centerCoords, offsetX, offsetY)
+//    gp.systemHandler.grid.draw(g2d, this)
 
-  object TowerScan:
-    private val attackCircle: Ellipse2D =
-      new Ellipse2D.Double(
-        centerCoords._1 - (getRange*2 - idleAnimation.getCurrentFrame.getWidth())/2,
-        centerCoords._2 - (getRange*4/3 - idleAnimation.getCurrentFrame.getHeight())/2,
-        getRange*2, getRange*4/3
-      )
-    var isShowingRange: Boolean = false
-
-    def findEnemy(): Option[Enemy] =
-      gp.stageManager.currentStage.flatMap(stage =>
-        stage.enemyList.toList.find(enemy =>
-          val (x, y) = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
-          attackCircle.contains(x, y)
-        )
-      )
-
-    def draw(g2d: Graphics2D): Unit =
-      if isShowingRange then
-        g2d.setColor(Color.RED)
-        g2d.draw(attackCircle)
+  def findEnemy(): ListBuffer[Enemy] =
+    gp.systemHandler.grid.scanForEnemiesInRange(this)

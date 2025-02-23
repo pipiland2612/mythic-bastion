@@ -81,9 +81,8 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
           continueMove()
         else this.haveReachBase = true
       )
-
+      gp.systemHandler.grid.addEnemy(this)
       if this.haveReachBase then attackPlayer()
-
 
 end Enemy
 

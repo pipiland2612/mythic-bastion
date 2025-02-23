@@ -5,8 +5,9 @@ import entity.{Direction, State}
 import stage.{EnemyData, GameMap, Stage, Wave}
 import entity.creature.enemy.Enemy
 import entity.tower.TowerBuild
+import scalafx.geometry.Rectangle2D
 
-import java.awt.geom.AffineTransform
+import java.awt.geom.{AffineTransform, Ellipse2D}
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
@@ -200,3 +201,16 @@ object Tools:
     val x = (1 - t) * (1 - t) * p0._1 + 2 * (1 - t) * t * p1._1 + t * t * p2._1
     val y = (1 - t) * (1 - t) * p0._2 + 2 * (1 - t) * t * p1._2 + t * t * p2._2
     (x, y)
+
+  def getInnerRectangle(ellipse: Ellipse2D): Rectangle2D = 
+    // Get the center and dimensions of the ellipse
+    val cx = ellipse.getCenterX
+    val cy = ellipse.getCenterY
+    val rx = ellipse.getWidth / 2
+    val ry = ellipse.getHeight / 2
+    val width = rx * Math.sqrt(2)
+    val height = ry * Math.sqrt(2)
+
+    // The rectangle is centered on the ellipse center
+    Rectangle2D(cx - width / 2, cy - height / 2, width, height)
+  
