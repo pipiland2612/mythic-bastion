@@ -17,7 +17,7 @@ class GridCell:
 
 class Grid(gp: GamePanel):
 
-  private val cellSize: Int = 16
+  private val cellSize: Int = 64
   private val rows: Int = gp.screenWidth / cellSize
   private val cols: Int = gp.screenHeight / cellSize
   val cells: Array[Array[GridCell]] = Array.ofDim[GridCell](rows, cols)
@@ -46,10 +46,10 @@ class Grid(gp: GamePanel):
 
     val maxRect: Rectangle2D = Tools.getInnerRectangle(ellipse)
 
-    val minX: Int = (maxRect.minX.toInt / cellSize) - 2
-    val maxX: Int = (maxRect.maxX.toInt / cellSize) + 2
-    val minY: Int = (maxRect.minY.toInt / cellSize) - 1
-    val maxY: Int = (maxRect.maxY.toInt / cellSize) + 1
+    val minX: Int = (maxRect.minX.toInt / cellSize)
+    val maxX: Int = (maxRect.maxX.toInt / cellSize)
+    val minY: Int = (maxRect.minY.toInt / cellSize)
+    val maxY: Int = (maxRect.maxY.toInt / cellSize)
 
     for (i <- Math.max(0, minX) to Math.min(rows - 1, maxX)) do
       for (j <- Math.max(0, minY) to Math.min(cols - 1, maxY)) do
@@ -86,12 +86,12 @@ class Grid(gp: GamePanel):
     )
 
     val maxRect: Rectangle2D = Tools.getInnerRectangle(ellipse)
-    val minX: Int = (maxRect.minX.toInt / cellSize) - 2
-    val maxX: Int = (maxRect.maxX.toInt / cellSize) + 2
-    val minY: Int = (maxRect.minY.toInt / cellSize) - 1
-    val maxY: Int = (maxRect.maxY.toInt / cellSize) + 1
+    val minX: Int = (maxRect.minX.toInt / cellSize)
+    val maxX: Int = (maxRect.maxX.toInt / cellSize)
+    val minY: Int = (maxRect.minY.toInt / cellSize)
+    val maxY: Int = (maxRect.maxY.toInt / cellSize)
 
-    g.setColor(new Color(0, 0, 255, 50)) // Semi-transparent blue color for checked cells
+    g.setColor(new Color(0, 0, 255, 50))
 
     for (i <- Math.max(0, minX) to Math.min(rows - 1, maxX)) do
       for (j <- Math.max(0, minY) to Math.min(cols - 1, maxY)) do
