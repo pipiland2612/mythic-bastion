@@ -42,8 +42,8 @@ class Grid(gp: GamePanel):
 
   private def enemyCenterPos(enemy: Enemy): (Int, Int) =
     val pos = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
-    val gridX = enemy.pos._1.toInt / cellSize
-    val gridY = enemy.pos._2.toInt / cellSize
+    val gridX = enemy.getPosition._1.toInt / cellSize
+    val gridY = enemy.getPosition._2.toInt / cellSize
     (gridX, gridY)
 
   def remove(enemy: Enemy): Unit =

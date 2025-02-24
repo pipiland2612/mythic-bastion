@@ -49,7 +49,7 @@ class StageManager (gp: GamePanel):
         stage.getEnemyList ++
         stage.getAllianceList ++
         stage.map.towerPos.flatMap(_.getCurrentTower).toList
-      ).sortBy(_.pos._2) // then sort by y coords to draw
+      ).sortBy(_.getPosition._2) // then sort by y coords to draw
 
       sortedEntities.foreach(_.draw(g2d))
     )

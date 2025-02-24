@@ -8,7 +8,7 @@ import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 
 abstract class Entity(gp: GamePanel):
-  var pos: (Double, Double)
+  protected var pos: (Double, Double)
   protected val name: String
   protected val jsonPath, imagePath: String
 
@@ -33,6 +33,9 @@ abstract class Entity(gp: GamePanel):
   def getImagePath: String = imagePath
   def getCenterCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
   def getMaxAttackCoolDown: Double = maxAttackCoolDown
+  def getPosition: (Double, Double) = pos
+
+  def setPosition(pos: (Double, Double)): Unit = this.pos = pos
 
   parse()
   setUpImages()

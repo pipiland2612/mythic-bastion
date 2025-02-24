@@ -33,7 +33,7 @@ class WaveSpawner(stageManager: StageManager):
   private def spawnEnemy(enemyData: EnemyData): Unit =
     stageManager.currentStage.foreach ( stage =>
       val enemy: Enemy = Enemy.clone(enemyData.enemyType)
-      enemy.pos = stage.spawnPosition(enemyData.spawnIndex)
+      enemy.setPosition(stage.spawnPosition(enemyData.spawnIndex))
       enemy.setPath(stage.map.path(enemyData.spawnIndex))
       stage.addEnemy(enemy)
     )

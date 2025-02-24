@@ -49,7 +49,7 @@ case class Explo(
         attackInProgress = false
 
   private def updateProjectileMovement(): Unit =
-    val angle = Tools.getAngle(pos, enemy.pos) - angleOffset
+    val angle = Tools.getAngle(pos, enemy.getPosition) - angleOffset
     move(angle)
     angleOffset *= 0.98 // gradually reduce the angle for the projectile to straighten
 
@@ -60,7 +60,7 @@ case class Explo(
       this.state = State.ATTACK
       needsAnimationUpdate = true
       checkAnimationUpdate()
-      this.pos = (enemy.pos._1, enemy.pos._2 - 45) // set the final position to the enemy's position to play the boom animation
+      this.pos = (enemy.getPosition._1, enemy.getPosition._2 - 45) // set the final position to the enemy's position to play the boom animation
 
   override def attack(): Unit =
     if (!attackInProgress) then

@@ -41,15 +41,15 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     needsAnimationUpdate = true
 
   protected def attack(): Unit =
-    val angle = Tools.getAngle(pos, enemy.pos)
+    val angle = Tools.getAngle(pos, enemy.getPosition)
     move(angle)
-    val (xDist, yDist) = (enemy.pos._1 - this.pos._1, enemy.pos._2 - this.pos._2)
+    val (xDist, yDist) = (enemy.getPosition._1 - this.pos._1, enemy.getPosition._2 - this.pos._2)
     if (Math.abs(xDist) <= this.speed && Math.abs(yDist) <= this.speed) then
       dealDamage()
       this.state = State.ATTACK
       needsAnimationUpdate = true
       checkAnimationUpdate()
-      this.pos = (enemy.pos._1, enemy.pos._2 - 45)
+      this.pos = (enemy.getPosition._1, enemy.getPosition._2 - 45)
 
   override def update(): Unit =
     super.update()
