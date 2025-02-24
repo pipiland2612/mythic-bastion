@@ -2,8 +2,8 @@ package game
 
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
-import stage.{Stage, StageManager}
 import system.SystemHandler
+import system.stage.{Stage, StageManager}
 import utils.Tools
 
 import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
@@ -23,7 +23,6 @@ class GamePanel extends JPanel with Runnable:
 
   // System initialize
   val systemHandler: SystemHandler = SystemHandler(this)
-  val stageManager: StageManager = StageManager(this)
   var currentGameState: GameState = GameState.PlayState
   private var gameThread: Thread = _
 
@@ -31,10 +30,9 @@ class GamePanel extends JPanel with Runnable:
   this.setBackground(Color.BLACK)
 
   def setUpGame(): Unit =
-    val stage: Stage = Tools.loadStage("stages/Stage01.json")
     Enemy.gp = this
     Weapon.gp = this
-    stageManager.setStage(stage)
+    systemHandler.setUp()
 
   def startGameThread(): Unit =
     gameThread = Thread(this)
@@ -43,8 +41,7 @@ class GamePanel extends JPanel with Runnable:
   def update(): Unit =
     currentGameState match
       case GameState.PlayState =>
-        stageManager.update()
-//        systemHandler.update()
+        systemHandler.update()
       case _ =>
 
   override def paintComponent(g: Graphics): Unit =
@@ -53,7 +50,7 @@ class GamePanel extends JPanel with Runnable:
 
     val startTime: Long = System.nanoTime()
 
-    stageManager.draw(g2d)
+    systemHandler.draw(g2d)
 
     val x = 10
     val y = 400

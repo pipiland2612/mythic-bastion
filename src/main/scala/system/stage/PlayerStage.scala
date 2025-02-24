@@ -1,4 +1,4 @@
-package stage
+package system.stage
 
 class PlayerStage (private var coins: Int):
 

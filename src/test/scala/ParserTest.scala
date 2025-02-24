@@ -1,6 +1,6 @@
 
 import org.scalatest.funsuite.AnyFunSuite
-import stage.Stage
+import system.stage.Stage
 import utils.Tools
 
 class ParserTest extends AnyFunSuite :

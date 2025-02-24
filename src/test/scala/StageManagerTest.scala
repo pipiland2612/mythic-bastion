@@ -1,7 +1,7 @@
 
 import game.GamePanel
 import org.scalatest.funsuite.AnyFunSuite
-import stage.Stage
+import system.stage.Stage
 import utils.Tools
 
 class StageManagerTest extends AnyFunSuite :
@@ -14,7 +14,7 @@ class StageManagerTest extends AnyFunSuite :
     )
 
     testCases.foreach(test =>
-      gp.stageManager.startWave()
+      gp.systemHandler.stageManager.startWave()
     )
 
 

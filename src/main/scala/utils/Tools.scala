@@ -2,10 +2,10 @@ package utils
 
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
 import entity.{Direction, State}
-import stage.{EnemyData, GameMap, Stage, Wave}
 import entity.creature.enemy.Enemy
 import entity.tower.TowerBuild
 import scalafx.geometry.Rectangle2D
+import system.stage.{EnemyData, GameMap, Stage, Wave}
 
 import java.awt.geom.{AffineTransform, Ellipse2D}
 import java.awt.Graphics2D

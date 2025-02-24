@@ -50,7 +50,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     deadAnimation = Animation(value(5), 10)
 
   def attackPlayer(): Unit =
-    gp.stageManager.currentPlayer.foreach(player =>
+    gp.systemHandler.stageManager.currentPlayer.foreach(player =>
       player.updateHealth(-(this.playerDamage.toInt))
     )
 

@@ -1,4 +1,4 @@
-package stage
+package system.stage
 
 import entity.creature.enemy.Enemy
 
