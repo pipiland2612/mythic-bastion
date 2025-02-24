@@ -30,12 +30,12 @@ class StageManager (gp: GamePanel):
 
   def update(): Unit =
     currentStage.foreach ( stage =>
-      stage.enemyList.toList.foreach(_.update())
-      stage.allianceList.toList.foreach(_.update())
+      stage.getEnemyList.toList.foreach(_.update())
+      stage.getAllianceList.toList.foreach(_.update())
       stage.map.towerPos.foreach(towerBuild =>
         towerBuild.currentTower.foreach(_.update())
       )
-      stage.enemyList.filterInPlace(enemy => !enemy.haveReachBase && !enemy.hasDied)
+      stage.filterEnemyList(enemy => !enemy.haveReachBase && !enemy.hasDied)
     )
 
   def draw(g2d: Graphics2D): Unit =
@@ -45,8 +45,8 @@ class StageManager (gp: GamePanel):
 
       // add enemylist, alliance list, and tower list to one entity list
       val sortedEntities: List[Entity] = (
-        stage.enemyList.toList ++
-        stage.allianceList.toList ++
+        stage.getEnemyList ++
+        stage.getAllianceList ++
         stage.map.towerPos.flatMap(_.currentTower).toList
       ).sortBy(_.pos._2) // then sort by y coords to draw
 

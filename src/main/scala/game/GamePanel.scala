@@ -1,7 +1,6 @@
 package game
 
 import entity.creature.enemy.Enemy
-import entity.tower.Tower
 import entity.weapon.Weapon
 import stage.{Stage, StageManager}
 import system.SystemHandler

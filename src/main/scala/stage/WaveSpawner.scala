@@ -35,5 +35,5 @@ class WaveSpawner(stageManager: StageManager):
       val enemy: Enemy = Enemy.clone(enemyData.enemyType)
       enemy.pos = stage.spawnPosition(enemyData.spawnIndex)
       enemy.setPath(stage.map.path(enemyData.spawnIndex))
-      stage.enemyList += enemy
+      stage.addEnemy(enemy)
     )

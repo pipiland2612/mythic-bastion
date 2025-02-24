@@ -14,9 +14,17 @@ case class Stage(
   waves: Vector[Wave],
   map: GameMap,
 ):
-  var enemyList: ListBuffer[Enemy] = ListBuffer()
-  var allianceList: ListBuffer[Alliance] = ListBuffer()
-  var currentWave: Int = 0
+  private val enemyList: ListBuffer[Enemy] = ListBuffer()
+  private val allianceList: ListBuffer[Alliance] = ListBuffer()
+
+  def getEnemyList: List[Enemy] = enemyList.toList
+  def getAllianceList: List[Alliance] = allianceList.toList
+
+  def filterEnemyList(condition: Enemy => Boolean): Unit =
+    enemyList.filterInPlace(condition)
+
+  def addEnemy(enemy: Enemy): Unit =
+    enemyList += enemy
 
   override def toString: String =
     val alliances = allianceList.map(_.toString).mkString(", ")

@@ -22,13 +22,14 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private val transform: AffineTransform = AffineTransform()
   val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
 
-  var bulletList: ListBuffer[Weapon] = ListBuffer()
+  private val bulletList: ListBuffer[Weapon] = ListBuffer()
 
+  protected var shootAnimation: Animation = _
   protected val weaponType: String
-  var attackCounter: Int = 0
-  var prepareCounter: Int = 0
-  var shootAnimation: Animation = _
-  var hasShoot = false
+  private var attackCounter: Int = 0
+  private var prepareCounter: Int = 0
+  private var hasShoot = false
+  var isShowingRange: Boolean = false
 
   val attackCircle: Ellipse2D =
     new Ellipse2D.Double(
@@ -36,7 +37,8 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       centerCoords._2 - (getRange*4/3 - idleAnimation.getCurrentFrame.getHeight())/2,
       getRange*2, getRange*4/3
     )
-  var isShowingRange: Boolean = false
+
+  def getBulletList: List[Weapon] = bulletList.toList
 
   def attack(enemy: Enemy): Unit =
     if attackCoolDown <= 0 && this.state != State.PREPARE then

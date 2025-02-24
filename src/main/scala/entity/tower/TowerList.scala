@@ -22,7 +22,7 @@ class ExploTower(
   protected val jsonPath: String = s"towers/ExploTower$level.json"
   protected val imagePath: String = s"towers/ExploTower$level.png"
 
-  var prepareAnimation: Animation = _
+  private var prepareAnimation: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(value(0), 10)
@@ -52,7 +52,7 @@ class ArrowTower(
   protected val jsonPath: String = s"towers/ArrowTower$level.json"
   protected val imagePath: String = s"towers/ArrowTower$level.png"
 
-  var shootEndAnimation: Animation = _
+  private var shootEndAnimation: Animation = _
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit = {}
   override def setUpImages(): Unit = {}
 
@@ -73,7 +73,7 @@ class MagicTower(
   protected val jsonPath: String = s"towers/MagicTower$level.json"
   protected val imagePath: String = s"towers/MagicTower$level.png"
 
-  var shootEndAnimation: Animation = _
+  private var shootEndAnimation: Animation = _
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit = {}
   override def setUpImages(): Unit = {}
