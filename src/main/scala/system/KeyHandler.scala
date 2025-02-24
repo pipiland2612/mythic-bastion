@@ -32,6 +32,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
         gp.currentGameState =
           if gp.currentGameState == GameState.PlayState then GameState.PauseState
           else GameState.PlayState
+        gp.gui.reloadGameBackGround()
       case _ =>
 
   override def keyReleased(e: KeyEvent): Unit = {}
