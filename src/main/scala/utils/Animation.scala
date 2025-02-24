@@ -3,7 +3,7 @@ package utils
 import java.awt.image.BufferedImage
 
 class Animation(val frames: Vector[BufferedImage], val frameDuration: Int, var attackStartFrame: Int = -1, var attackEndFrame: Int = -1) :
-  var currentFrame: Int = 0
+  private var currentFrame: Int = 0
   private var frameCount: Int = 0
 
   def update(): Unit =

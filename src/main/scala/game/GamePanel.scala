@@ -35,7 +35,6 @@ class GamePanel extends JPanel with Runnable:
     Enemy.gp = this
     Weapon.gp = this
     stageManager.setStage(stage)
-    stageManager.setUpBackgroundImage()
 
   def startGameThread(): Unit =
     gameThread = Thread(this)

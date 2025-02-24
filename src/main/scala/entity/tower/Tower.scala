@@ -40,37 +40,6 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
 
   def getBulletList: List[Weapon] = bulletList.toList
 
-  def attack(enemy: Enemy): Unit =
-    if attackCoolDown <= 0 && this.state != State.PREPARE then
-      state = State.ATTACK
-      attackCoolDown = maxAttackCoolDown
-      needsAnimationUpdate = true
-
-      if shootAnimation.isInAttackInterval && !hasShoot then
-        val pos = (centerCoords._1 + idleAnimation.getCurrentFrame.getWidth() / 2, centerCoords._2 + idleAnimation.getCurrentFrame.getHeight() / 4)
-        val bullet = Weapon.clone(weaponType, enemy, pos)
-        bulletList += bullet
-        hasShoot = true
-
-  def handleAttackState(): Unit =
-    if this.state == State.ATTACK then
-      attackCounter += 1
-      if (attackCounter >= 100) then
-        attackCounter = 0
-        currentAnimation.foreach(_.reset())
-        state = State.PREPARE
-        hasShoot = false
-      needsAnimationUpdate = true
-
-  def handlePrepareState(): Unit =
-    if this.state == State.PREPARE then
-      prepareCounter += 1
-      if prepareCounter >= 70 then
-        currentAnimation.foreach(_.reset())
-        prepareCounter = 0
-        this.state = State.IDLE
-      needsAnimationUpdate = true
-
   override def update(): Unit =
     if attackCoolDown > 0 then
       attackCoolDown -= 1
@@ -95,5 +64,36 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
           centerCoords, offsetX, offsetY)
 //    gp.systemHandler.grid.draw(g2d, this)
 
-  def findEnemy(): ListBuffer[Enemy] =
+  private def findEnemy(): ListBuffer[Enemy] =
     gp.systemHandler.grid.scanForEnemiesInRange(this)
+ 
+  private def attack(enemy: Enemy): Unit =
+    if attackCoolDown <= 0 && this.state != State.PREPARE then
+      state = State.ATTACK
+      attackCoolDown = maxAttackCoolDown
+      needsAnimationUpdate = true
+
+      if shootAnimation.isInAttackInterval && !hasShoot then
+        val pos = (centerCoords._1 + idleAnimation.getCurrentFrame.getWidth() / 2, centerCoords._2 + idleAnimation.getCurrentFrame.getHeight() / 4)
+        val bullet = Weapon.clone(weaponType, enemy, pos)
+        bulletList += bullet
+        hasShoot = true
+
+  private def handleAttackState(): Unit =
+    if this.state == State.ATTACK then
+      attackCounter += 1
+      if (attackCounter >= 100) then
+        attackCounter = 0
+        currentAnimation.foreach(_.reset())
+        state = State.PREPARE
+        hasShoot = false
+      needsAnimationUpdate = true
+
+  private def handlePrepareState(): Unit =
+    if this.state == State.PREPARE then
+      prepareCounter += 1
+      if prepareCounter >= 70 then
+        currentAnimation.foreach(_.reset())
+        prepareCounter = 0
+        this.state = State.IDLE
+      needsAnimationUpdate = true

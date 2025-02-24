@@ -16,7 +16,7 @@ class StageManager (gp: GamePanel):
   var currentStage: Option[Stage] = None
   var currentPlayer: Option[PlayerStage] = None
 
-  def setUpBackgroundImage(): Unit =
+  private def setUpBackgroundImage(): Unit =
     this.backgroundImage = currentStage match
       case Some(stage) => Tools.scaleImage(Tools.loadImage(s"maps/map${stage.stageID}.jpg"), gp.screenWidth, gp.screenHeight)
       case _ => throw new Exception("Can not find background image path")
@@ -24,6 +24,7 @@ class StageManager (gp: GamePanel):
   def setStage(stage: Stage): Unit =
     currentStage = Some(stage)
     currentPlayer = Some(PlayerStage(stage.coins))
+    setUpBackgroundImage()
 
   def startWave(): Unit =
     currentStage.foreach(stage => waveSpawner.scheduleWaveSpawn(stage.waves))
@@ -33,7 +34,7 @@ class StageManager (gp: GamePanel):
       stage.getEnemyList.toList.foreach(_.update())
       stage.getAllianceList.toList.foreach(_.update())
       stage.map.towerPos.foreach(towerBuild =>
-        towerBuild.currentTower.foreach(_.update())
+        towerBuild.getCurrentTower.foreach(_.update())
       )
       stage.filterEnemyList(enemy => !enemy.haveReachBase && !enemy.hasDied)
     )
@@ -47,7 +48,7 @@ class StageManager (gp: GamePanel):
       val sortedEntities: List[Entity] = (
         stage.getEnemyList ++
         stage.getAllianceList ++
-        stage.map.towerPos.flatMap(_.currentTower).toList
+        stage.map.towerPos.flatMap(_.getCurrentTower).toList
       ).sortBy(_.pos._2) // then sort by y coords to draw
 
       sortedEntities.foreach(_.draw(g2d))

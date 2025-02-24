@@ -7,7 +7,7 @@ import java.awt.event.{KeyEvent, KeyListener, MouseEvent, MouseListener}
 
 class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
 
-  val offSetY = 30
+  private val offSetY = 30
 
   override def mouseClicked(e: MouseEvent): Unit =
     val (x,y) = (e.getX, e.getY - offSetY)
@@ -45,11 +45,11 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       pos match
         case Some(value) =>
           gp.stageManager.currentStage.foreach(stage =>
-            if value.currentTower.isEmpty then
+            if value.getCurrentTower.isEmpty then
               val tower = ExploTower(gp, 1, value.pos)
-              value.currentTower = Some(tower)
+              value.setCurrentTower(tower)
             else
-              value.currentTower.foreach(stage =>
+              value.getCurrentTower.foreach(stage =>
                 stage.isShowingRange = if stage.isShowingRange then false
                 else true
               )

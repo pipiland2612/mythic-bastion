@@ -12,7 +12,6 @@ abstract class Entity(gp: GamePanel):
   protected val name: String
   protected val jsonPath, imagePath: String
 
-  private val transform = new AffineTransform()
   protected var currentAnimation: Option[Animation] = None
   protected var scaleFactor: Double = 1
   protected var needsAnimationUpdate: Boolean = false
@@ -23,22 +22,25 @@ abstract class Entity(gp: GamePanel):
   protected var idleAnimation: Animation = _
 
   protected val range: Double
-  val maxAttackCoolDown: Double
-  var attackCoolDown: Double = 0
+  protected val maxAttackCoolDown: Double
+  protected var attackCoolDown: Double = 0
+
+  private val transform = new AffineTransform()
 
   def getRange: Double = range
   def getName: String = name
   def getJsonPath: String = jsonPath
   def getImagePath: String = imagePath
   def getCenterCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
+  def getMaxAttackCoolDown: Double = maxAttackCoolDown
 
   parse()
   setUpImages()
 
-  def setUpImages(): Unit
-  def parseInformation(value: Vector[Vector[BufferedImage]]): Unit
+  protected def setUpImages(): Unit
+  protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit
 
-  def parse(): Unit =
+  private def parse(): Unit =
     Cache.animationCached.get(this.name) match
       case Some(value) =>
         parseInformation(value)
@@ -49,7 +51,7 @@ abstract class Entity(gp: GamePanel):
             parseInformation(value)
           case _ => throw new Exception(s"Parsing error")
 
-  def checkAnimationUpdate(): Unit =
+  protected def checkAnimationUpdate(): Unit =
     if(needsAnimationUpdate) then
       needsAnimationUpdate = false
       currentAnimation = images.get(this.direction, this.state)

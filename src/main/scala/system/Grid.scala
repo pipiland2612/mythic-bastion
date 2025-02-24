@@ -32,15 +32,15 @@ class Grid(gp: GamePanel):
   val cells: Array[Array[GridCell]] = Array.ofDim[GridCell](rows, cols)
 
   initialise()
-  def initialise(): Unit =
+  private def initialise(): Unit =
     for (i <- 0 until rows) do
       for (j <- 0 until cols) do
         cells(i)(j) = new GridCell
 
-  def checkBounds(x: Int, y: Int): Boolean =
+  private def checkBounds(x: Int, y: Int): Boolean =
     x >= 0 && x < rows && y >= 0 && y < cols
 
-  def enemyCenterPos(enemy: Enemy): (Int, Int) =
+  private def enemyCenterPos(enemy: Enemy): (Int, Int) =
     val pos = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
     val gridX = enemy.pos._1.toInt / cellSize
     val gridY = enemy.pos._2.toInt / cellSize

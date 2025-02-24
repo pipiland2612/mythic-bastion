@@ -13,7 +13,11 @@ case class TowerBuild(pos: (Double, Double), towerBuildImage: BufferedImage):
   private val offsetX: Int = 10
   private val offsetY: Int = 10
   private val range: Ellipse2D = new Ellipse2D.Double(drawCoords._1 + offsetX, drawCoords._2 + offsetY, radius * 2, radius)
-  var currentTower: Option[Tower] = None
+  private var currentTower: Option[Tower] = None
+
+  def getCurrentTower: Option[Tower] = currentTower
+  def setCurrentTower(tower: Tower): Unit = currentTower = Some(tower)
+
 
   def draw(g2d: Graphics2D): Unit =
     Tools.drawFrame(g2d, towerBuildImage, transform, drawCoords)

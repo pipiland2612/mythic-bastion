@@ -9,14 +9,17 @@ import java.awt.{Color, Graphics2D}
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
   protected val maxHealth: Double
   protected var health: Double
-  val rect: Rectangle2D
-  val maxDeadCounter: Double
+  protected val rect: Rectangle2D
+  protected val maxDeadCounter: Double
   private var deadCounter: Int = 0
 
-  var isCollided: Boolean = false
+  protected var isCollided: Boolean = false
+  protected var lastPosition: (Double, Double) = (0,0)
+
   var hasDied: Boolean = false
 
-  protected var lastPosition: (Double, Double) = (0,0)
+  def getMaxDeadCounter: Double = maxDeadCounter
+  def getRect: Rectangle2D = rect
 
   def attackBox: Rectangle2D = new Rectangle2D.Double(
     pos._1 + rect.getX, pos._2 + rect.getY,

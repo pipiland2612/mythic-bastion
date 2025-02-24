@@ -15,16 +15,16 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
 
   protected val playerDamage: Double
 
-  var haveReachBase: Boolean = false
-  var walkingAnimation: Animation = _
-  var walkingUpAnimation: Animation = _
-  var walkingDownAnimation: Animation = _
-  var fightingAnimation: Animation = _
-  var deadAnimation: Animation = _
+  protected var walkingAnimation: Animation = _
+  protected var walkingUpAnimation: Animation = _
+  protected var walkingDownAnimation: Animation = _
+  protected var fightingAnimation: Animation = _
+  protected var deadAnimation: Animation = _
   scaleFactor = 1.25
 
   private var path: Option[Vector[(Double, Double)]] = None
   private var index = 0
+  var haveReachBase: Boolean = false
 
   def setPath(path: Vector[(Double, Double)]) = this.path = Some(path)
 
@@ -54,7 +54,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       player.updateHealth(-(this.playerDamage.toInt))
     )
 
-  def followPath(goal: (Double, Double)): Unit =
+  private def followPath(goal: (Double, Double)): Unit =
     val (xDist, yDist) = (goal._1 - this.pos._1, goal._2 - this.pos._2)
     val absX = Math.abs(xDist)
     val absY = Math.abs(yDist)
@@ -123,5 +123,5 @@ object Enemy:
     Creep(
       enemy.getName, enemy.getMaxHealth, enemy.getHealth, enemy.playerDamage,
       enemy.getApDmg, enemy.getApDefense,enemy.getAdDmg, enemy.getAdDefense,
-      enemy.getRange, enemy.getSpeed, enemy.maxAttackCoolDown, enemy.maxDeadCounter, enemy.getJsonPath, enemy.getImagePath, enemy.rect, gp
+      enemy.getRange, enemy.getSpeed, enemy.getMaxAttackCoolDown, enemy.getMaxDeadCounter, enemy.getJsonPath, enemy.getImagePath, enemy.getRect, gp
     )
