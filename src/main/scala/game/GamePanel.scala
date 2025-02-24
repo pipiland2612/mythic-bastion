@@ -46,7 +46,7 @@ class GamePanel extends JPanel with Runnable:
     currentGameState match
       case GameState.PlayState =>
         stageManager.update()
-        systemHandler.update()
+//        systemHandler.update()
       case _ =>
 
   override def paintComponent(g: Graphics): Unit =

@@ -15,6 +15,9 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
 
   var isCollided: Boolean = false
   var hasDied: Boolean = false
+
+  protected var lastPosition: (Double, Double) = (0,0)
+
   def attackBox: Rectangle2D = new Rectangle2D.Double(
     pos._1 + rect.getX, pos._2 + rect.getY,
     rect.getWidth, rect.getHeight
@@ -42,6 +45,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
         case Direction.DOWN_RIGHT => this.move(this.speed, this.speed)
 
   override def update(): Unit =
+    lastPosition = pos
     if health <= 0 then
       needsAnimationUpdate = true
       this.state = State.DEAD

@@ -7,17 +7,26 @@ import scalafx.geometry.Rectangle2D
 import utils.Tools
 
 import java.awt.{Color, Graphics2D}
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class GridCell:
-  private val enemyList: ListBuffer[Enemy] = ListBuffer()
+  private val enemyMap: mutable.HashMap[Int, Enemy] = mutable.HashMap()
 
-  def addEnemy(enemy: Enemy) = enemyList += enemy
-  def getList = enemyList
+  def addEnemy(enemy: Enemy): Unit =
+    enemyMap.getOrElseUpdate(enemy.getId, enemy)
+
+  def removeEnemy(enemy: Enemy): Unit =
+    // race condition:
+    this.synchronized(
+      enemyMap.remove(enemy.getId)
+    )
+
+  def getEnemies: Iterable[Enemy] = enemyMap.values
 
 class Grid(gp: GamePanel):
 
-  private val cellSize: Int = 96
+  private val cellSize: Int = 112
   private val rows: Int = gp.screenWidth / cellSize
   private val cols: Int = gp.screenHeight / cellSize
   val cells: Array[Array[GridCell]] = Array.ofDim[GridCell](rows, cols)
@@ -28,17 +37,33 @@ class Grid(gp: GamePanel):
       for (j <- 0 until cols) do
         cells(i)(j) = new GridCell
 
-  def reset(): Unit =
-    for (i <- 0 until rows) do
-      for (j <- 0 until cols) do
-        cells(i)(j).getList.clear()
+  def checkBounds(x: Int, y: Int): Boolean =
+    x >= 0 && x < rows && y >= 0 && y < cols
 
-  def addEnemy(enemy: Enemy): Unit =
+  def enemyCenterPos(enemy: Enemy): (Int, Int) =
     val pos = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
     val gridX = enemy.pos._1.toInt / cellSize
     val gridY = enemy.pos._2.toInt / cellSize
-    if (gridX >= 0 && gridX < rows && gridY >= 0 && gridY < cols) then
-      cells(gridX)(gridY).addEnemy(enemy)
+    (gridX, gridY)
+
+  def remove(enemy: Enemy): Unit =
+    val (gridX, gridY) = enemyCenterPos(enemy)
+    if checkBounds(gridX, gridY) then
+      cells(gridX)(gridY).removeEnemy(enemy)
+
+  def updateEnemyPosition(enemy: Enemy, prevPos: (Int, Int)): Unit =
+
+    val (newGridX, newGridY) = enemyCenterPos(enemy)
+    val (prevX, prevY) = prevPos
+    val oldGridX = prevX / cellSize
+    val oldGridY = prevY / cellSize
+
+    if (oldGridX != newGridX || oldGridY != newGridY) then
+      if checkBounds(oldGridX, oldGridY) then
+        cells(oldGridX)(oldGridY).removeEnemy(enemy)
+
+      if checkBounds(newGridX, newGridY) then
+        cells(newGridX)(newGridY).addEnemy(enemy)
 
   def scanForEnemiesInRange(tower: Tower): ListBuffer[Enemy] =
     val ellipse = tower.attackCircle
@@ -46,14 +71,14 @@ class Grid(gp: GamePanel):
 
     val maxRect: Rectangle2D = Tools.getInnerRectangle(ellipse)
 
-    val minX: Int = (maxRect.minX.toInt / cellSize) - 1
-    val maxX: Int = (maxRect.maxX.toInt / cellSize) + 1
+    val minX: Int = (maxRect.minX.toInt / cellSize)
+    val maxX: Int = (maxRect.maxX.toInt / cellSize)
     val minY: Int = (maxRect.minY.toInt / cellSize)
     val maxY: Int = (maxRect.maxY.toInt / cellSize)
 
     for (i <- Math.max(0, minX) to Math.min(rows - 1, maxX)) do
       for (j <- Math.max(0, minY) to Math.min(cols - 1, maxY)) do
-        cells(i)(j).getList.foreach(enemy =>
+        cells(i)(j).getEnemies.foreach(enemy =>
           val pos = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
           if (ellipse.contains(pos._1, pos._2)) then
             nearbyEnemies += enemy
@@ -68,14 +93,6 @@ class Grid(gp: GamePanel):
       for (j <- 0 until cols) do
         g.drawRect(i * cellSize, j * cellSize, cellSize, cellSize)
 
-    for (i <- 0 until rows) do
-      for (j <- 0 until cols) do
-        cells(i)(j).getList.toList.foreach ( enemy =>
-          g.setColor(Color.RED)
-          val pos = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
-          g.fillOval(pos._1.toInt - i * cellSize, pos._2.toInt - j * cellSize, 8, 8)
-        )
-
     val ellipse = tower.attackCircle
     g.setColor(Color.BLUE)
     g.drawOval(
@@ -86,8 +103,8 @@ class Grid(gp: GamePanel):
     )
 
     val maxRect: Rectangle2D = Tools.getInnerRectangle(ellipse)
-    val minX: Int = (maxRect.minX.toInt / cellSize) - 1
-    val maxX: Int = (maxRect.maxX.toInt / cellSize) + 1
+    val minX: Int = (maxRect.minX.toInt / cellSize)
+    val maxX: Int = (maxRect.maxX.toInt / cellSize)
     val minY: Int = (maxRect.minY.toInt / cellSize)
     val maxY: Int = (maxRect.maxY.toInt / cellSize)
 

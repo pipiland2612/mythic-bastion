@@ -8,6 +8,11 @@ import entity.{Direction, State}
 import java.awt.image.BufferedImage
 
 abstract class Enemy(gp: GamePanel) extends Creature(gp):
+  // immutable id to ensure giving exact hashcode
+  private val id: Int = Enemy.nextId()
+
+  def getId: Int = id
+
   protected val playerDamage: Double
 
   var haveReachBase: Boolean = false
@@ -81,14 +86,26 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
           continueMove()
         else this.haveReachBase = true
       )
-      gp.systemHandler.grid.addEnemy(this)
+      gp.systemHandler.grid.updateEnemyPosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
       if this.haveReachBase then attackPlayer()
+
+    if this.health <= 0 then
+      gp.systemHandler.grid.remove(this)
+
+  override def hashCode(): Int = id.hashCode()
+  override def equals(obj: Any): Boolean = obj match
+    case other: Enemy => this.id == other.id
+    case _            => false
 
 end Enemy
 
 object Enemy:
 
   var gp: GamePanel = _
+  private var idCounter: Int = 0
+  private def nextId(): Int =
+    idCounter += 1
+    idCounter
 
   def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
     val enemyData = Map(
