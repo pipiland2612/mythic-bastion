@@ -17,7 +17,7 @@ class GridCell:
 
 class Grid(gp: GamePanel):
 
-  private val cellSize: Int = 64
+  private val cellSize: Int = 96
   private val rows: Int = gp.screenWidth / cellSize
   private val cols: Int = gp.screenHeight / cellSize
   val cells: Array[Array[GridCell]] = Array.ofDim[GridCell](rows, cols)
@@ -46,8 +46,8 @@ class Grid(gp: GamePanel):
 
     val maxRect: Rectangle2D = Tools.getInnerRectangle(ellipse)
 
-    val minX: Int = (maxRect.minX.toInt / cellSize)
-    val maxX: Int = (maxRect.maxX.toInt / cellSize)
+    val minX: Int = (maxRect.minX.toInt / cellSize) - 1
+    val maxX: Int = (maxRect.maxX.toInt / cellSize) + 1
     val minY: Int = (maxRect.minY.toInt / cellSize)
     val maxY: Int = (maxRect.maxY.toInt / cellSize)
 
@@ -86,8 +86,8 @@ class Grid(gp: GamePanel):
     )
 
     val maxRect: Rectangle2D = Tools.getInnerRectangle(ellipse)
-    val minX: Int = (maxRect.minX.toInt / cellSize)
-    val maxX: Int = (maxRect.maxX.toInt / cellSize)
+    val minX: Int = (maxRect.minX.toInt / cellSize) - 1
+    val maxX: Int = (maxRect.maxX.toInt / cellSize) + 1
     val minY: Int = (maxRect.minY.toInt / cellSize)
     val maxY: Int = (maxRect.maxY.toInt / cellSize)
 

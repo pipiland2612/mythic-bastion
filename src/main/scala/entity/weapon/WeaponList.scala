@@ -36,7 +36,7 @@ case class Explo(
   private def calculateMidPoint(start: (Double, Double), end: (Double, Double)): (Double, Double) =
     val xOffset = Math.random() * 40 - 20
     val distance = Math.sqrt(Math.pow(end._1 - start._1, 2) + Math.pow(end._2 - start._2, 2))
-    val yOffset = -distance * 1.2  // make the curve higher in the middle (adjust for more or less curve)
+    val yOffset = -distance * 1.8  // make the curve higher in the middle (adjust for more or less curve)
 
     ((start._1 + end._1) / 2 + xOffset, (start._2 + end._2) / 2 + yOffset)
 
