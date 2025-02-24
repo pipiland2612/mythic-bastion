@@ -21,7 +21,7 @@ class StageManager (gp: GamePanel):
     currentStage.foreach(stage => waveSpawner.scheduleWaveSpawn(stage.waves))
 
   def update(): Unit =
-    currentStage.foreach ( stage =>
+    currentStage.foreach (stage =>
       stage.getEnemyList.toList.foreach(_.update())
       stage.getAllianceList.toList.foreach(_.update())
       stage.map.towerPos.foreach(towerBuild =>

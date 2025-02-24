@@ -22,7 +22,6 @@ class GUI(gp: GamePanel):
     gp.currentGameState match
       case GameState.PlayState       =>
         gp.systemHandler.stageManager.currentStage.foreach(stage =>
-          println(stage)
           changeBackgroundImage(s"maps/map${stage.stageID}.jpg", gp.screenWidth, gp.screenHeight)
         )
       case GameState.PauseState      =>

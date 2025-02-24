@@ -50,9 +50,9 @@ class GamePanel extends JPanel with Runnable:
     val g2d = g.asInstanceOf[Graphics2D]
     val startTime: Long = System.nanoTime()
 
+    gui.drawUI(g2d)
     systemHandler.draw(g2d)
 
-    gui.drawUI(g2d)
     val x = 10
     val y = 400
     val endTime = System.nanoTime()
