@@ -62,7 +62,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       case _ =>
         Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform,
           centerCoords, offsetX, offsetY)
-//    gp.systemHandler.grid.draw(g2d, this)
+    gp.systemHandler.grid.draw(g2d, this)
 
   private def findEnemy(): ListBuffer[Enemy] =
     gp.systemHandler.grid.scanForEnemiesInRange(this)
