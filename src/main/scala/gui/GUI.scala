@@ -19,9 +19,9 @@ class GUI(gp: GamePanel):
     this.g2d = g
 
   def reloadGameBackGround(): Unit =
-    gp.currentGameState match
+    gp.getCurrentGameState match
       case GameState.PlayState       =>
-        gp.systemHandler.stageManager.currentStage.foreach(stage =>
+        gp.getSystemHandler.stageManager.getCurrentStage.foreach(stage =>
           changeBackgroundImage(s"maps/map${stage.stageID}.jpg", gp.screenWidth, gp.screenHeight)
         )
       case GameState.PauseState      =>
@@ -31,7 +31,7 @@ class GUI(gp: GamePanel):
   def drawUI(g2d: Graphics2D): Unit =
     setUpGraphics(g2d)
     g2d.drawImage(this.backgroundImage, 0, 0, None.orNull)
-    gp.currentGameState match
+    gp.getCurrentGameState match
       case GameState.PlayState       => drawPlayState()
       case GameState.PauseState      => drawPauseState()
       case GameState.TitleState      => drawTitleScreen()

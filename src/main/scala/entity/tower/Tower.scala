@@ -17,26 +17,27 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   override def getImagePath: String = s"towers/${getName}.png"
   override def getJsonPath: String = s"towers/${getName}.json"
   override def getRange: Double = range * level
+
   private val offsetX: Double = 0
   private val offsetY: Double = -10
   private val transform: AffineTransform = AffineTransform()
-  val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
-
   private val bulletList: ListBuffer[Weapon] = ListBuffer()
 
-  protected var shootAnimation: Animation = _
-  protected val weaponType: String
   private var attackCounter: Int = 0
   private var prepareCounter: Int = 0
   private var hasShoot = false
-  var isShowingRange: Boolean = false
 
+  protected var shootAnimation: Animation = _
+  protected val weaponType: String
+
+  val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
   val attackCircle: Ellipse2D =
     new Ellipse2D.Double(
       centerCoords._1 - (getRange*2 - idleAnimation.getCurrentFrame.getWidth())/2,
       centerCoords._2 - (getRange*4/3 - idleAnimation.getCurrentFrame.getHeight())/2,
       getRange*2, getRange*4/3
     )
+  var isShowingRange: Boolean = false
 
   def getBulletList: List[Weapon] = bulletList.toList
 
@@ -47,7 +48,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
     findEnemy().headOption.foreach(attack(_))
     handleAttackState()
     bulletList.toList.foreach(_.update())
-    bulletList.filterInPlace(!_.hasHit)
+    bulletList.filterInPlace(!_.hit)
     handlePrepareState()
 
   override def draw(g2d: Graphics2D): Unit =
@@ -62,10 +63,10 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       case _ =>
         Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform,
           centerCoords, offsetX, offsetY)
-    gp.systemHandler.grid.draw(g2d, this)
+//    gp.getSystemHandler.grid.draw(g2d, this)
 
   private def findEnemy(): ListBuffer[Enemy] =
-    gp.systemHandler.grid.scanForEnemiesInRange(this)
+    gp.getSystemHandler.grid.scanForEnemiesInRange(this)
  
   private def attack(enemy: Enemy): Unit =
     if attackCoolDown <= 0 && this.state != State.PREPARE then

@@ -16,7 +16,9 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   protected var hitAnimation: Animation = _
   protected var hitEndAnimation: Animation = _
 
-  var hasHit: Boolean = false
+  private var hasHit: Boolean = false
+
+  def hit: Boolean = hasHit
 
   protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(value(0), 10)
@@ -61,7 +63,9 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
 
 // In the Weapon companion object, initialize velocities after creation
 object Weapon:
-  var gp: GamePanel = _
+  private var gp: GamePanel = _
+
+  def setUp(gp: GamePanel): Unit = this.gp = gp
 
   def clone(weapon: String, enemy: Enemy, pos: (Double, Double)): Weapon =
     weapon match

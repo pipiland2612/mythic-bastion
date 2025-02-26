@@ -18,7 +18,6 @@ case class TowerBuild(pos: (Double, Double), towerBuildImage: BufferedImage):
   def getCurrentTower: Option[Tower] = currentTower
   def setCurrentTower(tower: Tower): Unit = currentTower = Some(tower)
 
-
   def draw(g2d: Graphics2D): Unit =
     Tools.drawFrame(g2d, towerBuildImage, transform, drawCoords)
 

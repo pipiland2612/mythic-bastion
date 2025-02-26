@@ -5,8 +5,8 @@ import javax.swing.*
 
 // RUN GAME HERE
 object GameApp extends App :
-  val frame = new JFrame("Mythic Bastion")
-  val gamePanel = new GamePanel()
+  private val frame = new JFrame("Mythic Bastion")
+  private val gamePanel = new GamePanel()
 
   frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
   frame.add(gamePanel, java.awt.BorderLayout.CENTER)
@@ -17,8 +17,8 @@ object GameApp extends App :
   frame.setVisible(true)
   frame.setFocusable(true)
   frame.setLocationRelativeTo(None.orNull)
-  frame.addMouseListener(gamePanel.systemHandler.keyHandler)
-  frame.addKeyListener(gamePanel.systemHandler.keyHandler)
+  frame.addMouseListener(gamePanel.getSystemHandler.keyHandler)
+  frame.addKeyListener(gamePanel.getSystemHandler.keyHandler)
 
   gamePanel.setUpGame()
   gamePanel.startGameThread()

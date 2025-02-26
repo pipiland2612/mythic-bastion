@@ -13,25 +13,30 @@ class GamePanel extends JPanel with Runnable:
 
   // Configuration
   private val scale: Int = 3
-  val tileSize: Int = 16 * scale
   private val maxScreenColumn: Int = 20
   private val maxScreenRow: Int = 12
   private val FPS: Int = 90
+  private val tileSize: Int = 16 * scale
   val screenWidth: Int = tileSize * maxScreenColumn
   val screenHeight: Int = tileSize * maxScreenRow
 
   // System initialize
-  val systemHandler: SystemHandler = SystemHandler(this)
-  val gui: GUI = GUI(this)
-  var currentGameState: GameState = GameState.PlayState
+  private val systemHandler: SystemHandler = SystemHandler(this)
+  private val gui: GUI = GUI(this)
+  private var currentGameState: GameState = GameState.PlayState
   private var gameThread: Thread = _
 
   this.setPreferredSize(new Dimension(screenWidth, screenHeight))
   this.setBackground(Color.BLACK)
 
+  def getSystemHandler: SystemHandler = systemHandler
+  def getGUI: GUI = gui
+  def getCurrentGameState: GameState = currentGameState
+  def setCurrentGameState(gst: GameState) = currentGameState = gst
+
   def setUpGame(): Unit =
-    Enemy.gp = this
-    Weapon.gp = this
+    Enemy.setUp(this)
+    Weapon.setUp(this)
     systemHandler.setUp()
     gui.reloadGameBackGround()
 

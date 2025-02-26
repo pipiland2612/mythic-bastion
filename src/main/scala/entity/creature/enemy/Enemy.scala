@@ -10,11 +10,11 @@ import java.awt.image.BufferedImage
 abstract class Enemy(gp: GamePanel) extends Creature(gp):
   // immutable id to ensure giving exact hashcode
   private val id: Int = Enemy.nextId()
+  private var path: Option[Vector[(Double, Double)]] = None
+  private var index = 0
 
-  def getId: Int = id
-
+  protected var haveReachBase: Boolean = false
   protected val playerDamage: Double
-
   protected var walkingAnimation: Animation = _
   protected var walkingUpAnimation: Animation = _
   protected var walkingDownAnimation: Animation = _
@@ -22,11 +22,9 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   protected var deadAnimation: Animation = _
   scaleFactor = 1.25
 
-  private var path: Option[Vector[(Double, Double)]] = None
-  private var index = 0
-  var haveReachBase: Boolean = false
-
+  def getId: Int = id
   def setPath(path: Vector[(Double, Double)]) = this.path = Some(path)
+  def haveReach: Boolean = haveReachBase
 
   override def setUpImages(): Unit =
     val mirroredDirections = Seq(Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT)
@@ -50,7 +48,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     deadAnimation = Animation(value(5), 10)
 
   def attackPlayer(): Unit =
-    gp.systemHandler.stageManager.currentPlayer.foreach(player =>
+    gp.getSystemHandler.stageManager.getCurrentPlayer.foreach(player =>
       player.updateHealth(-(this.playerDamage.toInt))
     )
 
@@ -86,11 +84,11 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
           continueMove()
         else this.haveReachBase = true
       )
-      gp.systemHandler.grid.updateEnemyPosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
+      gp.getSystemHandler.grid.updateEnemyPosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
       if this.haveReachBase then attackPlayer()
 
     if this.health <= 0 then
-      gp.systemHandler.grid.remove(this)
+      gp.getSystemHandler.grid.remove(this)
 
   override def hashCode(): Int = id.hashCode()
   override def equals(obj: Any): Boolean = obj match
@@ -101,11 +99,13 @@ end Enemy
 
 object Enemy:
 
-  var gp: GamePanel = _
+  private var gp: GamePanel = _
   private var idCounter: Int = 0
   private def nextId(): Int =
     idCounter += 1
     idCounter
+
+  def setUp(gp: GamePanel): Unit = this.gp = gp
 
   def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
     val enemyData = Map(

@@ -11,15 +11,16 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   protected var health: Double
   protected val rect: Rectangle2D
   protected val maxDeadCounter: Double
-  private var deadCounter: Int = 0
 
   protected var isCollided: Boolean = false
   protected var lastPosition: (Double, Double) = (0,0)
+  protected var hasDied: Boolean = false
 
-  var hasDied: Boolean = false
+  private var deadCounter: Int = 0
 
   def getMaxDeadCounter: Double = maxDeadCounter
   def getRect: Rectangle2D = rect
+  def hasDie: Boolean = hasDied
 
   def attackBox: Rectangle2D = new Rectangle2D.Double(
     pos._1 + rect.getX, pos._2 + rect.getY,
@@ -30,12 +31,12 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
 
   def takeDamage(damage: Double) = health -= damage
 
-  def move(dx: Double, dy: Double): Unit =
+  protected def move(dx: Double, dy: Double): Unit =
     state = State.RUN
     this.pos = (pos._1 + dx, pos._2 + dy)
     needsAnimationUpdate = true
 
-  def continueMove(): Unit =
+  protected def continueMove(): Unit =
     if !isCollided then
       direction match
         case Direction.UP => this.move(0, -this.speed)

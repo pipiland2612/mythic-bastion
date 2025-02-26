@@ -10,8 +10,11 @@ class StageManager (gp: GamePanel):
 
   private val transform = new AffineTransform()
   private val waveSpawner: WaveSpawner = WaveSpawner(this)
-  var currentStage: Option[Stage] = None
-  var currentPlayer: Option[PlayerStage] = None
+  private var currentStage: Option[Stage] = None
+  private var currentPlayer: Option[PlayerStage] = None
+
+  def getCurrentStage: Option[Stage] = currentStage
+  def getCurrentPlayer: Option[PlayerStage] = currentPlayer
 
   def setStage(stage: Stage): Unit =
     currentStage = Some(stage)
@@ -27,7 +30,7 @@ class StageManager (gp: GamePanel):
       stage.map.towerPos.foreach(towerBuild =>
         towerBuild.getCurrentTower.foreach(_.update())
       )
-      stage.filterEnemyList(enemy => !enemy.haveReachBase && !enemy.hasDied)
+      stage.filterEnemyList(enemy => !enemy.haveReach && !enemy.hasDie)
     )
 
   def draw(g2d: Graphics2D): Unit =
