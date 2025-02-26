@@ -21,7 +21,7 @@ class GUI(gp: GamePanel):
   def reloadGameBackGround(): Unit =
     gp.getCurrentGameState match
       case GameState.PlayState       =>
-        gp.getSystemHandler.stageManager.getCurrentStage.foreach(stage =>
+        gp.getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
           changeBackgroundImage(s"maps/map${stage.stageID}.jpg", gp.screenWidth, gp.screenHeight)
         )
       case GameState.PauseState      =>

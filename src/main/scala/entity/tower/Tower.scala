@@ -66,7 +66,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
 //    gp.getSystemHandler.grid.draw(g2d, this)
 
   private def findEnemy(): ListBuffer[Enemy] =
-    gp.getSystemHandler.grid.scanForEnemiesInRange(this)
+    gp.getSystemHandler.getGrid.scanForEnemiesInRange(this)
  
   private def attack(enemy: Enemy): Unit =
     if attackCoolDown <= 0 && this.state != State.PREPARE then

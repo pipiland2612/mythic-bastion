@@ -89,8 +89,8 @@ case class Arrow(
   protected val speed: Double = 5,
 ) extends Weapon(gp, enemy):
 
-  var missAnimation: Animation = _
-  var missEndAnimation: Animation = _
+  private var missAnimation: Animation = _
+  private var missEndAnimation: Animation = _
   private val missIndex = 3
   private val missEndIndex = 4
 

@@ -29,7 +29,7 @@ class Grid(gp: GamePanel):
   private val cellSize: Int = 128
   private val rows: Int = gp.screenWidth / cellSize
   private val cols: Int = gp.screenHeight / cellSize
-  val cells: Array[Array[GridCell]] = Array.ofDim[GridCell](rows, cols)
+  private val cells: Array[Array[GridCell]] = Array.ofDim[GridCell](rows, cols)
 
   initialise()
   private def initialise(): Unit =

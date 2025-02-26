@@ -48,7 +48,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     deadAnimation = Animation(value(5), 10)
 
   def attackPlayer(): Unit =
-    gp.getSystemHandler.stageManager.getCurrentPlayer.foreach(player =>
+    gp.getSystemHandler.getStageManager.getCurrentPlayer.foreach(player =>
       player.updateHealth(-(this.playerDamage.toInt))
     )
 
@@ -84,11 +84,11 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
           continueMove()
         else this.haveReachBase = true
       )
-      gp.getSystemHandler.grid.updateEnemyPosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
+      gp.getSystemHandler.getGrid.updateEnemyPosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
       if this.haveReachBase then attackPlayer()
 
     if this.health <= 0 then
-      gp.getSystemHandler.grid.remove(this)
+      gp.getSystemHandler.getGrid.remove(this)
 
   override def hashCode(): Int = id.hashCode()
   override def equals(obj: Any): Boolean = obj match
