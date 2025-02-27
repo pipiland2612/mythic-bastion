@@ -4,6 +4,7 @@ import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
 import gui.GUI
 import system.SystemHandler
+import utils.Tools
 
 import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
 import javax.swing.JPanel
@@ -37,6 +38,7 @@ class GamePanel extends JPanel with Runnable:
   def setUpGame(): Unit =
     Enemy.setUp(this)
     Weapon.setUp(this)
+    Tools.setUp(this)
     systemHandler.setUp()
     gui.reloadGameBackGround()
 

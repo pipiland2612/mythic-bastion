@@ -36,7 +36,6 @@ class StageManager (gp: GamePanel):
 
   def draw(g2d: Graphics2D): Unit =
     currentStage.foreach(stage =>
-
       // add enemylist, alliance list, and tower list to one entity list
       val sortedEntities: List[Entity] = (
         stage.getEnemyList ++

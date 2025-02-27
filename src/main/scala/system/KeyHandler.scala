@@ -1,6 +1,6 @@
 package system
 
-import entity.tower.{ExploTower, TowerBuild}
+import entity.tower.{ExploTower, Tower, TowerBuild}
 import game.{GamePanel, GameState}
 
 import java.awt.event.{KeyEvent, KeyListener, MouseEvent, MouseListener}
@@ -47,15 +47,24 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       pos match
         case Some(value) =>
           value.isDrawingFrame = if value.isDrawingFrame then false else true
-          gp.getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
-            if value.getCurrentTower.isEmpty then {}
-//              val tower = ExploTower(gp, 1, value.pos)
-//              value.setCurrentTower(tower)
-            else
-              value.getCurrentTower.foreach(stage =>
-                stage.isShowingRange = if stage.isShowingRange then false
-                else true
-              )
+          if value.isDrawingFrame then
+            gp.getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
+              if value.getCurrentTower.isEmpty then
+                val clickedButton = value.buttons.keys.find(_.contains(x, y)) match
+                  case Some(button) =>
+                    value.buttons.get(button) match
+                      case Some(tower) => value.setCurrentTower(tower)
+                      case _ =>
+                  case _ =>
+
+//            if value.getCurrentTower.isEmpty then {}
+////              val tower = ExploTower(gp, 1, value.pos)
+////              value.setCurrentTower(tower)
+//            else
+//              value.getCurrentTower.foreach(stage =>
+//                stage.isShowingRange = if stage.isShowingRange then false
+//                else true
+//              )
           )
         case _ =>
     )
