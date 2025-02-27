@@ -15,6 +15,7 @@ class StageManager (gp: GamePanel):
 
   def getCurrentStage: Option[Stage] = currentStage
   def getCurrentPlayer: Option[PlayerStage] = currentPlayer
+  def getCurrentWave: Int = waveSpawner.getCurrentWave
 
   def setStage(stage: Stage): Unit =
     currentStage = Some(stage)

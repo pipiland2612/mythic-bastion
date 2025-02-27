@@ -52,10 +52,15 @@ class GamePanel extends JPanel with Runnable:
 
   override def paintComponent(g: Graphics): Unit =
     super.paintComponents(g)
-    val g2d = g.asInstanceOf[Graphics2D]
+    var g2d = g.asInstanceOf[Graphics2D]
+    val g2dSaved: Graphics2D = g2d.create().asInstanceOf[Graphics2D]
+
     val startTime: Long = System.nanoTime()
 
     gui.drawUI(g2d)
+    g2d.dispose()
+    g2d = g2dSaved
+
     systemHandler.draw(g2d)
 
     val x = 10
@@ -66,6 +71,7 @@ class GamePanel extends JPanel with Runnable:
     g2d.setColor(Color.WHITE)
 
     g2d.drawString("Draw time: " + passTime, x,y)
+
     g2d.dispose()
 
   override def run(): Unit =

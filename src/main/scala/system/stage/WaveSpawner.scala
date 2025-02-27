@@ -5,13 +5,17 @@ import entity.creature.enemy.Enemy
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 
 class WaveSpawner(stageManager: StageManager):
+  private var currentWave: Int = 0
+
+  def getCurrentWave: Int = currentWave
   
   def scheduleWaveSpawn(waves: Vector[Wave]): Unit =
     val waveScheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
     waves.foreach(wave =>
-      val waveTask: Runnable = () => (
+      val waveTask: Runnable = () => {
         scheduleEnemySpawn(wave.enemyData)
-      )
+        currentWave += 1
+      }
       waveScheduler.schedule(waveTask, wave.delay.toLong, TimeUnit.SECONDS)
     )
 

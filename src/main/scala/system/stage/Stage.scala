@@ -19,6 +19,7 @@ case class Stage(
 
   def getEnemyList: List[Enemy] = enemyList.toList
   def getAllianceList: List[Alliance] = allianceList.toList
+  def totalWave: Int = waves.length
 
   def filterEnemyList(condition: Enemy => Boolean): Unit =
     enemyList.filterInPlace(condition)
