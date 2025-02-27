@@ -19,18 +19,19 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   override def getJsonPath: String = s"towers/${getName}.json"
   override def getRange: Double = range * level
 
-  private val offsetX: Double = 0
-  private val offsetY: Double = -10
   private val transform: AffineTransform = AffineTransform()
-  private val bulletList: ListBuffer[Weapon] = ListBuffer()
-
   private var attackCounter: Int = 0
   private var prepareCounter: Int = 0
   private var hasShoot = false
-    
+
+  protected var towerImage = Tools.loadImage(s"towers/ArrowTower0$level.png")
+  protected val offsetX: Double = 0
+  protected val offsetY: Double = -10
+  protected val bulletList: ListBuffer[Weapon] = ListBuffer()
   protected var shootAnimation: Animation = _
   protected val weaponType: String
-  
+  protected val maxAttackCounter: Int
+  protected val maxPrepareCounter: Int
 
   val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
   val attackCircle: Ellipse2D =
@@ -40,6 +41,9 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       getRange*2, getRange*4/3
     )
   var isShowingRange: Boolean = false
+
+  def updateTowerImage(): Unit =
+    this.towerImage = Tools.loadImage(s"towers/ArrowTower0$level.png")
 
   def getBulletList: List[Weapon] = bulletList.toList
 
@@ -58,14 +62,12 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
     if isShowingRange then
       g2d.setColor(Color.RED)
       g2d.draw(attackCircle)
+    Tools.drawFrame(g2d, this.towerImage, transform, centerCoords, offsetX, offsetY)
     currentAnimation match
       case Some(animation) =>
-        Tools.drawFrame(g2d, animation.getCurrentFrame, transform,
-          centerCoords, offsetX, offsetY)
+        // Draw archer, wizard
+        Tools.drawFrame(g2d, animation.getCurrentFrame, transform, centerCoords, offsetX + 10, offsetY + 100)
       case _ =>
-        Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform,
-          centerCoords, offsetX, offsetY)
-//    gp.getSystemHandler.grid.draw(g2d, this)
 
   private def findEnemy(): ListBuffer[Enemy] =
     gp.getSystemHandler.getGrid.scanForEnemiesInRange(this)
@@ -85,7 +87,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private def handleAttackState(): Unit =
     if this.state == State.ATTACK then
       attackCounter += 1
-      if (attackCounter >= 100) then
+      if (attackCounter >= maxAttackCounter) then
         attackCounter = 0
         currentAnimation.foreach(_.reset())
         state = State.PREPARE
@@ -95,7 +97,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private def handlePrepareState(): Unit =
     if this.state == State.PREPARE then
       prepareCounter += 1
-      if prepareCounter >= 70 then
+      if prepareCounter >= maxPrepareCounter then
         currentAnimation.foreach(_.reset())
         prepareCounter = 0
         this.state = State.IDLE
