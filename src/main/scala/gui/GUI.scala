@@ -11,6 +11,7 @@ class GUI(gp: GamePanel):
 
   private var backgroundImage: BufferedImage = _
   private var g2d: Graphics2D = _
+  private var isBuilding: Boolean = false
 
   private def changeBackgroundImage(imgPath: String, scaleX: Int, scaleY: Int): Unit =
     this.backgroundImage = Tools.scaleImage(Tools.loadImage(imgPath), scaleX, scaleY)
@@ -55,6 +56,8 @@ class GUI(gp: GamePanel):
       val totalWave = stage.totalWave
       g2d.drawString(s"Wave ${currentWave}/${totalWave}", downTopLeftCoords._1 + 35, downTopLeftCoords._2 + 20)
     )
+
+    if isBuilding then {}
 
     g2d.drawImage(Image.heart_img, topLeftCoords._1, topLeftCoords._2, None.orNull)
     g2d.drawImage(Image.coins_img, nextTopLeftCoords._1, nextTopLeftCoords._2, None.orNull)

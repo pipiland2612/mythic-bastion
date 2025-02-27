@@ -118,7 +118,7 @@
         { "x": 950, "y": 300 }
       ]
     ],
-    "towerImage": "Base02",
+    "towerImage": "Base01",
     "towerSpots": [
       { "x": 390, "y": 230 },
       { "x": 390, "y": 330 },
