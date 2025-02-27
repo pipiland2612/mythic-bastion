@@ -4,6 +4,7 @@ import entity.{Entity, State}
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
 import game.GamePanel
+import gui.Image
 import utils.{Animation, Tools}
 
 import java.awt.{Color, Graphics2D}
@@ -26,9 +27,10 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private var attackCounter: Int = 0
   private var prepareCounter: Int = 0
   private var hasShoot = false
-
+    
   protected var shootAnimation: Animation = _
   protected val weaponType: String
+  
 
   val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
   val attackCircle: Ellipse2D =

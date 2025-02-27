@@ -46,10 +46,11 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
 
       pos match
         case Some(value) =>
+          value.isDrawingFrame = if value.isDrawingFrame then false else true
           gp.getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
-            if value.getCurrentTower.isEmpty then
-              val tower = ExploTower(gp, 1, value.pos)
-              value.setCurrentTower(tower)
+            if value.getCurrentTower.isEmpty then {}
+//              val tower = ExploTower(gp, 1, value.pos)
+//              value.setCurrentTower(tower)
             else
               value.getCurrentTower.foreach(stage =>
                 stage.isShowingRange = if stage.isShowingRange then false

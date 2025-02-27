@@ -17,7 +17,7 @@ object Image:
 
   private val buildTool: BufferedImage = Tools.loadImage("build/buildTool.png")
 
-  val frame: BufferedImage = buildTool.getSubimage(1, 1, 118, 118)
+  val frame: BufferedImage = Tools.scaleImage(buildTool.getSubimage(1, 1, 118, 118), 1.2, 1.2)
   val explo01: BufferedImage = buildTool.getSubimage(251, 75, 46, 44)
   val explo03_1: BufferedImage = buildTool.getSubimage(443, 75, 46, 44)
   val explo03_2: BufferedImage = buildTool.getSubimage(203, 75, 46, 44)
