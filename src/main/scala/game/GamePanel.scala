@@ -4,7 +4,9 @@ import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
 import gui.GUI
 import system.SystemHandler
+import utils.Tools
 
+import java.awt.image.BufferedImage
 import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
 import javax.swing.JPanel
 
@@ -25,6 +27,7 @@ class GamePanel extends JPanel with Runnable:
   private val gui: GUI = GUI(this)
   private var currentGameState: GameState = GameState.PlayState
   private var gameThread: Thread = _
+  private var backgroundImage: BufferedImage = _
 
   this.setPreferredSize(new Dimension(screenWidth, screenHeight))
   this.setBackground(Color.BLACK)
@@ -34,11 +37,25 @@ class GamePanel extends JPanel with Runnable:
   def getCurrentGameState: GameState = currentGameState
   def setCurrentGameState(gst: GameState) = currentGameState = gst
 
+  private def changeBackgroundImage(imgPath: String, scaleX: Int, scaleY: Int): Unit =
+    this.backgroundImage = Tools.scaleImage(Tools.loadImage(imgPath), scaleX, scaleY)
+
+  def reloadGameBackGround(): Unit =
+    getCurrentGameState match
+      case GameState.PlayState       =>
+        getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
+          changeBackgroundImage(s"maps/map${stage.stageID}.jpg", screenWidth, screenHeight)
+        )
+      case GameState.PauseState      =>
+        changeBackgroundImage(s"maps/map.jpg", screenWidth, screenHeight)
+      case GameState.TitleState      =>
+
   def setUpGame(): Unit =
     Enemy.setUp(this)
     Weapon.setUp(this)
+    Tools.setUp(this)
     systemHandler.setUp()
-    gui.reloadGameBackGround()
+    reloadGameBackGround()
 
   def startGameThread(): Unit =
     gameThread = Thread(this)
@@ -52,17 +69,14 @@ class GamePanel extends JPanel with Runnable:
 
   override def paintComponent(g: Graphics): Unit =
     super.paintComponents(g)
-    var g2d = g.asInstanceOf[Graphics2D]
-    val g2dSaved: Graphics2D = g2d.create().asInstanceOf[Graphics2D]
+    val g2d = g.asInstanceOf[Graphics2D]
 
     val startTime: Long = System.nanoTime()
-
-    gui.drawUI(g2d)
-    g2d.dispose()
-    g2d = g2dSaved
+    g2d.drawImage(this.backgroundImage, 0, 0, None.orNull)
 
     systemHandler.draw(g2d)
 
+    gui.drawUI(g2d)
     val x = 10
     val y = 400
     val endTime = System.nanoTime()

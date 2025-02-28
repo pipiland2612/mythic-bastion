@@ -1,7 +1,8 @@
 package system
 
-import entity.tower.{ExploTower, TowerBuild}
+import entity.tower.{Frame, TowerBuild}
 import game.{GamePanel, GameState}
+import utils.Cache
 
 import java.awt.event.{KeyEvent, KeyListener, MouseEvent, MouseListener}
 
@@ -13,6 +14,9 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
     val (x,y) = (e.getX, e.getY - offSetY)
     System.out.println("Mouse clicked at: " + x + ", " + y)
     handleTowerBuildOnClick(x, y)
+
+    gp.getGUI.currentFrame.foreach(_.handleFrameOnClick(x,y))
+
     if x <= 210 && y <= 255 then
       gp.getSystemHandler.getStageManager.startWave()
 
@@ -33,28 +37,24 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
           if gp.getCurrentGameState == GameState.PlayState then GameState.PauseState
           else GameState.PlayState
         gp.setCurrentGameState(stage)
-        gp.getGUI.reloadGameBackGround()
+        gp.reloadGameBackGround()
       case _ =>
 
   override def keyReleased(e: KeyEvent): Unit = {}
 
   private def handleTowerBuildOnClick(x: Int, y: Int): Unit =
     val towerBuildList: Option[Vector[TowerBuild]] = gp.getSystemHandler.getStageManager.getCurrentStage.map(_.map.towerPos)
-
     towerBuildList.foreach(towerBuildList =>
       val pos: Option[TowerBuild] = towerBuildList.find(_.isInBuildRange(x, y))
-
       pos match
-        case Some(value) =>
-          gp.getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
-            if value.getCurrentTower.isEmpty then
-              val tower = ExploTower(gp, 1, value.pos)
-              value.setCurrentTower(tower)
-            else
-              value.getCurrentTower.foreach(stage =>
-                stage.isShowingRange = if stage.isShowingRange then false
-                else true
-              )
-          )
+        case Some(towerBuild) =>
+          Cache.frameCached.get(towerBuild.pos) match
+            case Some(frame) =>
+              gp.getGUI.currentFrame = Some(frame)
+            case _ =>
+              val frame: Frame = Frame(towerBuild.gp, towerBuild)
+              Cache.frameCached += towerBuild.pos -> frame
+
+              gp.getGUI.currentFrame = Some(frame)
         case _ =>
     )

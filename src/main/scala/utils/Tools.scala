@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
 import entity.{Direction, State}
 import entity.creature.enemy.Enemy
 import entity.tower.TowerBuild
+import game.GamePanel
 import scalafx.geometry.Rectangle2D
 import system.stage.{EnemyData, GameMap, Stage, Wave}
 
@@ -18,6 +19,8 @@ import scala.jdk.CollectionConverters.*
 case class ImageProb(val x: Int, val y: Int, val w: Int, val h: Int)
 
 object Tools:
+  private var gp: GamePanel = _
+  def setUp(gp: GamePanel): Unit = this.gp = gp
 
   def flipImageHorizontally(image: BufferedImage): BufferedImage =
     val flippedImage = new BufferedImage(image.getWidth, image.getHeight, image.getType)
@@ -87,7 +90,7 @@ object Tools:
       val mapPath: JsonNode = root.path("map")
       val towerPos: Vector[(Double,Double)] = getPosition(mapPath.path("towerSpots"))
       val towerImage: BufferedImage = Tools.loadImage(s"build/${mapPath.path("towerImage").asText()}.png")
-      val towerBuilds: Vector[TowerBuild] = towerPos.map(TowerBuild(_, towerImage))
+      val towerBuilds: Vector[TowerBuild] = towerPos.map(TowerBuild(gp, _, towerImage))
       var path: Vector[Vector[(Double,Double)]] = Vector()
       mapPath.path("path").forEach(data =>
         val pos: Vector[(Double,Double)] = getPosition(data)
