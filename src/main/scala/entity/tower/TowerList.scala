@@ -64,7 +64,7 @@ class ArrowTower(
   var pos: (Double, Double),
   val towerImagePath: String,
   val range: Double = 200,
-  val maxAttackCounter: Int = 20,
+  val maxAttackCounter: Int = 70,
   val maxPrepareCounter: Int = 10,
   val maxAttackCoolDown: Double = 30
 ) extends Tower(gp, level):
@@ -88,7 +88,7 @@ class ArrowTower(
     idleAnimation = Animation(value(1), 10)
     shootDownAnimation = Animation(value(2), 10)
     shootDownEndAnimation = Animation(value(3), 10)
-    shootAnimation =  Animation(value(4), 10)
+    shootAnimation =  Animation(value(4), 10, 0, 8)
     shootEndAnimation = Animation(value(5), 10)
 
   override def setUpImages(): Unit =
@@ -100,6 +100,8 @@ class ArrowTower(
       Tools.fillMap(downAnimation, State.IDLE, idleDownAnimation) ++
       Tools.fillMap(upAnimation, State.ATTACK, shootAnimation) ++
       Tools.fillMap(downAnimation, State.ATTACK, shootDownAnimation)
+  
+  override def bulletPosition: (Double, Double) = (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 
 object ArrowTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ArrowTower =
@@ -112,7 +114,7 @@ class MagicTower(
   val weaponType: String,
   var pos: (Double, Double),
   val towerImagePath: String,
-  val range: Double = 100,
+  val range: Double = 110,
   val maxAttackCounter: Int = 70,
   val maxPrepareCounter: Int = 70,
   val maxAttackCoolDown: Double = 60
@@ -134,8 +136,8 @@ class MagicTower(
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleDownAnimation = Animation(value(0), 10)
     idleAnimation = Animation(value(1), 10)
-    shootDownAnimation = Animation(value(2), 10)
-    shootAnimation =  Animation(value(3), 10)
+    shootDownAnimation = Animation(value(2), 10, 0, 8)
+    shootAnimation =  Animation(value(3), 10, 0, 8)
 
   override def setUpImages(): Unit =
     val downAnimation: Seq[Direction] = Seq(Direction.RIGHT, Direction.DOWN)
@@ -146,6 +148,8 @@ class MagicTower(
       Tools.fillMap(Direction.allEntityDirections, State.PREPARE, idleAnimation) ++
       Tools.fillMap(upAnimation, State.IDLE, idleAnimation) ++
       Tools.fillMap(downAnimation, State.ATTACK, shootDownAnimation)
+
+  override def bulletPosition: (Double, Double) = (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 
 object MagicTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): MagicTower =
