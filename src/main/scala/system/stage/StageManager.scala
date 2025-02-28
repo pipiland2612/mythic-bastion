@@ -36,8 +36,6 @@ class StageManager (gp: GamePanel):
 
   def draw(g2d: Graphics2D): Unit =
     currentStage.foreach(stage =>
-      stage.map.towerPos.foreach(_.draw(g2d))
-
       // add enemylist, alliance list, and tower list to one entity list
       val sortedEntities: List[Entity] = (
         stage.getEnemyList ++
@@ -45,5 +43,6 @@ class StageManager (gp: GamePanel):
         stage.map.towerPos.flatMap(_.getCurrentTower).toList
       ).sortBy(_.getPosition._2) // then sort by y coords to draw
 
+      stage.map.towerPos.foreach(_.draw(g2d))
       sortedEntities.foreach(_.draw(g2d))
     )
