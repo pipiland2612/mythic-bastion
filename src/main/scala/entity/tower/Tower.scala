@@ -15,6 +15,7 @@ import scala.collection.mutable.ListBuffer
 
 
 abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
+  this.currentAnimation = Some(idleAnimation)
 
   override def getName: String = s"$name"
   override def getImagePath: String = s"towers/${getName}.png"
@@ -39,6 +40,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private var prepareCounter: Int = 0
   private val secureRandom: SecureRandom = SecureRandom()
   private val dynamicSeed = secureRandom.nextLong()
+
   val random: Random = Random(dynamicSeed)
 
   val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
@@ -49,6 +51,8 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       getRange*2, getRange*4/3
     )
   var isShowingRange: Boolean = false
+
+  def bulletPosition: (Double, Double) = (centerCoords._1 + idleAnimation.getCurrentFrame.getWidth() / 2, centerCoords._2 + idleAnimation.getCurrentFrame.getHeight() / 4)
 
   def updateTowerImage(): Unit =
     this.towerImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")
@@ -90,7 +94,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       needsAnimationUpdate = true
 
       if shootAnimation.isInAttackInterval && !hasShoot then
-        val pos = (centerCoords._1 + idleAnimation.getCurrentFrame.getWidth() / 2, centerCoords._2 + idleAnimation.getCurrentFrame.getHeight() / 4)
+        val pos = bulletPosition
         val bullet = Weapon.clone(weaponType, enemy, pos)
         bulletList += bullet
         hasShoot = true

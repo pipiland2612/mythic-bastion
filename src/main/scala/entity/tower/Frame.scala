@@ -57,7 +57,6 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild):
 
   def draw(g2d: Graphics2D): Unit =
     if isDrawingFrame then
-      println("drawing")
       transform.setToTranslation(upgradeCoords._1, upgradeCoords._2)
       g2d.drawImage(Image.frame, transform, None.orNull)
       towerBuild.getCurrentTower match

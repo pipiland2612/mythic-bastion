@@ -14,7 +14,6 @@ abstract class Entity(gp: GamePanel):
 
   protected var currentAnimation: Option[Animation] = None
   protected var scaleFactor: Double = 1
-  protected var needsAnimationUpdate: Boolean = false
   protected var images: Map[(Direction, State), Animation] = Map()
 
   protected var state: State = State.IDLE
@@ -24,6 +23,7 @@ abstract class Entity(gp: GamePanel):
   protected val range: Double
   protected val maxAttackCoolDown: Double
   protected var attackCoolDown: Double = 0
+  var needsAnimationUpdate: Boolean = false
 
   private val transform = new AffineTransform()
 
@@ -35,6 +35,7 @@ abstract class Entity(gp: GamePanel):
   def getMaxAttackCoolDown: Double = maxAttackCoolDown
   def getPosition: (Double, Double) = pos
   def setPosition(pos: (Double, Double)): Unit = this.pos = pos
+  def setState(state: State) = this.state = state
 
   parse()
   setUpImages()
