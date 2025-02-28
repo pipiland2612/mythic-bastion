@@ -42,3 +42,7 @@ object Image:
   val sell: BufferedImage = buildTool.getSubimage(473, 1, 32, 32)
   val upgrade: BufferedImage = buildTool.getSubimage(361, 121, 46, 44)
 
+  val towerBuildImage: BufferedImage = Tools.loadImage("build/Base01.png")
+  val towerBuildWidth = towerBuildImage.getWidth
+  val towerBuildHeight = towerBuildImage.getHeight
+

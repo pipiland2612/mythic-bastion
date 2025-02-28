@@ -21,12 +21,14 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
 
   private val transform: AffineTransform = AffineTransform()
   private var attackCounter: Int = 0
-  private var prepareCounter: Int = 0
   private var hasShoot = false
 
-  protected var towerImage = Tools.loadImage(s"towers/ArrowTower0$level.png")
+  protected val towerImagePath: String
+  protected var towerImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")
   protected val offsetX: Double = 0
   protected val offsetY: Double = -10
+  protected val drawOffsetX: Double = 25
+  protected val drawOffsetY: Double = 15
   protected val bulletList: ListBuffer[Weapon] = ListBuffer()
   protected var shootAnimation: Animation = _
   protected val weaponType: String
@@ -43,7 +45,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   var isShowingRange: Boolean = false
 
   def updateTowerImage(): Unit =
-    this.towerImage = Tools.loadImage(s"towers/ArrowTower0$level.png")
+    this.towerImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")
 
   def getBulletList: List[Weapon] = bulletList.toList
 
@@ -55,7 +57,6 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
     handleAttackState()
     bulletList.toList.foreach(_.update())
     bulletList.filterInPlace(!_.hit)
-    handlePrepareState()
 
   override def draw(g2d: Graphics2D): Unit =
     bulletList.toList.foreach(_.draw(g2d))
@@ -66,7 +67,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
     currentAnimation match
       case Some(animation) =>
         // Draw archer, wizard
-        Tools.drawFrame(g2d, animation.getCurrentFrame, transform, centerCoords, offsetX + 10, offsetY + 100)
+        Tools.drawFrame(g2d, animation.getCurrentFrame, transform, centerCoords, drawOffsetX, drawOffsetY)
       case _ =>
 
   private def findEnemy(): ListBuffer[Enemy] =
@@ -92,13 +93,4 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
         currentAnimation.foreach(_.reset())
         state = State.PREPARE
         hasShoot = false
-      needsAnimationUpdate = true
-
-  private def handlePrepareState(): Unit =
-    if this.state == State.PREPARE then
-      prepareCounter += 1
-      if prepareCounter >= maxPrepareCounter then
-        currentAnimation.foreach(_.reset())
-        prepareCounter = 0
-        this.state = State.IDLE
       needsAnimationUpdate = true

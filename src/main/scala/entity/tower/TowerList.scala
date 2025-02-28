@@ -1,6 +1,6 @@
 package entity.tower
 
-import entity.weapon.{Arrow, Explo, MagicBullet, Weapon}
+import entity.weapon.{Arrow, Explo, MagicBullet}
 import entity.{Direction, State}
 import game.GamePanel
 import utils.{Animation, Tools}
@@ -15,6 +15,7 @@ class ExploTower(
   val name: String,
   val weaponType: String,
   var pos: (Double, Double),
+  val towerImagePath: String,
   val range: Double = 120,
   val maxAttackCounter: Int = 100,
   val maxPrepareCounter: Int = 70,
@@ -25,6 +26,7 @@ class ExploTower(
   protected val imagePath: String = s"towers/ExploTower$level.png"
   private var prepareAnimation: Animation = _
   private val transform: AffineTransform = AffineTransform()
+  private var prepareCounter: Int = 0
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(value(0), 10)
@@ -36,6 +38,19 @@ class ExploTower(
       Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
       Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation) ++
       Tools.fillMap(Direction.allEntityDirections, State.PREPARE, prepareAnimation)
+
+  private def handlePrepareState(): Unit =
+    if this.state == State.PREPARE then
+      prepareCounter += 1
+      if prepareCounter >= maxPrepareCounter then
+        currentAnimation.foreach(_.reset())
+        prepareCounter = 0
+        this.state = State.IDLE
+      needsAnimationUpdate = true
+
+  override def update(): Unit =
+    super.update()
+    handlePrepareState()
 
   override def draw(g2d: Graphics2D): Unit =
     if isShowingRange then
@@ -53,7 +68,7 @@ class ExploTower(
 
 object ExploTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ExploTower =
-    new ExploTower(gp, level, s"ExploTower0$level", Explo.name, pos)
+    new ExploTower(gp, level, s"ExploTower0$level", Explo.name, pos, s"ExploTower")
 
 class ArrowTower(
   gp: GamePanel,
@@ -61,6 +76,7 @@ class ArrowTower(
   val name: String,
   val weaponType: String,
   var pos: (Double, Double),
+  val towerImagePath: String,
   val range: Double = 200,
   val maxAttackCounter: Int = 20,
   val maxPrepareCounter: Int = 10,
@@ -75,6 +91,11 @@ class ArrowTower(
   private var shootDownAnimation: Animation =_
   private var shootDownEndAnimation: Animation =_
   private val transform: AffineTransform = AffineTransform()
+
+  override val offsetX: Double = -30
+  override val offsetY: Double = -30
+  override val drawOffsetX: Double = 2
+  override val drawOffsetY: Double = -16
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleDownAnimation = Animation(value(0), 10)
@@ -93,12 +114,9 @@ class ArrowTower(
       Tools.fillMap(upAnimation, State.ATTACK, shootAnimation) ++
       Tools.fillMap(downAnimation, State.ATTACK, shootDownAnimation)
 
-  override def update(): Unit =
-    super.update()
-
 object ArrowTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ArrowTower =
-    new ArrowTower(gp, level, s"ArrowShooter0$level", Arrow.name, pos)
+    new ArrowTower(gp, level, s"ArrowShooter0$level", Arrow.name, pos, s"ArrowTower")
 
 class MagicTower(
   gp: GamePanel,
@@ -106,6 +124,7 @@ class MagicTower(
   val name: String,
   val weaponType: String,
   var pos: (Double, Double),
+  val towerImagePath: String,
   val range: Double = 100,
   val maxAttackCounter: Int = 70,
   val maxPrepareCounter: Int = 70,
@@ -119,6 +138,11 @@ class MagicTower(
   private val transform: AffineTransform = AffineTransform()
 
   private var shootEndAnimation: Animation = _
+
+  override val offsetX: Double = -25
+  override val offsetY: Double = -30
+  override val drawOffsetX: Double = 2
+  override val drawOffsetY: Double = -23
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleDownAnimation = Animation(value(0), 10)
@@ -137,4 +161,4 @@ class MagicTower(
 
 object MagicTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): MagicTower =
-    new MagicTower(gp, level, s"MagicWizard$level", MagicBullet.name, pos)
+    new MagicTower(gp, level, s"MagicWizard", MagicBullet.name, pos, s"MagicTower")
