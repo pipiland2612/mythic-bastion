@@ -9,6 +9,8 @@ import utils.{Animation, Tools}
 
 import java.awt.{Color, Graphics2D}
 import java.awt.geom.{AffineTransform, Ellipse2D}
+import java.security.SecureRandom
+import java.util.Random
 import scala.collection.mutable.ListBuffer
 
 
@@ -34,6 +36,10 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   protected val weaponType: String
   protected val maxAttackCounter: Int
   protected val maxPrepareCounter: Int
+  private var prepareCounter: Int = 0
+  private val secureRandom: SecureRandom = SecureRandom()
+  private val dynamicSeed = secureRandom.nextLong()
+  val random: Random = Random(dynamicSeed)
 
   val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
   val attackCircle: Ellipse2D =
@@ -53,10 +59,14 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
     if attackCoolDown > 0 then
       attackCoolDown -= 1
     super.update()
-    findEnemy().headOption.foreach(attack(_))
+    val enemyList = findEnemy()
+    if enemyList.nonEmpty then
+      val randInd = random.nextInt(enemyList.length)
+      attack(enemyList(randInd))
     handleAttackState()
     bulletList.toList.foreach(_.update())
     bulletList.filterInPlace(!_.hit)
+    handlePrepareState()
 
   override def draw(g2d: Graphics2D): Unit =
     bulletList.toList.foreach(_.draw(g2d))
@@ -93,4 +103,14 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
         currentAnimation.foreach(_.reset())
         state = State.PREPARE
         hasShoot = false
+      needsAnimationUpdate = true
+
+
+  private def handlePrepareState(): Unit =
+    if this.state == State.PREPARE then
+      prepareCounter += 1
+      if prepareCounter >= maxPrepareCounter then
+        currentAnimation.foreach(_.reset())
+        prepareCounter = 0
+        this.state = State.IDLE
       needsAnimationUpdate = true

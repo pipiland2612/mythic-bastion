@@ -26,7 +26,6 @@ class ExploTower(
   protected val imagePath: String = s"towers/ExploTower$level.png"
   private var prepareAnimation: Animation = _
   private val transform: AffineTransform = AffineTransform()
-  private var prepareCounter: Int = 0
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(value(0), 10)
@@ -38,19 +37,6 @@ class ExploTower(
       Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
       Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation) ++
       Tools.fillMap(Direction.allEntityDirections, State.PREPARE, prepareAnimation)
-
-  private def handlePrepareState(): Unit =
-    if this.state == State.PREPARE then
-      prepareCounter += 1
-      if prepareCounter >= maxPrepareCounter then
-        currentAnimation.foreach(_.reset())
-        prepareCounter = 0
-        this.state = State.IDLE
-      needsAnimationUpdate = true
-
-  override def update(): Unit =
-    super.update()
-    handlePrepareState()
 
   override def draw(g2d: Graphics2D): Unit =
     if isShowingRange then
@@ -80,7 +66,7 @@ class ArrowTower(
   val range: Double = 200,
   val maxAttackCounter: Int = 20,
   val maxPrepareCounter: Int = 10,
-  val maxAttackCoolDown: Double = 1 * 60
+  val maxAttackCoolDown: Double = 30
 ) extends Tower(gp, level):
 
   protected val imagePath: String = s"towers/ArrowShooter0$level.png"
@@ -110,6 +96,7 @@ class ArrowTower(
     val downAnimation: Seq[Direction] = Seq(Direction.RIGHT, Direction.DOWN)
     this.images =
       Tools.fillMap(upAnimation, State.IDLE, idleAnimation) ++
+      Tools.fillMap(Direction.allEntityDirections, State.PREPARE, idleAnimation) ++
       Tools.fillMap(downAnimation, State.IDLE, idleDownAnimation) ++
       Tools.fillMap(upAnimation, State.ATTACK, shootAnimation) ++
       Tools.fillMap(downAnimation, State.ATTACK, shootDownAnimation)
@@ -128,7 +115,7 @@ class MagicTower(
   val range: Double = 100,
   val maxAttackCounter: Int = 70,
   val maxPrepareCounter: Int = 70,
-  val maxAttackCoolDown: Double = 2 * 60
+  val maxAttackCoolDown: Double = 60
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/MagicWizard.json"
@@ -156,6 +143,7 @@ class MagicTower(
     this.images =
       Tools.fillMap(downAnimation, State.IDLE, idleDownAnimation) ++
       Tools.fillMap(upAnimation, State.ATTACK, shootAnimation) ++
+      Tools.fillMap(Direction.allEntityDirections, State.PREPARE, idleAnimation) ++
       Tools.fillMap(upAnimation, State.IDLE, idleAnimation) ++
       Tools.fillMap(downAnimation, State.ATTACK, shootDownAnimation)
 
