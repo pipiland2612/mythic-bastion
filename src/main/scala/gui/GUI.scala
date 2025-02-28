@@ -48,7 +48,6 @@ class GUI(gp: GamePanel):
     g2d.drawImage(Image.skull_img, downTopLeftCoords._1, downTopLeftCoords._2, None.orNull)
     g2d.drawImage(Image.pause_img, topRightCoords._1, topRightCoords._2, None.orNull)
 
-    println(currentFrame)
     currentFrame.foreach(_.draw(g2d))
 
   def drawPauseState(): Unit = {}
