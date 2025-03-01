@@ -39,6 +39,10 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   def getHealth: Double = health
 
   def takeDamage(damage: Double) = health -= damage
+  def dealDamage(creature: Creature): Unit =
+    val apDamge = Math.max(getApDmg - creature.getApDefense, 0)
+    val adDamage = Math.max(getAdDmg - creature.getAdDefense, 0)
+    creature.takeDamage(adDamage + apDamge)
 
   protected def move(dx: Double, dy: Double): Unit =
     state = State.RUN
@@ -58,7 +62,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
         case Direction.DOWN_RIGHT => this.move(this.speed, this.speed)
 
   override def update(): Unit =
-    lastPosition = pos
+    lastPosition = (attackBox.getCenterX, attackBox.getCenterY)
     if health <= 0 then
       needsAnimationUpdate = true
       this.state = State.DEAD

@@ -23,7 +23,7 @@ case class Stage(
 
   def filterEnemyList(condition: Enemy => Boolean): Unit =
     enemyList.filterInPlace(condition)
-
+  
   def addEnemy(enemy: Enemy): Unit =
     enemyList += enemy
 

@@ -1,5 +1,6 @@
 package game
 
+import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
 import gui.GUI
@@ -52,6 +53,7 @@ class GamePanel extends JPanel with Runnable:
 
   def setUpGame(): Unit =
     Enemy.setUp(this)
+    Alliance.setUp(this)
     Weapon.setUp(this)
     Tools.setUp(this)
     systemHandler.setUp()

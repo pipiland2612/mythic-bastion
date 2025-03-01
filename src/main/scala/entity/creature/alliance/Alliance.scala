@@ -30,6 +30,13 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
     fightingAnimation = Animation(value(2), 10)
     deadAnimation = Animation(value(3), 10)
 
+  override def update(): Unit =
+    super.update()
+    gp.getSystemHandler.getGrid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
+
+    if health <= 0 then
+      gp.getSystemHandler.getGrid.remove(this)
+
 object Alliance:
   private var gp: GamePanel = _
   def setUp(gp: GamePanel): Unit = this.gp = gp

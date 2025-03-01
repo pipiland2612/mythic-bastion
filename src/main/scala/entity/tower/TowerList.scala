@@ -175,7 +175,7 @@ class BarrackTower(
   private var prepareAnimation: Animation = _
   private val transform: AffineTransform = AffineTransform()
   private val barrackTrainers: Vector[BarrackTrainer] =
-    Vector(BarrackTrainer((pos._1 + 20, pos._2 + 10)), BarrackTrainer((pos._1 - 30, pos._2 + 40)), BarrackTrainer((pos._1 , pos._2 + 25)))
+    Vector(BarrackTrainer((pos._1 - 50, pos._2 + 60)), BarrackTrainer((pos._1 - 30, pos._2 + 80)), BarrackTrainer((pos._1 - 50, pos._2 + 90)))
 
   override def update(): Unit =
     barrackTrainers.foreach(_.update())
@@ -196,8 +196,7 @@ class BarrackTower(
     def getCurrentSoldier: Option[Alliance] = currentSoldier
     def update(): Unit =
       currentSoldier match
-        case Some(soldier) =>
-          if soldier.getHealth <= 0 then currentSoldier = None
+        case Some(soldier) => if soldier.hasDie then currentSoldier = None
         case None => startTraining()
 
     private def startTraining(): Unit =

@@ -26,17 +26,19 @@ class GridCell:
       case _ =>
 
   def removeCreature(creature: Creature): Unit =
-    val map = if creature.isInstanceOf[Enemy] then enemyMap else allianceMap
-    this.synchronized(
-      map.remove(creature.getId)
-    )
+    creature match
+      case enemy: Enemy =>
+        enemyMap.remove(enemy.getId)
+      case alliance: Alliance =>
+        allianceMap.remove(alliance.getId)
+      case _ =>
 
   def getEnemies: Iterable[Enemy] = enemyMap.values
   def getAlliance: Iterable[Alliance] = allianceMap.values
 
 class Grid(gp: GamePanel):
 
-  private val cellSize: Int = 128
+  private val cellSize: Int = 64
   private val rows: Int = gp.screenWidth / cellSize
   private val cols: Int = gp.screenHeight / cellSize
   private val cells: Array[Array[GridCell]] = Array.ofDim[GridCell](rows, cols)
@@ -52,8 +54,8 @@ class Grid(gp: GamePanel):
 
   private def creatureCenterPos(creature: Creature): (Int, Int) =
     val pos = (creature.attackBox.getCenterX, creature.attackBox.getCenterY)
-    val gridX = creature.getPosition._1.toInt / cellSize
-    val gridY = creature.getPosition._2.toInt / cellSize
+    val gridX = pos._1.toInt / cellSize
+    val gridY = pos._2.toInt / cellSize
     (gridX, gridY)
 
   def remove(creature: Creature): Unit =
@@ -73,6 +75,9 @@ class Grid(gp: GamePanel):
 
       if checkBounds(newGridX, newGridY) then
         cells(newGridX)(newGridY).addCreature(creature) // Rename to a more general method
+    else if prevX == creature.attackBox.getCenterX && prevY == creature.attackBox.getCenterY then
+      if checkBounds(oldGridX, oldGridY) then
+        cells(oldGridX)(oldGridY).addCreature(creature)
 
   private def scanForCreaturesInRange[T <: Creature](
     attacker: Entity,

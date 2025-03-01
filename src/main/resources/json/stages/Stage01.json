@@ -12,7 +12,8 @@
       "wave": 1,
       "delay": 1,
       "enemies": [
-        { "type": "Monster01", "count": 10, "spawnInterval": 2, "spawnIndex": 0 },
+        { "type": "Monster01", "count": 7, "spawnInterval": 2, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 3, "spawnInterval": 4, "spawnIndex": 0 },
         { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 1 }
       ]
     },

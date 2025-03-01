@@ -42,7 +42,7 @@ object Helper02:
   val rect: Rectangle2D = Rectangle2D.Double(30, 20, 20, 10)
 
 object Soldier01:
-  val data: Vector[Double] = Vector(70, 0, 0 , 10, 5, 15, 0.5, 1 * 60, 45)
+  val data: Vector[Double] = Vector(70, 0, 0, 10, 0, 15, 0.5, 1 * 60, 45)
   val name: String = "Soldier01"
   val jsonPath: String = "alliances/Soldier01.json"
   val imagePath: String = "alliances/Soldier01.png"
