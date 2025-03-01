@@ -92,7 +92,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
       state = State.ATTACK
       attackCoolDown = maxAttackCoolDown
       needsAnimationUpdate = true
-
+      
       if shootAnimation.isInAttackInterval && !hasShoot then
         val pos = bulletPosition
         val bullet = Weapon.clone(weaponType, enemy, pos)

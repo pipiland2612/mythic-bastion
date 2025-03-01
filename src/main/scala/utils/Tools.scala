@@ -217,3 +217,6 @@ object Tools:
     // The rectangle is centered on the ellipse center
     Rectangle2D(cx - width / 2, cy - height / 2, width, height)
   
+  def squareDistance(end: (Double, Double), start: (Double, Double)): Double = 
+    Math.sqrt(Math.pow(end._1 - start._1, 2) + Math.pow(end._2 - start._2, 2))
+  

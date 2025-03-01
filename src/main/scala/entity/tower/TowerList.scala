@@ -64,9 +64,9 @@ class ArrowTower(
   var pos: (Double, Double),
   val towerImagePath: String,
   val range: Double = 200,
-  val maxAttackCounter: Int = 70,
-  val maxPrepareCounter: Int = 10,
-  val maxAttackCoolDown: Double = 30
+  val maxAttackCounter: Int = 45,
+  val maxPrepareCounter: Int = 70,
+  val maxAttackCoolDown: Double = 0
 ) extends Tower(gp, level):
 
   protected val imagePath: String = s"towers/ArrowShooter0$level.png"
@@ -84,22 +84,20 @@ class ArrowTower(
   override val drawOffsetY: Double = -16
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleDownAnimation = Animation(value(0), 10)
+//    idleDownAnimation = Animation(value(0), 10)
     idleAnimation = Animation(value(1), 10)
-    shootDownAnimation = Animation(value(2), 10)
-    shootDownEndAnimation = Animation(value(3), 10)
-    shootAnimation =  Animation(value(4), 10, 0, 8)
-    shootEndAnimation = Animation(value(5), 10)
+//    shootDownAnimation = Animation(value(2), 10)
+//    shootDownEndAnimation = Animation(value(3), 10)
+    shootAnimation =  Animation(value(4), 15, 2, 8)
+//    shootEndAnimation = Animation(value(5), 10)
 
   override def setUpImages(): Unit =
-    val upAnimation: Seq[Direction] = Seq(Direction.LEFT, Direction.UP)
-    val downAnimation: Seq[Direction] = Seq(Direction.RIGHT, Direction.DOWN)
     this.images =
-      Tools.fillMap(upAnimation, State.IDLE, idleAnimation) ++
+      Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
       Tools.fillMap(Direction.allEntityDirections, State.PREPARE, idleAnimation) ++
-      Tools.fillMap(downAnimation, State.IDLE, idleDownAnimation) ++
-      Tools.fillMap(upAnimation, State.ATTACK, shootAnimation) ++
-      Tools.fillMap(downAnimation, State.ATTACK, shootDownAnimation)
+//      Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleDownAnimation) ++
+//      Tools.fillMap(upAnimation, State.ATTACK, shootAnimation) ++
+      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation)
   
   override def bulletPosition: (Double, Double) = (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 
@@ -117,7 +115,7 @@ class MagicTower(
   val range: Double = 110,
   val maxAttackCounter: Int = 70,
   val maxPrepareCounter: Int = 70,
-  val maxAttackCoolDown: Double = 60
+  val maxAttackCoolDown: Double = 0
 ) extends Tower(gp, level):
 
   protected val jsonPath: String = s"towers/MagicWizard.json"
@@ -134,20 +132,20 @@ class MagicTower(
   override val drawOffsetY: Double = -23
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleDownAnimation = Animation(value(0), 10)
-    idleAnimation = Animation(value(1), 10)
-    shootDownAnimation = Animation(value(2), 10, 0, 8)
-    shootAnimation =  Animation(value(3), 10, 0, 8)
+//    idleDownAnimation = Animation(value(0), 10)
+    idleAnimation = Animation(value(0), 10)
+    shootAnimation = Animation(value(2), 10, 5, 8)
+//    shootAnimation =  Animation(value(3), 10, 5, 8)
 
   override def setUpImages(): Unit =
     val downAnimation: Seq[Direction] = Seq(Direction.RIGHT, Direction.DOWN)
     val upAnimation: Seq[Direction] = Seq(Direction.LEFT, Direction.UP)
     this.images =
-      Tools.fillMap(downAnimation, State.IDLE, idleDownAnimation) ++
-      Tools.fillMap(upAnimation, State.ATTACK, shootAnimation) ++
+//      Tools.fillMap(downAnimation, State.IDLE, idleDownAnimation) ++
+//      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation) ++
       Tools.fillMap(Direction.allEntityDirections, State.PREPARE, idleAnimation) ++
-      Tools.fillMap(upAnimation, State.IDLE, idleAnimation) ++
-      Tools.fillMap(downAnimation, State.ATTACK, shootDownAnimation)
+      Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
+      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation)
 
   override def bulletPosition: (Double, Double) = (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 

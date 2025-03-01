@@ -15,7 +15,7 @@ case class Explo(
   var pos: (Double, Double),
   protected val apDmg: Double = 0,
   protected val adDmg: Double = 20,
-  protected val speed: Double = 5,
+  protected val speed: Double = 0.7,
   protected val curveConst: Double = 1.8,
   protected val yDrawOffSet: Double = 45
 ) extends Weapon(gp, enemy)
@@ -37,12 +37,13 @@ case class Arrow(
   var pos: (Double, Double),
   protected val apDmg: Double = 0,
   protected val adDmg: Double = 15,
-  protected val speed: Double = 5,
+  protected val speed: Double = 2,
   protected val curveConst: Double = 0.5,
   protected val yDrawOffSet: Double = 0
 ) extends Weapon(gp, enemy):
   override protected val deadDuration = 30
   override protected val hitTime = 0.9
+  override protected val weight = 0.5
 
 object Arrow:
   val name = s"Arrow01"

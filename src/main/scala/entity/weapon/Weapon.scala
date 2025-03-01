@@ -18,6 +18,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   protected val curveConst: Double
   protected val yDrawOffSet: Double
   protected val hitTime: Double = 1.0
+  protected val weight: Double = 1.5
 
   private var attackT: Double = 0.0
   private var attackInProgress: Boolean = false
@@ -59,6 +60,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       if deadCounter >= deadDuration then hasHit = true
     else attack()
 
+  private val baseSpeed: Double = 0.02
 
   private def initializeAttackCurve(): Unit =
     val start = pos
@@ -72,15 +74,21 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
 
   private def calculateMidPoint(start: (Double, Double), end: (Double, Double)): (Double, Double) =
     val xOffset = Math.random() * 40 - 20
-    val distance = Math.sqrt(Math.pow(end._1 - start._1, 2) + Math.pow(end._2 - start._2, 2))
-    val yOffset = -distance * curveConst  // make the curve higher in the middle (adjust for more or less curve)
+    val distance = Tools.squareDistance(end, start)
+    val yOffset = -distance * curveConst
 
     ((start._1 + end._1) / 2 + xOffset, (start._2 + end._2) / 2 + yOffset)
 
   private def moveAlongCurve(): Unit =
     attackCurve match
       case Some((start, mid, end)) =>
-        attackT = (attackT + 0.02).min(1.0)
+        val distance = Tools.squareDistance(end, start)
+        val normalizedDist = (distance / 100).max(1.0)
+        val dynamicSpeed = baseSpeed * (speed / normalizedDist)
+        val isDescending = attackT >= 0.45
+
+        val weightFactor = if isDescending then 1 + (weight * 0.2) else 1.0
+        attackT = (attackT + dynamicSpeed * weightFactor).min(1.0)
         pos = Tools.bezier(attackT, start, mid, end)
       case None =>
         attackInProgress = false
@@ -88,7 +96,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   private def updateProjectileMovement(): Unit =
     val angle = Tools.getAngle(pos, enemy.getPosition) - angleOffset
     move(angle)
-    angleOffset *= 0.98 // gradually reduce the angle for the projectile to straighten
+    angleOffset *= 0.98 // Gradually straighten the trajectory
 
   private def finalizeAttack(): Unit =
     if (attackT >= hitTime) then
@@ -97,7 +105,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       this.state = State.ATTACK
       needsAnimationUpdate = true
       checkAnimationUpdate()
-      this.pos = (enemy.getPosition._1, enemy.getPosition._2 - yDrawOffSet) // set the final position to the enemy's position to play the boom animation
+      this.pos = (enemy.getPosition._1, enemy.getPosition._2 - yDrawOffSet)
 
   def attack(): Unit =
     if (!attackInProgress) then
@@ -106,7 +114,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       moveAlongCurve()
       updateProjectileMovement()
       finalizeAttack()
-// In the Weapon companion object, initialize velocities after creation
+
 object Weapon:
   private var gp: GamePanel = _
 
