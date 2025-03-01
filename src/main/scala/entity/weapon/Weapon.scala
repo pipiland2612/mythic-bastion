@@ -8,6 +8,7 @@ import utils.{Animation, Tools}
 import java.awt.image.BufferedImage
 
 abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel) with Attacker:
+  this.currentAnimation = Some(idleAnimation)
   private var deadCounter: Int = 0
 
   protected val deadDuration: Int = 100
@@ -20,10 +21,10 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   protected val hitTime: Double = 1.0
   protected val weight: Double = 1.5
 
-  private var attackT: Double = 0.0
   private var attackInProgress: Boolean = false
-  private var attackCurve: Option[((Double, Double), (Double, Double), (Double, Double))] = None
   private var angleOffset: Double = 0
+  protected var attackT: Double = 0.0
+  protected var attackCurve: Option[((Double, Double), (Double, Double), (Double, Double))] = None
 
   private var hasHit: Boolean = false
 

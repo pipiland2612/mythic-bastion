@@ -4,6 +4,8 @@ import entity.creature.enemy.Enemy
 import game.GamePanel
 import utils.{Animation, Tools}
 
+import java.awt.Graphics2D
+import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 
 case class Explo(
@@ -41,9 +43,34 @@ case class Arrow(
   protected val curveConst: Double = 0.5,
   protected val yDrawOffSet: Double = 0
 ) extends Weapon(gp, enemy):
+
+  private val transform = new AffineTransform()
   override protected val deadDuration = 30
   override protected val hitTime = 0.9
   override protected val weight = 0.5
+
+  override def draw(g2d: Graphics2D): Unit =
+    attackCurve match
+      case Some((p0, p1, p2)) =>
+        val t = attackT
+
+        // Compute the tangent vector
+        val tangentX = 2 * (1 - t) * (p1._1 - p0._1) + 2 * t * (p2._1 - p1._1)
+        val tangentY = 2 * (1 - t) * (p1._2 - p0._2) + 2 * t * (p2._2 - p1._2)
+        val angle = Math.atan2(tangentY, tangentX)
+        val img = this.idleAnimation.getCurrentFrame
+        val (imgWidth, imgHeight) = (img.getWidth, img.getHeight)
+        val g2dCopy = g2d.create().asInstanceOf[Graphics2D]
+        g2dCopy.translate(pos._1, pos._2)
+        g2dCopy.rotate(angle, imgWidth / 2, imgHeight / 2)
+        g2dCopy.drawImage(img, -imgWidth / 2, -imgHeight / 2, None.orNull)
+        g2dCopy.dispose()
+      case None =>
+
+    currentAnimation match
+      case Some(animation) if this.state == State.ATTACK =>
+        Tools.drawFrame(g2d, animation.getCurrentFrame, transform, pos)
+      case _ =>
 
 object Arrow:
   val name = s"Arrow01"
