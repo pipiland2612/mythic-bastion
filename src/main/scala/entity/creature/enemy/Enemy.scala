@@ -15,11 +15,8 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
 
   protected var haveReachBase: Boolean = false
   protected val playerDamage: Double
-  protected var walkingAnimation: Animation = _
   protected var walkingUpAnimation: Animation = _
   protected var walkingDownAnimation: Animation = _
-  protected var fightingAnimation: Animation = _
-  protected var deadAnimation: Animation = _
   scaleFactor = 1.25
 
   def getId: Int = id

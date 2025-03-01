@@ -42,8 +42,8 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       Tools.fillMap(Direction.allEntityDirections, State.ATTACK, hitAnimation)
 
   protected def dealDamage(): Unit =
-    val adDamage = getAdDmg - enemy.getAdDefense
-    val apDamge = getApDmg - enemy.getApDefense
+    val adDamage = Math.max(getAdDmg - enemy.getAdDefense, 0)
+    val apDamge = Math.max(getApDmg - enemy.getApDefense, 0)
     enemy.takeDamage(adDamage + apDamge)
 
   protected def move(angle: Double): Unit =
@@ -75,7 +75,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
 
   private def calculateMidPoint(start: (Double, Double), end: (Double, Double)): (Double, Double) =
     val xOffset = Math.random() * 40 - 20
-    val distance = Tools.squareDistance(end, start)
+    val distance = Tools.distance(end, start)
     val yOffset = -distance * curveConst
 
     ((start._1 + end._1) / 2 + xOffset, (start._2 + end._2) / 2 + yOffset)
@@ -83,7 +83,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   private def moveAlongCurve(): Unit =
     attackCurve match
       case Some((start, mid, end)) =>
-        val distance = Tools.squareDistance(end, start)
+        val distance = Tools.distance(end, start)
         val normalizedDist = (distance / 100).max(1.0)
         val dynamicSpeed = baseSpeed * (speed / normalizedDist)
         val isDescending = attackT >= 0.45

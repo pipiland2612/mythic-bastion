@@ -38,7 +38,7 @@ case class Arrow(
   enemy: Enemy,
   var pos: (Double, Double),
   protected val apDmg: Double = 0,
-  protected val adDmg: Double = 15,
+  protected val adDmg: Double = 10,
   protected val speed: Double = 2,
   protected val curveConst: Double = 0.5,
   protected val yDrawOffSet: Double = 0

@@ -2,11 +2,13 @@ package entity.creature
 
 import entity.{Attacker, Defender, Direction, Entity, State}
 import game.GamePanel
+import utils.Animation
 
 import java.awt.geom.Rectangle2D
-import java.awt.{Color, Graphics2D}
+import java.awt.Graphics2D
 
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
+  currentAnimation = Some(idleAnimation)
   protected val maxHealth: Double
   protected var health: Double
   protected val rect: Rectangle2D
@@ -17,6 +19,10 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   protected var hasDied: Boolean = false
 
   private var deadCounter: Int = 0
+
+  protected var walkingAnimation: Animation = _
+  protected var fightingAnimation: Animation = _
+  protected var deadAnimation: Animation = _
 
   def getMaxDeadCounter: Double = maxDeadCounter
   def getRect: Rectangle2D = rect

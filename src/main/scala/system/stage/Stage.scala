@@ -1,6 +1,6 @@
 package system.stage
 
-import entity.creature.Alliance
+import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.tower.TowerBuild
 import scala.collection.mutable.ListBuffer
