@@ -4,11 +4,12 @@ import entity.{Attacker, Defender, Direction, Entity, State}
 import game.GamePanel
 import utils.Animation
 
-import java.awt.geom.Rectangle2D
+import java.awt.geom.{Ellipse2D, Rectangle2D}
 import java.awt.Graphics2D
 
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
   currentAnimation = Some(idleAnimation)
+  private val id = Creature.nextId()
   protected val maxHealth: Double
   protected var health: Double
   protected val rect: Rectangle2D
@@ -23,10 +24,12 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   protected var walkingAnimation: Animation = _
   protected var fightingAnimation: Animation = _
   protected var deadAnimation: Animation = _
+  def attackCircle: Ellipse2D = Ellipse2D.Double(pos._1 + 10, pos._2, getRange*2, getRange*4/3)
 
   def getMaxDeadCounter: Double = maxDeadCounter
   def getRect: Rectangle2D = rect
   def hasDie: Boolean = hasDied
+  def getId: Int = id
 
   def attackBox: Rectangle2D = new Rectangle2D.Double(
     pos._1 + rect.getX, pos._2 + rect.getY,
@@ -65,5 +68,16 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
 
   override def draw(g2d: Graphics2D): Unit =
     super.draw(g2d)
-//    g2d.setColor(Color.GREEN)
-//    g2d.drawRect(attackBox.getX.toInt, attackBox.getY.toInt, attackBox.getWidth.toInt, attackBox.getHeight.toInt)
+    g2d.draw(attackCircle)
+    g2d.drawRect(attackBox.getX.toInt, attackBox.getY.toInt, attackBox.getWidth.toInt, attackBox.getHeight.toInt)
+
+  override def hashCode(): Int = id.hashCode()
+  override def equals(obj: Any): Boolean = obj match
+    case other: Creature => this.id == other.id
+    case _            => false
+
+object Creature:
+  private var idCounter: Int = 0
+  private def nextId(): Int =
+    idCounter += 1
+    idCounter

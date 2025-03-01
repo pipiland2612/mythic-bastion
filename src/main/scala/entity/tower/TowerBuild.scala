@@ -1,10 +1,9 @@
 package entity.tower
 
 import game.GamePanel
-import gui.Image
 import utils.Tools
 
-import java.awt.{Color, Graphics2D, Rectangle}
+import java.awt.Graphics2D
 import java.awt.geom.{AffineTransform, Ellipse2D}
 import java.awt.image.BufferedImage
 

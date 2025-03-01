@@ -4,7 +4,7 @@ import game.GamePanel
 import utils.{Animation, Cache, Tools}
 
 import java.awt.Graphics2D
-import java.awt.geom.AffineTransform
+import java.awt.geom.{AffineTransform, Ellipse2D}
 import java.awt.image.BufferedImage
 
 abstract class Entity(gp: GamePanel):
@@ -26,7 +26,8 @@ abstract class Entity(gp: GamePanel):
   var needsAnimationUpdate: Boolean = false
 
   private val transform = new AffineTransform()
-
+  
+  def attackCircle: Ellipse2D
   def getRange: Double = range
   def getName: String = name
   def getJsonPath: String = jsonPath

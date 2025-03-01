@@ -27,6 +27,9 @@ case class Stage(
   def addEnemy(enemy: Enemy): Unit =
     enemyList += enemy
 
+  def addAllianceList(list: Vector[Alliance]): Unit =
+    allianceList.addAll(list)
+
   override def toString: String =
     val alliances = allianceList.map(_.toString).mkString(", ")
     val positions = spawnPosition.map ((x, y) => s"($x, $y)" ).mkString(", ")

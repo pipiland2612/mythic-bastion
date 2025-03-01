@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage
 
 abstract class Enemy(gp: GamePanel) extends Creature(gp):
   // immutable id to ensure giving exact hashcode
-  private val id: Int = Enemy.nextId()
   private var path: Option[Vector[(Double, Double)]] = None
   private var index = 0
 
@@ -19,7 +18,6 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   protected var walkingDownAnimation: Animation = _
   scaleFactor = 1.25
 
-  def getId: Int = id
   def setPath(path: Vector[(Double, Double)]) = this.path = Some(path)
   def haveReach: Boolean = haveReachBase
 
@@ -48,6 +46,8 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     gp.getSystemHandler.getStageManager.getCurrentPlayer.foreach(player =>
       player.updateHealth(-(this.playerDamage.toInt))
     )
+
+  def attackAlliance(): Unit = {}
 
   private def followPath(goal: (Double, Double)): Unit =
     val (xDist, yDist) = (goal._1 - this.pos._1, goal._2 - this.pos._2)
@@ -81,25 +81,16 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
           continueMove()
         else this.haveReachBase = true
       )
-      gp.getSystemHandler.getGrid.updateEnemyPosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
+      gp.getSystemHandler.getGrid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
       if this.haveReachBase then attackPlayer()
 
     if this.health <= 0 then
       gp.getSystemHandler.getGrid.remove(this)
 
-  override def hashCode(): Int = id.hashCode()
-  override def equals(obj: Any): Boolean = obj match
-    case other: Enemy => this.id == other.id
-    case _            => false
-
 end Enemy
 
 object Enemy:
   private var gp: GamePanel = _
-  private var idCounter: Int = 0
-  private def nextId(): Int =
-    idCounter += 1
-    idCounter
 
   def setUp(gp: GamePanel): Unit = this.gp = gp
 

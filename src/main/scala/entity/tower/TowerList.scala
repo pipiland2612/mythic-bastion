@@ -9,7 +9,6 @@ import utils.{Animation, Tools}
 import java.awt.geom.AffineTransform
 import java.awt.{Color, Graphics2D}
 import java.awt.image.BufferedImage
-import scala.collection.mutable.ListBuffer
 
 class ExploTower(
   gp: GamePanel,
@@ -176,7 +175,7 @@ class BarrackTower(
   private var prepareAnimation: Animation = _
   private val transform: AffineTransform = AffineTransform()
   private val barrackTrainers: Vector[BarrackTrainer] =
-    Vector(BarrackTrainer((pos._1 + 10, pos._2 + 10)), BarrackTrainer((pos._1 + 5, pos._2 + 10)), BarrackTrainer((pos._1 + 7, pos._2 + 15)))
+    Vector(BarrackTrainer((pos._1 + 20, pos._2 + 10)), BarrackTrainer((pos._1 - 30, pos._2 + 40)), BarrackTrainer((pos._1 , pos._2 + 25)))
 
   override def update(): Unit =
     barrackTrainers.foreach(_.update())
@@ -185,6 +184,7 @@ class BarrackTower(
 
   override def draw(g2d: Graphics2D): Unit =
     Tools.drawFrame(g2d, towerImage, transform, centerCoords, offsetX, offsetY)
+    // Draw soldier
     barrackTrainers.flatMap(_.getCurrentSoldier).foreach(_.draw(g2d))
 
   class BarrackTrainer (var pos: (Double, Double)):

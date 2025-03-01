@@ -5,6 +5,7 @@ import entity.{Attacker, Direction, Entity, State}
 import game.GamePanel
 import utils.{Animation, Tools}
 
+import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 
 abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel) with Attacker:
@@ -19,7 +20,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   protected val curveConst: Double
   protected val yDrawOffSet: Double
   protected val hitTime: Double = 1.0
-  protected val weight: Double = 1.5
+  protected val weight: Double = 2
 
   private var attackInProgress: Boolean = false
   private var angleOffset: Double = 0
@@ -30,6 +31,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
 
   def hit: Boolean = hasHit
   def getCurrentEnemy: Enemy = enemy
+  def attackCircle: Ellipse2D = Ellipse2D.Double(0,0,0,0)
 
   protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(value(0), 10)

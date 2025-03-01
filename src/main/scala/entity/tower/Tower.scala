@@ -4,7 +4,6 @@ import entity.{Entity, State}
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
 import game.GamePanel
-import gui.Image
 import utils.{Animation, Tools}
 
 import java.awt.{Color, Graphics2D}

@@ -1,5 +1,8 @@
 package system
 
+import entity.Entity
+import entity.creature.Creature
+import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.tower.Tower
 import game.GamePanel
@@ -12,17 +15,24 @@ import scala.collection.mutable.ListBuffer
 
 class GridCell:
   private val enemyMap: mutable.HashMap[Int, Enemy] = mutable.HashMap()
+  private val allianceMap: mutable.HashMap[Int, Alliance] = mutable.HashMap()
 
-  def addEnemy(enemy: Enemy): Unit =
-    enemyMap.getOrElseUpdate(enemy.getId, enemy)
+  def addCreature(creature: Creature): Unit =
+    creature match
+      case enemy: Enemy =>
+        enemyMap.getOrElseUpdate(enemy.getId, enemy)
+      case alliance: Alliance =>
+        allianceMap.getOrElseUpdate(alliance.getId, alliance)
+      case _ =>
 
-  def removeEnemy(enemy: Enemy): Unit =
-    // race condition:
+  def removeCreature(creature: Creature): Unit =
+    val map = if creature.isInstanceOf[Enemy] then enemyMap else allianceMap
     this.synchronized(
-      enemyMap.remove(enemy.getId)
+      map.remove(creature.getId)
     )
 
   def getEnemies: Iterable[Enemy] = enemyMap.values
+  def getAlliance: Iterable[Alliance] = allianceMap.values
 
 class Grid(gp: GamePanel):
 
@@ -40,51 +50,58 @@ class Grid(gp: GamePanel):
   private def checkBounds(x: Int, y: Int): Boolean =
     x >= 0 && x < rows && y >= 0 && y < cols
 
-  private def enemyCenterPos(enemy: Enemy): (Int, Int) =
-    val pos = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
-    val gridX = enemy.getPosition._1.toInt / cellSize
-    val gridY = enemy.getPosition._2.toInt / cellSize
+  private def creatureCenterPos(creature: Creature): (Int, Int) =
+    val pos = (creature.attackBox.getCenterX, creature.attackBox.getCenterY)
+    val gridX = creature.getPosition._1.toInt / cellSize
+    val gridY = creature.getPosition._2.toInt / cellSize
     (gridX, gridY)
 
-  def remove(enemy: Enemy): Unit =
-    val (gridX, gridY) = enemyCenterPos(enemy)
+  def remove(creature: Creature): Unit =
+    val (gridX, gridY) = creatureCenterPos(creature)
     if checkBounds(gridX, gridY) then
-      cells(gridX)(gridY).removeEnemy(enemy)
+      cells(gridX)(gridY).removeCreature(creature) // Rename to a more general method
 
-  def updateEnemyPosition(enemy: Enemy, prevPos: (Int, Int)): Unit =
-
-    val (newGridX, newGridY) = enemyCenterPos(enemy)
+  def updateCreaturePosition(creature: Creature, prevPos: (Int, Int)): Unit =
+    val (newGridX, newGridY) = creatureCenterPos(creature)
     val (prevX, prevY) = prevPos
     val oldGridX = prevX / cellSize
     val oldGridY = prevY / cellSize
 
     if (oldGridX != newGridX || oldGridY != newGridY) then
       if checkBounds(oldGridX, oldGridY) then
-        cells(oldGridX)(oldGridY).removeEnemy(enemy)
+        cells(oldGridX)(oldGridY).removeCreature(creature)
 
       if checkBounds(newGridX, newGridY) then
-        cells(newGridX)(newGridY).addEnemy(enemy)
+        cells(newGridX)(newGridY).addCreature(creature) // Rename to a more general method
 
-  def scanForEnemiesInRange(tower: Tower): ListBuffer[Enemy] =
-    val ellipse = tower.attackCircle
-    val nearbyEnemies: ListBuffer[Enemy] = ListBuffer()
-
+  private def scanForCreaturesInRange[T <: Creature](
+    attacker: Entity,
+    getCreatures: (Int, Int) => Iterable[T]
+  ): ListBuffer[T] =
+    val ellipse = attacker.attackCircle
+    val nearbyCreatures: ListBuffer[T] = ListBuffer()
     val maxRect: Rectangle2D = Tools.getInnerRectangle(ellipse)
 
-    val minX: Int = (maxRect.minX.toInt / cellSize)
-    val maxX: Int = (maxRect.maxX.toInt / cellSize)
-    val minY: Int = (maxRect.minY.toInt / cellSize)
-    val maxY: Int = (maxRect.maxY.toInt / cellSize)
+    val minX = (maxRect.minX.toInt / cellSize).max(0)
+    val maxX = (maxRect.maxX.toInt / cellSize).min(rows - 1)
+    val minY = (maxRect.minY.toInt / cellSize).max(0)
+    val maxY = (maxRect.maxY.toInt / cellSize).min(cols - 1)
 
-    for (i <- Math.max(0, minX) to Math.min(rows - 1, maxX)) do
-      for (j <- Math.max(0, minY) to Math.min(cols - 1, maxY)) do
-        cells(i)(j).getEnemies.foreach(enemy =>
-          val pos = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
-          if (ellipse.contains(pos._1, pos._2)) then
-            nearbyEnemies += enemy
+    for i <- minX to maxX do
+      for j <- minY to maxY do
+        getCreatures(i, j).foreach ( creature =>
+          val pos = (creature.attackBox.getCenterX, creature.attackBox.getCenterY)
+          if ellipse.contains(pos._1, pos._2) then
+            nearbyCreatures += creature
         )
 
-    nearbyEnemies
+    nearbyCreatures
+
+  def scanForEnemiesInRange(attacker: Entity): ListBuffer[Enemy] =
+    scanForCreaturesInRange(attacker, (x, y) => cells(x)(y).getEnemies)
+
+  def scanForAlliancesInRange(enemy: Enemy): ListBuffer[Alliance] =
+    scanForCreaturesInRange(enemy, (x, y) => cells(x)(y).getAlliance)
 
   def draw(g: Graphics2D, tower: Tower): Unit =
     g.setColor(Color.GRAY)

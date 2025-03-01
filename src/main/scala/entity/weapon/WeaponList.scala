@@ -22,7 +22,6 @@ case class Explo(
   protected val yDrawOffSet: Double = 45
 ) extends Weapon(gp, enemy)
 
-
 object Explo:
   val name = s"Explo01"
   private val jsonPath: String = s"weapons/Explo01.json"
