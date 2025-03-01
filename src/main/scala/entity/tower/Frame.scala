@@ -38,7 +38,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild):
     Image.magic01.getWidth, Image.magic01.getHeight
   )
   val buttons: Map[Rectangle, Tower] = Map(
-//    barrackButton -> "Barracks selected! Train your soldiers here.",
+    barrackButton -> BarrackTower(gp, 1, pos),
     exploButton -> ExploTower(gp, 1, pos),
     arrowButton -> ArrowTower(gp, 1, pos),
     magicButton -> MagicTower(gp, 1, pos)

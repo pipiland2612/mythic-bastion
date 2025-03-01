@@ -43,11 +43,15 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
 
   val random: Random = Random(dynamicSeed)
 
-  val centerCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
+  val centerCoords: (Double, Double) =
+    if Option(idleAnimation).isDefined then
+      Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
+    else Tools.getCenterCoords(pos, towerImage)
   val attackCircle: Ellipse2D =
+    val image = if Option(idleAnimation).isDefined then idleAnimation.getCurrentFrame else towerImage
     new Ellipse2D.Double(
-      centerCoords._1 - (getRange*2 - idleAnimation.getCurrentFrame.getWidth())/2,
-      centerCoords._2 - (getRange*4/3 - idleAnimation.getCurrentFrame.getHeight())/2,
+      centerCoords._1 - (getRange*2 - image.getWidth())/2,
+      centerCoords._2 - (getRange*4/3 - image.getHeight())/2,
       getRange*2, getRange*4/3
     )
   var isShowingRange: Boolean = false

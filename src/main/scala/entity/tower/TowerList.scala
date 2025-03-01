@@ -1,5 +1,6 @@
 package entity.tower
 
+import entity.creature.alliance.{Alliance, Soldier01}
 import entity.weapon.{Arrow, Explo, MagicBullet}
 import entity.{Direction, State}
 import game.GamePanel
@@ -8,6 +9,7 @@ import utils.{Animation, Tools}
 import java.awt.geom.AffineTransform
 import java.awt.{Color, Graphics2D}
 import java.awt.image.BufferedImage
+import scala.collection.mutable.ListBuffer
 
 class ExploTower(
   gp: GamePanel,
@@ -152,3 +154,65 @@ class MagicTower(
 object MagicTower :
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): MagicTower =
     new MagicTower(gp, level, s"MagicWizard", MagicBullet.name, pos, s"MagicTower")
+
+
+class BarrackTower(
+  gp: GamePanel,
+  level: Int,
+  val name: String,
+  var pos: (Double, Double),
+  val towerImagePath: String,
+) extends Tower(gp, level):
+
+  val weaponType: String = ""
+  val maxAttackCounter: Int = 0
+  val maxPrepareCounter: Int = 0
+  val maxAttackCoolDown: Double = 0
+  val range: Double = 120
+
+  protected val jsonPath: String = s"towers/BarrackTower$level.json"
+  protected val imagePath: String = s"towers/BarrackTower$level.png"
+  private val allianceType: String = Soldier01.name
+  private var prepareAnimation: Animation = _
+  private val transform: AffineTransform = AffineTransform()
+  private val barrackTrainers: Vector[BarrackTrainer] =
+    Vector(BarrackTrainer((pos._1 + 10, pos._2 + 10)), BarrackTrainer((pos._1 + 5, pos._2 + 10)), BarrackTrainer((pos._1 + 7, pos._2 + 15)))
+
+  override def update(): Unit =
+    barrackTrainers.foreach(_.update())
+    // Update soldier
+    barrackTrainers.flatMap(_.getCurrentSoldier).foreach(_.update())
+
+  override def draw(g2d: Graphics2D): Unit =
+    Tools.drawFrame(g2d, towerImage, transform, centerCoords, offsetX, offsetY)
+    barrackTrainers.flatMap(_.getCurrentSoldier).foreach(_.draw(g2d))
+
+  class BarrackTrainer (var pos: (Double, Double)):
+    private val soldierTrainingTime = 10 * 60 // 10 seconds
+    private var trainingCounter = soldierTrainingTime
+    private var training: Boolean = false
+    private var currentSoldier: Option[Alliance] = Alliance.allianceOfName(allianceType, pos)
+
+    def getCurrentSoldier: Option[Alliance] = currentSoldier
+    def update(): Unit =
+      currentSoldier match
+        case Some(soldier) =>
+          if soldier.getHealth <= 0 then currentSoldier = None
+        case None => startTraining()
+
+    private def startTraining(): Unit =
+      if trainingCounter <= 0 then
+        currentSoldier = Alliance.allianceOfName(allianceType, pos)
+        trainingCounter = soldierTrainingTime
+      else
+        trainingCounter -= 1
+
+  end BarrackTrainer
+
+  override protected def setUpImages(): Unit = {}
+  override protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit = {}
+  override protected def parse(): Unit = {}
+
+object BarrackTower :
+  def apply(gp: GamePanel, level: Int, pos: (Double, Double)): BarrackTower =
+    new BarrackTower(gp, level, s"BarrackTower0$level", pos, s"BarrackTower")

@@ -43,7 +43,7 @@ abstract class Entity(gp: GamePanel):
   protected def setUpImages(): Unit
   protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit
 
-  private def parse(): Unit =
+  protected def parse(): Unit =
     Cache.animationCached.get(this.name) match
       case Some(value) =>
         parseInformation(value)

@@ -95,7 +95,6 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
 end Enemy
 
 object Enemy:
-
   private var gp: GamePanel = _
   private var idCounter: Int = 0
   private def nextId(): Int =
@@ -113,12 +112,12 @@ object Enemy:
 
     enemyData.get(key).map ((initialData, jsonData, imageData, rect) =>
       val data: Vector[Double] = initialData.map(_ * difficulty)
-      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6), data(7), data(8) / difficulty, data(9), data(10), jsonData, imageData, rect, gp)
+      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6), data(7), data(8) / difficulty, data(9), jsonData, imageData, rect, gp)
     )
 
   def clone(enemy: Enemy): Enemy =
     Creep(
-      enemy.getName, enemy.getMaxHealth, enemy.getHealth, enemy.playerDamage,
+      enemy.getName, enemy.getMaxHealth, enemy.playerDamage,
       enemy.getApDmg, enemy.getApDefense,enemy.getAdDmg, enemy.getAdDefense,
       enemy.getRange, enemy.getSpeed, enemy.getMaxAttackCoolDown, enemy.getMaxDeadCounter, enemy.getJsonPath, enemy.getImagePath, enemy.getRect, gp
     )

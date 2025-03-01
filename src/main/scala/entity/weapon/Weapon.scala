@@ -83,14 +83,14 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   private def moveAlongCurve(): Unit =
     attackCurve match
       case Some((start, mid, end)) =>
-        val distance = Tools.distance(end, start)
+        val distance = Tools.distance(enemy.getPosition, start)
         val normalizedDist = (distance / 100).max(1.0)
         val dynamicSpeed = baseSpeed * (speed / normalizedDist)
         val isDescending = attackT >= 0.45
 
         val weightFactor = if isDescending then 1 + (weight * 0.2) else 1.0
         attackT = (attackT + dynamicSpeed * weightFactor).min(1.0)
-        pos = Tools.bezier(attackT, start, mid, end)
+        pos = Tools.bezier(attackT, start, mid, enemy.getPosition)
       case None =>
         attackInProgress = false
 
