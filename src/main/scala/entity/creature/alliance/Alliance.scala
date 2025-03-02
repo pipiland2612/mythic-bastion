@@ -33,13 +33,16 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
     walkingAnimation = Animation(value(1), 10)
     fightingAnimation = Animation(value(2), 10)
     deadAnimation = Animation(value(3), 10)
-    
-  override protected def findEnemy[T <: Creature](): ListBuffer[T] = 
+
+  override protected def findEnemy[T <: Creature](): ListBuffer[T] =
     gp.getSystemHandler.getGrid.scanForEnemiesInRange(this).asInstanceOf[ListBuffer[T]]
-  
+
   override def update(): Unit =
     super.update()
     gp.getSystemHandler.getGrid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
+    this.setAction()
+    this.handleAttackAnimation()
+
     if health <= 0 then
       gp.getSystemHandler.getGrid.remove(this)
 

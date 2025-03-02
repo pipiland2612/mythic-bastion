@@ -26,7 +26,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   protected var walkingAnimation: Animation = _
   protected var fightingAnimation: Animation = _
   protected var deadAnimation: Animation = _
-  def attackCircle: Ellipse2D = Ellipse2D.Double(pos._1 + 10, pos._2, getRange*2, getRange*4/3)
+  def attackCircle: Ellipse2D = Ellipse2D.Double(pos._1 + 5, pos._2, getRange*2, getRange*4/3)
 
   def getMaxDeadCounter: Double = maxDeadCounter
   def getRect: Rectangle2D = rect
@@ -80,24 +80,21 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
 
   private var attackCounter = 0
   private val maxAttackCounter = 40
-  private def handleAttackAnimation(): Unit =
+  def handleAttackAnimation(): Unit =
     attackCounter += 1
     if (attackCounter >= maxAttackCounter) then
       attackCounter = 0
       state = State.IDLE
     needsAnimationUpdate = true
-    checkAnimationUpdate()
 
   override def update(): Unit =
+    super.update()
     lastPosition = (attackBox.getCenterX, attackBox.getCenterY)
-    setAction()
-    handleAttackAnimation()
     if health <= 0 then
       needsAnimationUpdate = true
       this.state = State.DEAD
       deadCounter += 1
       if deadCounter >= maxDeadCounter then hasDied = true
-    super.update()
 
   override def draw(g2d: Graphics2D): Unit =
     super.draw(g2d)

@@ -89,6 +89,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     super.update()
     if this.state != State.DEAD then
       setAction()
+      handleAttackAnimation()
       gp.getSystemHandler.getGrid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
       if this.haveReachBase then attackPlayer()
 

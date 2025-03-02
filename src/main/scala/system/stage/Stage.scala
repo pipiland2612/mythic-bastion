@@ -3,7 +3,6 @@ package system.stage
 import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.tower.TowerBuild
-import scala.collection.mutable.ListBuffer
 
 case class Stage(
   stageName: String,
@@ -14,21 +13,21 @@ case class Stage(
   waves: Vector[Wave],
   map: GameMap,
 ):
-  private val enemyList: ListBuffer[Enemy] = ListBuffer()
-  private val allianceList: ListBuffer[Alliance] = ListBuffer()
+  private var enemyList: List[Enemy] = List()
+  private var allianceList: List[Alliance] = List()
 
   def getEnemyList: List[Enemy] = enemyList.toList
   def getAllianceList: List[Alliance] = allianceList.toList
   def totalWave: Int = waves.length
 
   def filterEnemyList(condition: Enemy => Boolean): Unit =
-    enemyList.filterInPlace(condition)
+    enemyList = enemyList.filter(condition)
   
   def addEnemy(enemy: Enemy): Unit =
-    enemyList += enemy
+    enemyList :+= enemy
 
   def addAllianceList(list: Vector[Alliance]): Unit =
-    allianceList.addAll(list)
+    allianceList ++= list
 
   override def toString: String =
     val alliances = allianceList.map(_.toString).mkString(", ")

@@ -22,7 +22,7 @@ case class Soldier(
   var pos: (Double, Double) = (0, 0),
 ) extends Alliance(gp):
   var health: Double = maxHealth
-  override def attackCircle: Ellipse2D = Ellipse2D.Double(pos._1 + 20, pos._2 + 15, getRange*2, getRange*4/3)
+  override def attackCircle: Ellipse2D = Ellipse2D.Double(pos._1 + 16, pos._2 + 15, getRange*2, getRange*4/3)
 
 end Soldier
 
@@ -42,7 +42,7 @@ object Helper02:
   val rect: Rectangle2D = Rectangle2D.Double(30, 20, 20, 10)
 
 object Soldier01:
-  val data: Vector[Double] = Vector(70, 0, 0, 10, 0, 15, 0.5, 1 * 60, 45)
+  val data: Vector[Double] = Vector(70, 0, 0, 10, 0, 20, 0.5, 1 * 60, 45)
   val name: String = "Soldier01"
   val jsonPath: String = "alliances/Soldier01.json"
   val imagePath: String = "alliances/Soldier01.png"
