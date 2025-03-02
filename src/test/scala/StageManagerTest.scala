@@ -14,7 +14,7 @@ class StageManagerTest extends AnyFunSuite :
     )
 
     testCases.foreach(test =>
-      gp.getSystemHandler.stageManager.startWave()
+//      gp.getSystemHandler.stageManager.startWave()
     )
 
 

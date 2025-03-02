@@ -39,7 +39,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     hitEndAnimation = Animation(frames = value(2), frameDuration = 10)
 
   protected def setUpImages(): Unit =
-    this.images = AnimationFactory.createWeaponAnimationMap(
+    this.images = WeaponAnimationFactory.createWeaponAnimationMap(
       directions = Direction.allEntityDirections,
       idleAnim = idleAnimation,
       attackAnim = hitAnimation
@@ -131,7 +131,7 @@ object Weapon:
       case Arrow.name => Arrow(gp, enemy, pos)
       case MagicBullet.name => MagicBullet(gp, enemy, pos)
 
-object AnimationFactory:
+private object WeaponAnimationFactory:
   def createWeaponAnimationMap(
     directions: Seq[Direction],
     idleAnim: Animation,

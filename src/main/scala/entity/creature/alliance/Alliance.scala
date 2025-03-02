@@ -21,7 +21,7 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
     val mirroredDirections = Seq(Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT)
     val nonMirroredDirections = Direction.allCreatureDirections.diff(mirroredDirections)
 
-    images = AnimationFactory.createAnimationMap(
+    images = AllianceAnimationFactory.createAnimationMap(
       mirroredDirections = mirroredDirections,
       nonMirroredDirections = nonMirroredDirections,
       idleAnim = idleAnimation,
@@ -103,7 +103,7 @@ object Alliance:
       gp = gp
     )
 
-object AnimationFactory:
+private object AllianceAnimationFactory:
   def createAnimationMap(
     mirroredDirections: Seq[Direction],
     nonMirroredDirections: Seq[Direction],

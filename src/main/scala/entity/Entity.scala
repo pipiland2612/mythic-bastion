@@ -23,7 +23,7 @@ abstract class Entity(gp: GamePanel):
   protected val range: Double
   protected val maxAttackCoolDown: Double
   protected var attackCoolDown: Double = 0
-  var needsAnimationUpdate: Boolean = false
+  protected var needsAnimationUpdate: Boolean = false
 
   private val transform = new AffineTransform()
   

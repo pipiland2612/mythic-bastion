@@ -25,7 +25,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   override def setUpImages(): Unit =
     val mirroredDirections = Seq(Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT)
     val nonMirroredDirections = Direction.allCreatureDirections.diff(mirroredDirections)
-    this.images = AnimationFactory.createEnemyAnimationMap(
+    this.images = EnemyAnimationFactory.createEnemyAnimationMap(
       allDirections = Direction.allCreatureDirections,
       mirroredDirections = mirroredDirections,
       nonMirroredDirections = nonMirroredDirections,
@@ -149,7 +149,7 @@ object Enemy:
       gp = gp
     )
 
-object AnimationFactory:
+private object EnemyAnimationFactory:
   def createEnemyAnimationMap(
     allDirections: Seq[Direction],
     mirroredDirections: Seq[Direction],
@@ -171,7 +171,7 @@ object AnimationFactory:
     Tools.fillMap(allDirections, State.ATTACK, fightAnim) ++
     Tools.fillMap(allDirections, State.DEAD, deadAnim)
 
-object EnemyData:
+private object EnemyData:
   case class EnemyConfig(
     stats: Vector[Double],
     jsonPath: String,
