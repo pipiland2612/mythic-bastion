@@ -4,7 +4,7 @@ import game.GamePanel
 import gui.Image
 
 import java.awt.geom.AffineTransform
-import java.awt.{AlphaComposite, BasicStroke, Color, Graphics2D, RadialGradientPaint, Rectangle}
+import java.awt.{Color, Graphics2D, RadialGradientPaint, Rectangle}
 
 class Frame(gp: GamePanel, towerBuild: TowerBuild):
   private val upgradeCoords: (Double, Double) =
@@ -50,16 +50,16 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild):
     Image.upgrade.getWidth, Image.upgrade.getHeight
   )
 
-  val buttons: Map[Rectangle, Tower] = Map(
+  private val buttons: Map[Rectangle, Tower] = Map(
     barrackButton -> BarrackTower(gp, 1, pos),
     exploButton -> ExploTower(gp, 1, pos),
     arrowButton -> ArrowTower(gp, 1, pos),
     magicButton -> MagicTower(gp, 1, pos)
   )
 
-  val levelUpButtons = Map(
-    sellButton -> "Sell",
-    levelUpButton -> "Level up",
+  private val levelUpButtons = Map(
+    sellButton -> "S",
+    levelUpButton -> "L",
   )
 
   def handleFrameOnClick(x: Int, y: Int): Unit =
@@ -80,8 +80,12 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild):
   private def handleLevelUpSelection(x: Int, y: Int): Unit =
     levelUpButtons.keys.find(_.contains(x, y)) match
       case Some(button) =>
-        levelUpButtons.get(button) match
-          case string => println(string)
+        if button == levelUpButton then
+          towerBuild.getCurrentTower match
+            case Some(tower: Tower) =>
+              println(tower.level)
+              towerBuild.setCurrentTower(Tower.levelUp(tower))
+            case _ =>
       case None =>
         setOffFrame(x, y)
 

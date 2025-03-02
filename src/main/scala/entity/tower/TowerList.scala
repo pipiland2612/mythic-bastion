@@ -20,7 +20,8 @@ class ExploTower(
   val range: Double = 120,
   val maxAttackCounter: Int = 100,
   val maxPrepareCounter: Int = 70,
-  val maxAttackCoolDown: Double = 0
+  val maxAttackCoolDown: Double = 0,
+  val towerType: String = ExploTower.towerType
 ) extends Tower(gp, level):
   protected val jsonPath: String = s"towers/ExploTower$level.json"
   protected val imagePath: String = s"towers/ExploTower$level.png"
@@ -53,8 +54,9 @@ class ExploTower(
         Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform, centerCoords, offsetX, offsetY)
 
 object ExploTower:
+  val towerType = "Explo"
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ExploTower =
-    new ExploTower(gp, level, s"ExploTower0$level", Explo.name, pos, "ExploTower")
+    new ExploTower(gp, level, s"ExploTower0$level", s"Explo0$level", pos, "ExploTower")
 
 class ArrowTower(
   gp: GamePanel,
@@ -66,7 +68,8 @@ class ArrowTower(
   val range: Double = 200,
   val maxAttackCounter: Int = 45,
   val maxPrepareCounter: Int = 70,
-  val maxAttackCoolDown: Double = 0
+  val maxAttackCoolDown: Double = 0,
+  val towerType: String = ArrowTower.towerType
 ) extends Tower(gp, level):
   protected val imagePath: String = s"towers/ArrowShooter0$level.png"
   protected val jsonPath: String = s"towers/ArrowShooter0$level.json"
@@ -92,8 +95,9 @@ class ArrowTower(
     (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 
 object ArrowTower:
+  val towerType = "Arrow"
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ArrowTower =
-    new ArrowTower(gp, level, s"ArrowShooter0$level", Arrow.name, pos, "ArrowTower")
+    new ArrowTower(gp, level, s"ArrowShooter0$level", s"Arrow0$level", pos, "ArrowTower")
 
 class MagicTower(
   gp: GamePanel,
@@ -105,7 +109,8 @@ class MagicTower(
   val range: Double = 110,
   val maxAttackCounter: Int = 70,
   val maxPrepareCounter: Int = 70,
-  val maxAttackCoolDown: Double = 0
+  val maxAttackCoolDown: Double = 0,
+  val towerType: String = MagicTower.towerType
 ) extends Tower(gp, level):
   protected val jsonPath: String = s"towers/MagicWizard.json"
   protected val imagePath: String = s"towers/MagicWizard.png"
@@ -131,6 +136,7 @@ class MagicTower(
     (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 
 object MagicTower:
+  val towerType = "Magic"
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): MagicTower =
     new MagicTower(gp, level, "MagicWizard", MagicBullet.name, pos, "MagicTower")
 
@@ -139,7 +145,8 @@ class BarrackTower(
   level: Int,
   val name: String,
   var pos: (Double, Double),
-  val towerImagePath: String
+  val towerImagePath: String,
+  val towerType: String = BarrackTower.towerType
 ) extends Tower(gp, level):
   val weaponType: String = ""
   val maxAttackCounter: Int = 0
@@ -204,6 +211,7 @@ class BarrackTower(
   override protected def parse(): Unit = {}
 
 object BarrackTower:
+  val towerType = "Barrack"
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): BarrackTower =
     new BarrackTower(gp, level, s"BarrackTower0$level", pos, "BarrackTower")
 

@@ -11,39 +11,49 @@ import java.awt.image.BufferedImage
 
 case class Explo(
   gp: GamePanel,
+  level: Int,
   name: String,
   jsonPath: String,
   imagePath: String,
   enemy: Enemy,
   var pos: (Double, Double),
-  protected val apDmg: Double = 0,
-  protected val adDmg: Double = 20,
-  protected val speed: Double = 0.7,
-  protected val curveConst: Double = 1.8,
+  protected val apDmg: Double,
+  protected val adDmg: Double,
+  protected val speed: Double,
+  protected val curveConst: Double = 2,
   protected val yDrawOffSet: Double = 45
 ) extends Weapon(gp, enemy)
 
 object Explo:
-  val name = "Explo01"
-  private val jsonPath: String = s"weapons/$name.json"
-  private val imagePath: String = s"weapons/$name.png"
+  private val baseStats = Map(
+    1 -> (0.0, 20.0, 0.7),  // (apDmg, adDmg, speed) for level 1
+    2 -> (0.0, 30.0, 0.6),  // (apDmg, adDmg, speed) for level 2
+    3 -> (0.0, 40.0, 0.6)   // (apDmg, adDmg, speed) for level 3
+  )
 
-  def apply(gp: GamePanel, enemy: Enemy, pos: (Double, Double)): Explo =
-    new Explo(gp, name, jsonPath, imagePath, enemy, pos)
+  def get(gp: GamePanel, enemy: Enemy, pos: (Double, Double), level: Int = 1): Explo =
+    require(level >= 1 && level <= 3, "Level must be between 1 and 3")
+    val name = s"Explo0$level"
+    val (apDmg, adDmg, speed) = baseStats(level)
+    new Explo(
+      gp = gp, level = level, name = name, jsonPath = s"weapons/$name.json", imagePath = s"weapons/$name.png", enemy = enemy,
+      pos = pos, apDmg = apDmg, adDmg = adDmg, speed = speed
+    )
 
 case class Arrow(
   gp: GamePanel,
+  level: Int,
   name: String,
   jsonPath: String,
   imagePath: String,
   enemy: Enemy,
   var pos: (Double, Double),
-  protected val apDmg: Double = 0,
-  protected val adDmg: Double = 10,
-  protected val speed: Double = 2,
-  protected val curveConst: Double = 0.5,
-  protected val yDrawOffSet: Double = 0
-) extends Weapon(gp, enemy):
+  protected val apDmg: Double,
+  protected val adDmg: Double,
+  protected val speed: Double,
+  protected val curveConst: Double,
+  protected val yDrawOffSet: Double
+) extends Weapon(gp, enemy) :
   private val transform = new AffineTransform()
   override protected val deadDuration = 30
   override protected val hitTime = 0.9
@@ -75,13 +85,22 @@ case class Arrow(
         Tools.drawFrame(g2d, animation.getCurrentFrame, transform, pos)
       case _ =>
 
-object Arrow:
-  val name = "Arrow01"
-  private val jsonPath: String = s"weapons/$name.json"
-  private val imagePath: String = s"weapons/$name.png"
+object Arrow :
+  private val baseStats = Map(
+    1 -> (0.0, 10.0, 2.0, 0.5, 0.0),  // (apDmg, adDmg, speed, curveConst, yDrawOffSet)
+    2 -> (0.0, 15.0, 2.2, 0.5, 0.0),  // Example stats for level 2
+    3 -> (0.0, 20.0, 2.4, 0.5, 0.0)   // Example stats for level 3
+  )
 
-  def apply(gp: GamePanel, enemy: Enemy, pos: (Double, Double)): Arrow =
-    new Arrow(gp, name, jsonPath, imagePath, enemy, pos)
+  // Main apply method with required level
+  def get(gp: GamePanel, enemy: Enemy, pos: (Double, Double), l: Int): Arrow =
+    val level = Math.min(3, l)
+    val name = s"Arrow0$level"
+    val (apDmg, adDmg, speed, curveConst, yDrawOffSet) = baseStats(level)
+    new Arrow(
+      gp = gp, level = level, name = name, jsonPath = s"weapons/$name.json", imagePath = s"weapons/$name.png", enemy = enemy,
+      pos = pos, apDmg = apDmg, adDmg = adDmg, speed = speed, curveConst = curveConst, yDrawOffSet = yDrawOffSet
+    )
 
 case class MagicBullet(
   gp: GamePanel,

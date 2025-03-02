@@ -120,16 +120,33 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       checkAnimationUpdate()
       this.pos = (enemy.getPosition._1, enemy.getPosition._2 - yDrawOffSet)
 
-object Weapon:
+object Weapon :
   private var gp: GamePanel = _
 
-  def setUp(gp: GamePanel): Unit = this.gp = gp
+  def setUp(gp: GamePanel): Unit =
+    this.gp = gp
 
-  def clone(weapon: String, enemy: Enemy, pos: (Double, Double)): Weapon =
+  def clone(weapon: String, enemy: Enemy, pos: (Double, Double), l: Int = 1): Weapon =
+    val level = Math.min(l, 3)
     weapon match
-      case Explo.name => Explo(gp, enemy, pos)
-      case Arrow.name => Arrow(gp, enemy, pos)
-      case MagicBullet.name => MagicBullet(gp, enemy, pos)
+      case s if s.startsWith("Explo") =>
+        val extractedLevel = extractLevel(s, level)
+        Explo.get(gp, enemy, pos, extractedLevel)
+      case s if s.startsWith("Arrow") =>
+        val extractedLevel = extractLevel(s, level)
+        Arrow.get(gp, enemy, pos, extractedLevel)
+      case s if s.startsWith("MagicBullet") =>
+        val extractedLevel = extractLevel(s, level)
+        MagicBullet(gp, enemy, pos)
+      case _ => throw new IllegalArgumentException(s"Unknown weapon type: $weapon")
+
+  private def extractLevel(weaponName: String, defaultLevel: Int): Int =
+    val levelPattern = ".*0(\\d)$".r
+    weaponName match
+      case levelPattern(levelStr) =>
+        levelStr.toInt
+      case _ =>
+        defaultLevel
 
 private object WeaponAnimationFactory:
   def createWeaponAnimationMap(

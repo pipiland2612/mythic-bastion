@@ -12,13 +12,13 @@ import java.security.SecureRandom
 import java.util.Random
 import scala.collection.mutable.ListBuffer
 
-abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
+abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   this.currentAnimation = Some(idleAnimation)
 
   override def getName: String = s"$name"
   override def getImagePath: String = s"towers/${getName}.png"
   override def getJsonPath: String = s"towers/${getName}.json"
-  override def getRange: Double = range * level
+  override def getRange: Double = range + level * 5
 
   private val transform: AffineTransform = AffineTransform()
   private var attackCounter: Int = 0
@@ -28,6 +28,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private val dynamicSeed = secureRandom.nextLong()
   private val random: Random = Random(dynamicSeed)
 
+  protected val towerType: String
   protected val towerImagePath: String
   protected var towerImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")
   protected val offsetX: Double = 0
@@ -138,3 +139,11 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
     if isShowingRange then
       g2d.setColor(Color.RED)
       g2d.draw(attackCircle)
+
+object Tower:
+  def levelUp(tower: Tower): Tower =
+    tower.towerType match
+      case BarrackTower.towerType => BarrackTower(tower.gp, tower.level + 1, tower.getPosition)
+      case ArrowTower.towerType => ArrowTower(tower.gp, tower.level + 1, tower.getPosition)
+      case MagicTower.towerType => MagicTower(tower.gp, tower.level + 1, tower.getPosition)
+      case ExploTower.towerType => ExploTower(tower.gp, tower.level + 1, tower.getPosition)
