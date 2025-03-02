@@ -1,6 +1,5 @@
 package entity.creature
 
-import entity.creature.alliance.Alliance
 import entity.{Attacker, Defender, Direction, Entity, State}
 import game.GamePanel
 import utils.Animation
@@ -10,42 +9,39 @@ import java.awt.Graphics2D
 import scala.collection.mutable.ListBuffer
 
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
-  currentAnimation = Some(idleAnimation)
   private val id = Creature.nextId()
+
   protected val maxHealth: Double
   protected var health: Double
   protected val rect: Rectangle2D
   protected val maxDeadCounter: Double
 
   protected var isCollided: Boolean = false
-  protected var lastPosition: (Double, Double) = (0,0)
+  protected var lastPosition: (Double, Double) = (0, 0)
   protected var hasDied: Boolean = false
-
   private var deadCounter: Int = 0
 
   protected var walkingAnimation: Animation = _
   protected var fightingAnimation: Animation = _
   protected var deadAnimation: Animation = _
-  def attackCircle: Ellipse2D = Ellipse2D.Double(pos._1 + 5, pos._2, getRange*2, getRange*4/3)
+
+  private var attackCounter = 0
+  private val maxAttackCounter = 40
+
+  currentAnimation = Some(idleAnimation)
 
   def getMaxDeadCounter: Double = maxDeadCounter
   def getRect: Rectangle2D = rect
   def hasDie: Boolean = hasDied
   def getId: Int = id
-
-  def attackBox: Rectangle2D = new Rectangle2D.Double(
-    pos._1 + rect.getX, pos._2 + rect.getY,
-    rect.getWidth, rect.getHeight
-  )
   def getMaxHealth: Double = maxHealth
   def getHealth: Double = health
 
-  protected def findEnemy[T <: Creature](): ListBuffer[T]
-  def takeDamage(damage: Double) = health -= damage
-  def dealDamage(creature: Creature): Unit =
-    val apDamge = Math.max(getApDmg - creature.getApDefense, 0)
-    val adDamage = Math.max(getAdDmg - creature.getAdDefense, 0)
-    creature.takeDamage(adDamage + apDamge)
+  def attackCircle: Ellipse2D =
+    Ellipse2D.Double(pos._1 + 5, pos._2, getRange * 2, getRange * 4 / 3)
+
+  def attackBox: Rectangle2D =
+    new Rectangle2D.Double(pos._1 + rect.getX, pos._2 + rect.getY, rect.getWidth, rect.getHeight)
 
   protected def move(dx: Double, dy: Double): Unit =
     state = State.RUN
@@ -69,32 +65,46 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
       state = State.ATTACK
       needsAnimationUpdate = true
       attackCoolDown = attackCoolDown
-
       if fightingAnimation.isInAttackInterval then
         dealDamage(creature)
+
+  def dealDamage(creature: Creature): Unit =
+    val apDamage = Math.max(getApDmg - creature.getApDefense, 0)
+    val adDamage = Math.max(getAdDmg - creature.getAdDefense, 0)
+    creature.takeDamage(adDamage + apDamage)
+
+  def takeDamage(damage: Double): Unit =
+    health -= damage
+
+  protected def findEnemy[T <: Creature](): ListBuffer[T]
 
   protected def setAction(): Unit =
     val enemyList = findEnemy()
     if enemyList.nonEmpty then
       attack(enemyList.head)
 
-  private var attackCounter = 0
-  private val maxAttackCounter = 40
   def handleAttackAnimation(): Unit =
     attackCounter += 1
-    if (attackCounter >= maxAttackCounter) then
+    if attackCounter >= maxAttackCounter then
       attackCounter = 0
       state = State.IDLE
     needsAnimationUpdate = true
 
   override def update(): Unit =
     super.update()
+    updateLastPosition()
+    checkDeathStatus()
+
+  private def updateLastPosition(): Unit =
     lastPosition = (attackBox.getCenterX, attackBox.getCenterY)
+
+  private def checkDeathStatus(): Unit =
     if health <= 0 then
       needsAnimationUpdate = true
       this.state = State.DEAD
       deadCounter += 1
-      if deadCounter >= maxDeadCounter then hasDied = true
+      if deadCounter >= maxDeadCounter then
+        hasDied = true
 
   override def draw(g2d: Graphics2D): Unit =
     super.draw(g2d)
@@ -102,12 +112,14 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
     g2d.drawRect(attackBox.getX.toInt, attackBox.getY.toInt, attackBox.getWidth.toInt, attackBox.getHeight.toInt)
 
   override def hashCode(): Int = id.hashCode()
+
   override def equals(obj: Any): Boolean = obj match
     case other: Creature => this.id == other.id
-    case _            => false
+    case _ => false
 
 object Creature:
   private var idCounter: Int = 0
+
   private def nextId(): Int =
     idCounter += 1
     idCounter

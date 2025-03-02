@@ -1,16 +1,15 @@
 package entity.creature.enemy
 
+import entity.{Direction, State}
 import entity.creature.Creature
-import entity.creature.alliance.Alliance
 import game.GamePanel
 import utils.{Animation, Tools}
-import entity.{Direction, State, creature}
 
+import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import scala.collection.mutable.ListBuffer
 
 abstract class Enemy(gp: GamePanel) extends Creature(gp):
-  // immutable id to ensure giving exact hashcode
   private var path: Option[Vector[(Double, Double)]] = None
   private var index = 0
 
@@ -20,29 +19,31 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   protected var walkingDownAnimation: Animation = _
   scaleFactor = 1.25
 
-  def setPath(path: Vector[(Double, Double)]) = this.path = Some(path)
+  def setPath(path: Vector[(Double, Double)]): Unit = this.path = Some(path)
   def haveReach: Boolean = haveReachBase
 
   override def setUpImages(): Unit =
     val mirroredDirections = Seq(Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT)
-    this.images =
-      Tools.fillMap(Direction.allCreatureDirections, State.IDLE, idleAnimation) ++
-      Tools.fillMap(mirroredDirections, State.RUN, Tools.flipAnimation(walkingAnimation)) ++
-      Tools.fillMap(Direction.allCreatureDirections.diff(mirroredDirections), State.RUN, walkingAnimation) ++
-      Map(
-        (Direction.DOWN, State.RUN) -> walkingDownAnimation,
-        (Direction.UP, State.RUN) -> walkingUpAnimation
-      ) ++
-      Tools.fillMap(Direction.allCreatureDirections, State.ATTACK, fightingAnimation) ++
-      Tools.fillMap(Direction.allCreatureDirections, State.DEAD, deadAnimation)
+    val nonMirroredDirections = Direction.allCreatureDirections.diff(mirroredDirections)
+    this.images = AnimationFactory.createEnemyAnimationMap(
+      allDirections = Direction.allCreatureDirections,
+      mirroredDirections = mirroredDirections,
+      nonMirroredDirections = nonMirroredDirections,
+      idleAnim = idleAnimation,
+      walkAnim = walkingAnimation,
+      walkUpAnim = walkingUpAnimation,
+      walkDownAnim = walkingDownAnimation,
+      fightAnim = fightingAnimation,
+      deadAnim = deadAnimation
+    )
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    walkingAnimation = Animation(value(0), 10)
-    walkingUpAnimation = Animation(value(1), 10)
-    walkingDownAnimation = Animation(value(2), 10)
-    idleAnimation = Animation(value(3), 10)
-    fightingAnimation = Animation(value(4), 10, 2, 8)
-    deadAnimation = Animation(value(5), 10)
+    walkingAnimation = Animation(value(0), frameDuration = 10)
+    walkingUpAnimation = Animation(value(1), frameDuration = 10)
+    walkingDownAnimation = Animation(value(2), frameDuration = 10)
+    idleAnimation = Animation(value(3), frameDuration = 10)
+    fightingAnimation = Animation(value(4), frameDuration = 10, attackStartFrame = 2, attackEndFrame = 8)
+    deadAnimation = Animation(value(5), frameDuration = 10)
 
   def attackPlayer(): Unit =
     gp.getSystemHandler.getStageManager.getCurrentPlayer.foreach(player =>
@@ -57,23 +58,21 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     val absX = Math.abs(xDist)
     val absY = Math.abs(yDist)
 
-    if (absX <= this.speed && absY <= this.speed) then
+    if absX <= this.speed && absY <= this.speed then
       index += 1
       return
 
-    // Move diagonally if it brings us closer
-    if (absX > 0 && absY > 0) then
-      direction =
-        if (xDist < 0 && yDist < 0) Direction.UP_LEFT
-        else if (xDist > 0 && yDist < 0) Direction.UP_RIGHT
-        else if (xDist < 0 && yDist > 0) Direction.DOWN_LEFT
-        else Direction.DOWN_RIGHT
-    else
-      direction =
-        if (absX > absY)
-          if (xDist < 0) Direction.LEFT else Direction.RIGHT
-        else
-          if (yDist < 0) Direction.UP else Direction.DOWN
+    direction = determineDirection(xDist, yDist, absX, absY)
+
+  private def determineDirection(xDist: Double, yDist: Double, absX: Double, absY: Double): Direction =
+    if absX > 0 && absY > 0 then
+      if xDist < 0 && yDist < 0 then Direction.UP_LEFT
+      else if xDist > 0 && yDist < 0 then Direction.UP_RIGHT
+      else if xDist < 0 && yDist > 0 then Direction.DOWN_LEFT
+      else Direction.DOWN_RIGHT
+    else if absX > absY then
+      if xDist < 0 then Direction.LEFT else Direction.RIGHT
+    else if yDist < 0 then Direction.UP else Direction.DOWN
 
   override def setAction(): Unit =
     super.setAction()
@@ -82,7 +81,8 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
         if index < path.length then
           followPath(path(index))
           continueMove()
-        else this.haveReachBase = true
+        else
+          this.haveReachBase = true
       )
 
   override def update(): Unit =
@@ -90,9 +90,14 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     if this.state != State.DEAD then
       setAction()
       handleAttackAnimation()
-      gp.getSystemHandler.getGrid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
+      updateGridPosition()
       if this.haveReachBase then attackPlayer()
+    checkHealthStatus()
 
+  private def updateGridPosition(): Unit =
+    gp.getSystemHandler.getGrid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
+
+  private def checkHealthStatus(): Unit =
     if this.health <= 0 then
       gp.getSystemHandler.getGrid.remove(this)
 
@@ -104,20 +109,78 @@ object Enemy:
   def setUp(gp: GamePanel): Unit = this.gp = gp
 
   def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
-    val enemyData = Map(
-      Monster01.name -> (Monster01.data, Monster01.jsonPath, Monster01.imagePath, Monster01.rect),
-      Monster02.name -> (Monster02.data, Monster02.jsonPath, Monster02.imagePath, Monster02.rect),
-      Monster03.name -> (Monster03.data, Monster03.jsonPath, Monster03.imagePath, Monster03.rect)
-    )
-
-    enemyData.get(key).map ((initialData, jsonData, imageData, rect) =>
-      val data: Vector[Double] = initialData.map(_ * difficulty)
-      Creep(key, data(0), data(1), data(2), data(3), data(4), data(5), data(6), data(7), data(8) / difficulty, data(9), jsonData, imageData, rect, gp)
+    EnemyData.registry.get(key).map(data =>
+      val adjustedData = data.stats.map(_ * difficulty)
+      Creep(
+        name = key,
+        maxHealth = adjustedData(0),
+        playerDamage = adjustedData(1),
+        apDmg = adjustedData(2),
+        apDefense = adjustedData(3),
+        adDmg = adjustedData(4),
+        adDefense = adjustedData(5),
+        range = adjustedData(6),
+        speed = adjustedData(7),
+        maxAttackCoolDown = adjustedData(8) / difficulty,
+        maxDeadCounter = adjustedData(9),
+        jsonPath = data.jsonPath,
+        imagePath = data.imagePath,
+        rect = data.rect,
+        gp = gp
+      )
     )
 
   def clone(enemy: Enemy): Enemy =
     Creep(
-      enemy.getName, enemy.getMaxHealth, enemy.playerDamage,
-      enemy.getApDmg, enemy.getApDefense,enemy.getAdDmg, enemy.getAdDefense,
-      enemy.getRange, enemy.getSpeed, enemy.getMaxAttackCoolDown, enemy.getMaxDeadCounter, enemy.getJsonPath, enemy.getImagePath, enemy.getRect, gp
+      name = enemy.getName,
+      maxHealth = enemy.getMaxHealth,
+      playerDamage = enemy.playerDamage,
+      apDmg = enemy.getApDmg,
+      apDefense = enemy.getApDefense,
+      adDmg = enemy.getAdDmg,
+      adDefense = enemy.getAdDefense,
+      range = enemy.getRange,
+      speed = enemy.getSpeed,
+      maxAttackCoolDown = enemy.getMaxAttackCoolDown,
+      maxDeadCounter = enemy.getMaxDeadCounter,
+      jsonPath = enemy.getJsonPath,
+      imagePath = enemy.getImagePath,
+      rect = enemy.getRect,
+      gp = gp
     )
+
+object AnimationFactory:
+  def createEnemyAnimationMap(
+    allDirections: Seq[Direction],
+    mirroredDirections: Seq[Direction],
+    nonMirroredDirections: Seq[Direction],
+    idleAnim: Animation,
+    walkAnim: Animation,
+    walkUpAnim: Animation,
+    walkDownAnim: Animation,
+    fightAnim: Animation,
+    deadAnim: Animation
+  ): Map[(Direction, State), Animation] =
+    Tools.fillMap(allDirections, State.IDLE, idleAnim) ++
+    Tools.fillMap(mirroredDirections, State.RUN, Tools.flipAnimation(walkAnim)) ++
+    Tools.fillMap(nonMirroredDirections, State.RUN, walkAnim) ++
+    Map(
+      (Direction.DOWN, State.RUN) -> walkDownAnim,
+      (Direction.UP, State.RUN) -> walkUpAnim
+    ) ++
+    Tools.fillMap(allDirections, State.ATTACK, fightAnim) ++
+    Tools.fillMap(allDirections, State.DEAD, deadAnim)
+
+object EnemyData:
+  case class EnemyConfig(
+    stats: Vector[Double],
+    jsonPath: String,
+    imagePath: String,
+    rect: Rectangle2D
+  )
+
+  val registry: Map[String, EnemyConfig] = Map(
+    Monster01.name -> EnemyConfig(Monster01.data, Monster01.jsonPath, Monster01.imagePath, Monster01.rect),
+    Monster02.name -> EnemyConfig(Monster02.data, Monster02.jsonPath, Monster02.imagePath, Monster02.rect),
+    Monster03.name -> EnemyConfig(Monster03.data, Monster03.jsonPath, Monster03.imagePath, Monster03.rect)
+  )

@@ -6,9 +6,9 @@ import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.tower.Tower
 import game.GamePanel
-import scalafx.geometry.Rectangle2D
 import utils.Tools
 
+import java.awt.geom.Ellipse2D
 import java.awt.{Color, Graphics2D}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -20,9 +20,9 @@ class GridCell:
   def addCreature(creature: Creature): Unit =
     creature match
       case enemy: Enemy =>
-        enemyMap.getOrElseUpdate(enemy.getId, enemy)
+        enemyMap.put(enemy.getId, enemy)
       case alliance: Alliance =>
-        allianceMap.getOrElseUpdate(alliance.getId, alliance)
+        allianceMap.put(alliance.getId, alliance)
       case _ =>
 
   def removeCreature(creature: Creature): Unit =
@@ -34,29 +34,27 @@ class GridCell:
       case _ =>
 
   def getEnemies: Iterable[Enemy] = enemyMap.values
-  def getAlliance: Iterable[Alliance] = allianceMap.values
+  def getAlliances: Iterable[Alliance] = allianceMap.values
 
 class Grid(gp: GamePanel):
-
   private val cellSize: Int = 96
   private val rows: Int = gp.screenWidth / cellSize
   private val cols: Int = gp.screenHeight / cellSize
-  private val cells: Array[Array[GridCell]] = Array.ofDim[GridCell](rows, cols)
+  private val cells: Array[Array[GridCell]] = initializeCells()
 
-  initialise()
-  private def initialise(): Unit =
-    for (i <- 0 until rows) do
-      for (j <- 0 until cols) do
-        cells(i)(j) = new GridCell
+  private def initializeCells(): Array[Array[GridCell]] =
+    val grid = Array.ofDim[GridCell](rows, cols)
+    for i <- 0 until rows do
+      for j <- 0 until cols do
+        grid(i)(j) = new GridCell
+    grid
 
   private def checkBounds(x: Int, y: Int): Boolean =
     x >= 0 && x < rows && y >= 0 && y < cols
 
   private def creatureCenterPos(creature: Creature): (Int, Int) =
-    val pos = (creature.attackBox.getCenterX, creature.attackBox.getCenterY)
-    val gridX = pos._1.toInt / cellSize
-    val gridY = pos._2.toInt / cellSize
-    (gridX, gridY)
+    val pos = (creature.attackBox.getCenterX.toInt / cellSize, creature.attackBox.getCenterY.toInt / cellSize)
+    (pos._1, pos._2)
 
   def remove(creature: Creature): Unit =
     val (gridX, gridY) = creatureCenterPos(creature)
@@ -65,19 +63,16 @@ class Grid(gp: GamePanel):
 
   def updateCreaturePosition(creature: Creature, prevPos: (Int, Int)): Unit =
     val (newGridX, newGridY) = creatureCenterPos(creature)
-    val (prevX, prevY) = prevPos
-    val oldGridX = prevX / cellSize
-    val oldGridY = prevY / cellSize
+    val (prevX, prevY) = (prevPos._1 / cellSize, prevPos._2 / cellSize)
 
-    if (oldGridX != newGridX || oldGridY != newGridY) then
-      if checkBounds(oldGridX, oldGridY) then
-        cells(oldGridX)(oldGridY).removeCreature(creature)
-
+    if newGridX != prevX || newGridY != prevY then
+      if checkBounds(prevX, prevY) then
+        cells(prevX)(prevY).removeCreature(creature)
       if checkBounds(newGridX, newGridY) then
         cells(newGridX)(newGridY).addCreature(creature)
-    else if prevX == creature.attackBox.getCenterX && prevY == creature.attackBox.getCenterY then
-      if checkBounds(oldGridX, oldGridY) then
-        cells(oldGridX)(oldGridY).addCreature(creature)
+    else if prevPos == (creature.attackBox.getCenterX.toInt, creature.attackBox.getCenterY.toInt) then
+      if checkBounds(newGridX, newGridY) then
+        cells(newGridX)(newGridY).addCreature(creature)
 
   private def scanForCreaturesInRange[T <: Creature](
     attacker: Entity,
@@ -85,37 +80,43 @@ class Grid(gp: GamePanel):
   ): ListBuffer[T] =
     val ellipse = attacker.attackCircle
     val nearbyCreatures: ListBuffer[T] = ListBuffer()
-    val maxRect: Rectangle2D = Tools.getInnerRectangle(ellipse)
+    val bounds = calculateScanBounds(ellipse)
 
-    val minX = (maxRect.minX.toInt / cellSize).max(0)
-    val maxX = (maxRect.maxX.toInt / cellSize).min(rows - 1)
-    val minY = (maxRect.minY.toInt / cellSize).max(0)
-    val maxY = (maxRect.maxY.toInt / cellSize).min(cols - 1)
-
-    for i <- minX to maxX do
-      for j <- minY to maxY do
-        getCreatures(i, j).foreach ( creature =>
+    for i <- bounds.minX to bounds.maxX do
+      for j <- bounds.minY to bounds.maxY do
+        getCreatures(i, j).foreach(creature =>
           val pos = (creature.attackBox.getCenterX, creature.attackBox.getCenterY)
           if ellipse.contains(pos._1, pos._2) then
             nearbyCreatures += creature
         )
-
     nearbyCreatures
+
+  private def calculateScanBounds(ellipse: Ellipse2D): ScanBounds =
+    val maxRect = Tools.getInnerRectangle(ellipse)
+    ScanBounds(
+      minX = (maxRect.minX.toInt / cellSize).max(0),
+      maxX = (maxRect.maxX.toInt / cellSize).min(rows - 1),
+      minY = (maxRect.minY.toInt / cellSize).max(0),
+      maxY = (maxRect.maxY.toInt / cellSize).min(cols - 1)
+    )
 
   def scanForEnemiesInRange(attacker: Entity): ListBuffer[Enemy] =
     scanForCreaturesInRange(attacker, (x, y) => cells(x)(y).getEnemies)
 
   def scanForAlliancesInRange(enemy: Enemy): ListBuffer[Alliance] =
-    scanForCreaturesInRange(enemy, (x, y) => cells(x)(y).getAlliance)
+    scanForCreaturesInRange(enemy, (x, y) => cells(x)(y).getAlliances)
 
   def draw(g: Graphics2D, tower: Tower): Unit =
-    g.setColor(Color.GRAY)
+    drawGridLines(g)
+    drawAttackRange(g, tower.attackCircle)
 
-    for (i <- 0 until rows) do
-      for (j <- 0 until cols) do
+  private def drawGridLines(g: Graphics2D): Unit =
+    g.setColor(Color.GRAY)
+    for i <- 0 until rows do
+      for j <- 0 until cols do
         g.drawRect(i * cellSize, j * cellSize, cellSize, cellSize)
 
-    val ellipse = tower.attackCircle
+  private def drawAttackRange(g: Graphics2D, ellipse: Ellipse2D): Unit =
     g.setColor(Color.BLUE)
     g.drawOval(
       (ellipse.getCenterX - ellipse.getWidth / 2).toInt,
@@ -123,16 +124,10 @@ class Grid(gp: GamePanel):
       ellipse.getWidth.toInt,
       ellipse.getHeight.toInt
     )
-
-    val maxRect: Rectangle2D = Tools.getInnerRectangle(ellipse)
-    val minX: Int = (maxRect.minX.toInt / cellSize)
-    val maxX: Int = (maxRect.maxX.toInt / cellSize)
-    val minY: Int = (maxRect.minY.toInt / cellSize)
-    val maxY: Int = (maxRect.maxY.toInt / cellSize)
-
+    val bounds = calculateScanBounds(ellipse)
     g.setColor(new Color(0, 0, 255, 50))
-
-    for (i <- Math.max(0, minX) to Math.min(rows - 1, maxX)) do
-      for (j <- Math.max(0, minY) to Math.min(cols - 1, maxY)) do
-        // Draw the checked cells with a transparent fill
+    for i <- bounds.minX to bounds.maxX do
+      for j <- bounds.minY to bounds.maxY do
         g.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
+
+private case class ScanBounds(minX: Int, maxX: Int, minY: Int, maxY: Int)

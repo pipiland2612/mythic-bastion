@@ -12,7 +12,6 @@ import java.security.SecureRandom
 import java.util.Random
 import scala.collection.mutable.ListBuffer
 
-
 abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   this.currentAnimation = Some(idleAnimation)
 
@@ -24,6 +23,10 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private val transform: AffineTransform = AffineTransform()
   private var attackCounter: Int = 0
   private var hasShoot = false
+  private var prepareCounter: Int = 0
+  private val secureRandom: SecureRandom = SecureRandom()
+  private val dynamicSeed = secureRandom.nextLong()
+  val random: Random = Random(dynamicSeed)
 
   protected val towerImagePath: String
   protected var towerImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")
@@ -36,26 +39,14 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   protected val weaponType: String
   protected val maxAttackCounter: Int
   protected val maxPrepareCounter: Int
-  private var prepareCounter: Int = 0
-  private val secureRandom: SecureRandom = SecureRandom()
-  private val dynamicSeed = secureRandom.nextLong()
 
-  val random: Random = Random(dynamicSeed)
-
-  val centerCoords: (Double, Double) =
-    if Option(idleAnimation).isDefined then
-      Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
-    else Tools.getCenterCoords(pos, towerImage)
-  val attackCircle: Ellipse2D =
-    val image = if Option(idleAnimation).isDefined then idleAnimation.getCurrentFrame else towerImage
-    new Ellipse2D.Double(
-      centerCoords._1 - (getRange*2 - image.getWidth())/2,
-      centerCoords._2 - (getRange*4/3 - image.getHeight())/2,
-      getRange*2, getRange*4/3
-    )
+  val centerCoords: (Double, Double) = calculateCenterCoords()
+  val attackCircle: Ellipse2D = createAttackCircle()
   var isShowingRange: Boolean = false
 
-  def bulletPosition: (Double, Double) = (centerCoords._1 + idleAnimation.getCurrentFrame.getWidth() / 2, centerCoords._2 + idleAnimation.getCurrentFrame.getHeight() / 4)
+  def bulletPosition: (Double, Double) =
+    val frame = idleAnimation.getCurrentFrame
+    (centerCoords._1 + frame.getWidth() / 2, centerCoords._2 + frame.getHeight() / 4)
 
   def updateTowerImage(): Unit =
     this.towerImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")
@@ -63,55 +54,73 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   def getBulletList: List[Weapon] = bulletList.toList
 
   override def update(): Unit =
-    if attackCoolDown > 0 then
-      attackCoolDown -= 1
+    updateAttackCooldown()
     super.update()
-    val enemyList = findEnemy()
-    if enemyList.nonEmpty then
-      val randInd = random.nextInt(enemyList.length)
-      attack(enemyList(randInd))
+    handleEnemyAttack()
+    updateBullets()
     handleAttackState()
-    bulletList.toList.foreach(_.update())
-    bulletList.filterInPlace(!_.hit)
     handlePrepareState()
 
   override def draw(g2d: Graphics2D): Unit =
-    bulletList.toList.foreach(_.draw(g2d))
-    if isShowingRange then
-      g2d.setColor(Color.RED)
-      g2d.draw(attackCircle)
+    drawBullets(g2d)
+    drawRangeCircle(g2d)
     Tools.drawFrame(g2d, this.towerImage, transform, centerCoords, offsetX, offsetY)
-    currentAnimation match
-      case Some(animation) =>
-        // Draw archer, wizard
-        Tools.drawFrame(g2d, animation.getCurrentFrame, transform, centerCoords, drawOffsetX, drawOffsetY)
-      case _ =>
+    currentAnimation.foreach(anim =>
+      Tools.drawFrame(g2d, anim.getCurrentFrame, transform, centerCoords, drawOffsetX, drawOffsetY)
+    )
+
+  private def calculateCenterCoords(): (Double, Double) =
+    if Option(idleAnimation).isDefined then
+      Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
+    else
+      Tools.getCenterCoords(pos, towerImage)
+
+  private def createAttackCircle(): Ellipse2D =
+    val image = if Option(idleAnimation).isDefined then idleAnimation.getCurrentFrame else towerImage
+    new Ellipse2D.Double(
+      centerCoords._1 - (getRange * 2 - image.getWidth()) / 2,
+      centerCoords._2 - (getRange * 4 / 3 - image.getHeight()) / 2,
+      getRange * 2,
+      getRange * 4 / 3
+    )
+
+  private def updateAttackCooldown(): Unit =
+    if attackCoolDown > 0 then
+      attackCoolDown -= 1
 
   private def findEnemy(): ListBuffer[Enemy] =
     gp.getSystemHandler.getGrid.scanForEnemiesInRange(this)
- 
+
   private def attack(enemy: Enemy): Unit =
     if attackCoolDown <= 0 && this.state != State.PREPARE then
       state = State.ATTACK
       attackCoolDown = maxAttackCoolDown
       needsAnimationUpdate = true
-      
       if shootAnimation.isInAttackInterval && !hasShoot then
         val pos = bulletPosition
         val bullet = Weapon.clone(weaponType, enemy, pos)
         bulletList += bullet
         hasShoot = true
 
+  private def handleEnemyAttack(): Unit =
+    val enemyList = findEnemy()
+    if enemyList.nonEmpty then
+      val randInd = random.nextInt(enemyList.length)
+      attack(enemyList(randInd))
+
+  private def updateBullets(): Unit =
+    bulletList.toList.foreach(_.update())
+    bulletList.filterInPlace(!_.hit)
+
   private def handleAttackState(): Unit =
     if this.state == State.ATTACK then
       attackCounter += 1
-      if (attackCounter >= maxAttackCounter) then
+      if attackCounter >= maxAttackCounter then
         attackCounter = 0
         currentAnimation.foreach(_.reset())
         state = State.PREPARE
         hasShoot = false
       needsAnimationUpdate = true
-
 
   private def handlePrepareState(): Unit =
     if this.state == State.PREPARE then
@@ -121,3 +130,11 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
         prepareCounter = 0
         this.state = State.IDLE
       needsAnimationUpdate = true
+
+  private def drawBullets(g2d: Graphics2D): Unit =
+    bulletList.toList.foreach(_.draw(g2d))
+
+  protected def drawRangeCircle(g2d: Graphics2D): Unit =
+    if isShowingRange then
+      g2d.setColor(Color.RED)
+      g2d.draw(attackCircle)

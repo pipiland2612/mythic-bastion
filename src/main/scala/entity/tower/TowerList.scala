@@ -22,40 +22,39 @@ class ExploTower(
   val maxPrepareCounter: Int = 70,
   val maxAttackCoolDown: Double = 0
 ) extends Tower(gp, level):
-
   protected val jsonPath: String = s"towers/ExploTower$level.json"
   protected val imagePath: String = s"towers/ExploTower$level.png"
   private var prepareAnimation: Animation = _
   private val transform: AffineTransform = AffineTransform()
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(0), 10)
-    shootAnimation = Animation(value(1), 10, 4, 6)
-    prepareAnimation = Animation(value(2), 10)
+    idleAnimation = Animation(value(0), frameDuration = 10)
+    shootAnimation = Animation(value(1), frameDuration = 10, attackStartFrame = 4, attackEndFrame = 6)
+    prepareAnimation = Animation(value(2), frameDuration = 10)
 
   override def setUpImages(): Unit =
-    this.images =
-      Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
-      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation) ++
-      Tools.fillMap(Direction.allEntityDirections, State.PREPARE, prepareAnimation)
+    this.images = AnimationFactory.createTowerAnimationMap(
+      directions = Direction.allEntityDirections,
+      idleAnim = idleAnimation,
+      attackAnim = shootAnimation,
+      prepareAnim = prepareAnimation
+    )
 
   override def draw(g2d: Graphics2D): Unit =
-    if isShowingRange then
-      g2d.setColor(Color.RED)
-      g2d.draw(attackCircle)
+    drawRangeCircle(g2d)
     bulletList.toList.foreach(_.draw(g2d))
+    drawAnimationOrDefault(g2d)
+
+  private def drawAnimationOrDefault(g2d: Graphics2D): Unit =
     currentAnimation match
       case Some(animation) =>
-        Tools.drawFrame(g2d, animation.getCurrentFrame, transform,
-          centerCoords, offsetX, offsetY)
+        Tools.drawFrame(g2d, animation.getCurrentFrame, transform, centerCoords, offsetX, offsetY)
       case _ =>
-        Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform,
-          centerCoords, offsetX, offsetY)
-//    gp.getSystemHandler.grid.draw(g2d, this)
+        Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform, centerCoords, offsetX, offsetY)
 
-object ExploTower :
+object ExploTower:
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ExploTower =
-    new ExploTower(gp, level, s"ExploTower0$level", Explo.name, pos, s"ExploTower")
+    new ExploTower(gp, level, s"ExploTower0$level", Explo.name, pos, "ExploTower")
 
 class ArrowTower(
   gp: GamePanel,
@@ -69,14 +68,8 @@ class ArrowTower(
   val maxPrepareCounter: Int = 70,
   val maxAttackCoolDown: Double = 0
 ) extends Tower(gp, level):
-
   protected val imagePath: String = s"towers/ArrowShooter0$level.png"
   protected val jsonPath: String = s"towers/ArrowShooter0$level.json"
-
-  private var idleDownAnimation: Animation =_
-  private var shootEndAnimation: Animation =_
-  private var shootDownAnimation: Animation =_
-  private var shootDownEndAnimation: Animation =_
   private val transform: AffineTransform = AffineTransform()
 
   override val offsetX: Double = -30
@@ -85,26 +78,22 @@ class ArrowTower(
   override val drawOffsetY: Double = -16
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-//    idleDownAnimation = Animation(value(0), 10)
-    idleAnimation = Animation(value(1), 10)
-//    shootDownAnimation = Animation(value(2), 10)
-//    shootDownEndAnimation = Animation(value(3), 10)
-    shootAnimation =  Animation(value(4), 15, 2, 8)
-//    shootEndAnimation = Animation(value(5), 10)
+    idleAnimation = Animation(value(1), frameDuration = 10)
+    shootAnimation = Animation(value(4), frameDuration = 15, attackStartFrame = 2, attackEndFrame = 8)
 
   override def setUpImages(): Unit =
-    this.images =
-      Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
-      Tools.fillMap(Direction.allEntityDirections, State.PREPARE, idleAnimation) ++
-//      Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleDownAnimation) ++
-//      Tools.fillMap(upAnimation, State.ATTACK, shootAnimation) ++
-      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation)
-  
-  override def bulletPosition: (Double, Double) = (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
+    this.images = AnimationFactory.createSimpleTowerAnimationMap(
+      directions = Direction.allEntityDirections,
+      idleAnim = idleAnimation,
+      attackAnim = shootAnimation
+    )
 
-object ArrowTower :
+  override def bulletPosition: (Double, Double) = 
+    (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
+
+object ArrowTower:
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ArrowTower =
-    new ArrowTower(gp, level, s"ArrowShooter0$level", Arrow.name, pos, s"ArrowTower")
+    new ArrowTower(gp, level, s"ArrowShooter0$level", Arrow.name, pos, "ArrowTower")
 
 class MagicTower(
   gp: GamePanel,
@@ -118,14 +107,9 @@ class MagicTower(
   val maxPrepareCounter: Int = 70,
   val maxAttackCoolDown: Double = 0
 ) extends Tower(gp, level):
-
   protected val jsonPath: String = s"towers/MagicWizard.json"
   protected val imagePath: String = s"towers/MagicWizard.png"
-  private var idleDownAnimation: Animation =_
-  private var shootDownAnimation: Animation =_
   private val transform: AffineTransform = AffineTransform()
-
-  private var shootEndAnimation: Animation = _
 
   override val offsetX: Double = -25
   override val offsetY: Double = -30
@@ -133,36 +117,30 @@ class MagicTower(
   override val drawOffsetY: Double = -23
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-//    idleDownAnimation = Animation(value(0), 10)
-    idleAnimation = Animation(value(0), 10)
-    shootAnimation = Animation(value(2), 10, 5, 8)
-//    shootAnimation =  Animation(value(3), 10, 5, 8)
+    idleAnimation = Animation(value(0), frameDuration = 10)
+    shootAnimation = Animation(value(2), frameDuration = 10, attackStartFrame = 5, attackEndFrame = 8)
 
   override def setUpImages(): Unit =
-    val downAnimation: Seq[Direction] = Seq(Direction.RIGHT, Direction.DOWN)
-    val upAnimation: Seq[Direction] = Seq(Direction.LEFT, Direction.UP)
-    this.images =
-//      Tools.fillMap(downAnimation, State.IDLE, idleDownAnimation) ++
-//      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation) ++
-      Tools.fillMap(Direction.allEntityDirections, State.PREPARE, idleAnimation) ++
-      Tools.fillMap(Direction.allEntityDirections, State.IDLE, idleAnimation) ++
-      Tools.fillMap(Direction.allEntityDirections, State.ATTACK, shootAnimation)
+    this.images = AnimationFactory.createSimpleTowerAnimationMap(
+      directions = Direction.allEntityDirections,
+      idleAnim = idleAnimation,
+      attackAnim = shootAnimation
+    )
 
-  override def bulletPosition: (Double, Double) = (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
+  override def bulletPosition: (Double, Double) = 
+    (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 
-object MagicTower :
+object MagicTower:
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): MagicTower =
-    new MagicTower(gp, level, s"MagicWizard", MagicBullet.name, pos, s"MagicTower")
-
+    new MagicTower(gp, level, "MagicWizard", MagicBullet.name, pos, "MagicTower")
 
 class BarrackTower(
   gp: GamePanel,
   level: Int,
   val name: String,
   var pos: (Double, Double),
-  val towerImagePath: String,
+  val towerImagePath: String
 ) extends Tower(gp, level):
-
   val weaponType: String = ""
   val maxAttackCounter: Int = 0
   val maxPrepareCounter: Int = 0
@@ -172,32 +150,45 @@ class BarrackTower(
   protected val jsonPath: String = s"towers/BarrackTower$level.json"
   protected val imagePath: String = s"towers/BarrackTower$level.png"
   private val allianceType: String = Soldier01.name
-  private var prepareAnimation: Animation = _
   private val transform: AffineTransform = AffineTransform()
-  private val barrackTrainers: Vector[BarrackTrainer] =
-    Vector(BarrackTrainer((pos._1 - 50, pos._2 + 60)), BarrackTrainer((pos._1 - 30, pos._2 + 80)), BarrackTrainer((pos._1 - 50, pos._2 + 90)))
+  private val barrackTrainers: Vector[BarrackTrainer] = initializeTrainers()
 
   override def update(): Unit =
     barrackTrainers.foreach(_.update())
-    // Update soldier
-    barrackTrainers.flatMap(_.getCurrentSoldier).foreach(_.update())
+    updateSoldiers()
 
   override def draw(g2d: Graphics2D): Unit =
     Tools.drawFrame(g2d, towerImage, transform, centerCoords, offsetX, offsetY)
-    // Draw soldier
+    drawSoldiers(g2d)
+
+  private def initializeTrainers(): Vector[BarrackTrainer] =
+    Vector(
+      BarrackTrainer((pos._1 - 50, pos._2 + 60)),
+      BarrackTrainer((pos._1 - 30, pos._2 + 80)),
+      BarrackTrainer((pos._1 - 50, pos._2 + 90))
+    )
+
+  private def updateSoldiers(): Unit =
+    barrackTrainers.flatMap(_.getCurrentSoldier).foreach(_.update())
+
+  private def drawSoldiers(g2d: Graphics2D): Unit =
     barrackTrainers.flatMap(_.getCurrentSoldier).foreach(_.draw(g2d))
 
-  class BarrackTrainer (var pos: (Double, Double)):
-    private val soldierTrainingTime = 10 * 60 // 10 seconds
+  class BarrackTrainer(var pos: (Double, Double)):
+    private val soldierTrainingTime = 10 * 60
     private var trainingCounter = soldierTrainingTime
-    private var training: Boolean = false
     private var currentSoldier: Option[Alliance] = Alliance.allianceOfName(allianceType, pos)
 
     def getCurrentSoldier: Option[Alliance] = currentSoldier
+
     def update(): Unit =
       currentSoldier match
-        case Some(soldier) => if soldier.hasDie then currentSoldier = None
+        case Some(soldier) => checkSoldierStatus(soldier)
         case None => startTraining()
+
+    private def checkSoldierStatus(soldier: Alliance): Unit =
+      if soldier.hasDie then
+        currentSoldier = None
 
     private def startTraining(): Unit =
       if trainingCounter <= 0 then
@@ -212,6 +203,26 @@ class BarrackTower(
   override protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit = {}
   override protected def parse(): Unit = {}
 
-object BarrackTower :
+object BarrackTower:
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): BarrackTower =
-    new BarrackTower(gp, level, s"BarrackTower0$level", pos, s"BarrackTower")
+    new BarrackTower(gp, level, s"BarrackTower0$level", pos, "BarrackTower")
+
+object AnimationFactory:
+  def createTowerAnimationMap(
+    directions: Seq[Direction],
+    idleAnim: Animation,
+    attackAnim: Animation,
+    prepareAnim: Animation
+  ): Map[(Direction, State), Animation] =
+    Tools.fillMap(directions, State.IDLE, idleAnim) ++
+    Tools.fillMap(directions, State.ATTACK, attackAnim) ++
+    Tools.fillMap(directions, State.PREPARE, prepareAnim)
+
+  def createSimpleTowerAnimationMap(
+    directions: Seq[Direction],
+    idleAnim: Animation,
+    attackAnim: Animation
+  ): Map[(Direction, State), Animation] =
+    Tools.fillMap(directions, State.IDLE, idleAnim) ++
+    Tools.fillMap(directions, State.PREPARE, idleAnim) ++
+    Tools.fillMap(directions, State.ATTACK, attackAnim)
