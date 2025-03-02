@@ -4,7 +4,7 @@ import game.GamePanel
 import gui.Image
 
 import java.awt.geom.AffineTransform
-import java.awt.{Graphics2D, Rectangle}
+import java.awt.{AlphaComposite, BasicStroke, Color, Graphics2D, RadialGradientPaint, Rectangle}
 
 class Frame(gp: GamePanel, towerBuild: TowerBuild):
   private val upgradeCoords: (Double, Double) =
@@ -89,16 +89,34 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild):
     if (!towerBuild.isInBuildRange(x, y)) then
       gp.getGUI.currentFrame = None
 
+  private val dist = Array(0.0f, 0.3f, 0.6f, 0.8f, 1.0f)
+  private val colors = Array(
+    Color(12, 227, 12, 0),
+    Color(12, 227, 12, 25),
+    Color(12, 227, 12, 75),
+    Color(12, 227, 12, 200),
+    Color(12, 227, 12, 255)
+  )
+
   def draw(g2d: Graphics2D): Unit =
     if isDrawingFrame then
+      val g2dCopy = g2d.create().asInstanceOf[Graphics2D]
       transform.setToTranslation(upgradeCoords._1, upgradeCoords._2)
-      g2d.drawImage(Image.frame, transform, None.orNull)
+      g2dCopy.drawImage(Image.frame, transform, None.orNull)
       towerBuild.getCurrentTower match
         case Some(tower) =>
-          g2d.drawImage(Image.upgrade, levelUpCoords._1, levelUpCoords._2, None.orNull)
-          g2d.drawImage(Image.sell, sellCoords._1, sellCoords._2, None.orNull)
+          val (centerX, centerY) = (tower.attackCircle.getCenterX.toInt, tower.attackCircle.getCenterY.toInt)
+          val (x, y, w, h) = (tower.attackCircle.getX.toInt, tower.attackCircle.getY.toInt, tower.attackCircle.getWidth.toInt, tower.attackCircle.getHeight.toInt)
+          val gradient: RadialGradientPaint = RadialGradientPaint(centerX, centerY, w, dist, colors)
+          g2dCopy.setPaint(gradient)
+          g2dCopy.fillOval(x, y, w, h)
+          g2dCopy.drawOval(x, y, w, h)
+          g2dCopy.drawImage(Image.upgrade, levelUpCoords._1, levelUpCoords._2, None.orNull)
+          g2dCopy.drawImage(Image.sell, sellCoords._1, sellCoords._2, None.orNull)
         case _ =>
-          g2d.drawImage(Image.barrack01, barrackCoords._1, barrackCoords._2, None.orNull)
-          g2d.drawImage(Image.explo01, exploCoords._1, exploCoords._2, None.orNull)
-          g2d.drawImage(Image.arrow01, arrowCoords._1, arrowCoords._2, None.orNull)
-          g2d.drawImage(Image.magic01, magicCoords._1, magicCoords._2, None.orNull)
+          g2dCopy.drawImage(Image.barrack01, barrackCoords._1, barrackCoords._2, None.orNull)
+          g2dCopy.drawImage(Image.explo01, exploCoords._1, exploCoords._2, None.orNull)
+          g2dCopy.drawImage(Image.arrow01, arrowCoords._1, arrowCoords._2, None.orNull)
+          g2dCopy.drawImage(Image.magic01, magicCoords._1, magicCoords._2, None.orNull)
+
+      g2dCopy.dispose()
