@@ -28,9 +28,9 @@ class ExploTower(
   private val transform: AffineTransform = AffineTransform()
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(0), frameDuration = 10)
-    shootAnimation = Animation(value(1), frameDuration = 10, attackStartFrame = 4, attackEndFrame = 6)
-    prepareAnimation = Animation(value(2), frameDuration = 10)
+    idleAnimation = Animation(frames = value(0), frameDuration = 10)
+    shootAnimation = Animation(frames = value(1), frameDuration = 10, attackStartFrame = 4, attackEndFrame = 6)
+    prepareAnimation = Animation(frames = value(2), frameDuration = 10)
 
   override def setUpImages(): Unit =
     this.images = AnimationFactory.createTowerAnimationMap(
@@ -78,8 +78,8 @@ class ArrowTower(
   override val drawOffsetY: Double = -16
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(1), frameDuration = 10)
-    shootAnimation = Animation(value(4), frameDuration = 15, attackStartFrame = 2, attackEndFrame = 8)
+    idleAnimation = Animation(frames = value(1), frameDuration = 10)
+    shootAnimation = Animation(frames = value(4), frameDuration = 15, attackStartFrame = 2, attackEndFrame = 8)
 
   override def setUpImages(): Unit =
     this.images = AnimationFactory.createSimpleTowerAnimationMap(
@@ -88,7 +88,7 @@ class ArrowTower(
       attackAnim = shootAnimation
     )
 
-  override def bulletPosition: (Double, Double) = 
+  override def bulletPosition: (Double, Double) =
     (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 
 object ArrowTower:
@@ -117,8 +117,8 @@ class MagicTower(
   override val drawOffsetY: Double = -23
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(0), frameDuration = 10)
-    shootAnimation = Animation(value(2), frameDuration = 10, attackStartFrame = 5, attackEndFrame = 8)
+    idleAnimation = Animation(frames = value(0), frameDuration = 10)
+    shootAnimation = Animation(frames = value(2), frameDuration = 10, attackStartFrame = 5, attackEndFrame = 8)
 
   override def setUpImages(): Unit =
     this.images = AnimationFactory.createSimpleTowerAnimationMap(
@@ -127,7 +127,7 @@ class MagicTower(
       attackAnim = shootAnimation
     )
 
-  override def bulletPosition: (Double, Double) = 
+  override def bulletPosition: (Double, Double) =
     (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 
 object MagicTower:

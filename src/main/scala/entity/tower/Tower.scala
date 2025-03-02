@@ -26,7 +26,7 @@ abstract class Tower(gp: GamePanel, var level: Int) extends Entity(gp):
   private var prepareCounter: Int = 0
   private val secureRandom: SecureRandom = SecureRandom()
   private val dynamicSeed = secureRandom.nextLong()
-  val random: Random = Random(dynamicSeed)
+  private val random: Random = Random(dynamicSeed)
 
   protected val towerImagePath: String
   protected var towerImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")

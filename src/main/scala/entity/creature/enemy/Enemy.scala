@@ -38,12 +38,12 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     )
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    walkingAnimation = Animation(value(0), frameDuration = 10)
-    walkingUpAnimation = Animation(value(1), frameDuration = 10)
-    walkingDownAnimation = Animation(value(2), frameDuration = 10)
-    idleAnimation = Animation(value(3), frameDuration = 10)
-    fightingAnimation = Animation(value(4), frameDuration = 10, attackStartFrame = 2, attackEndFrame = 8)
-    deadAnimation = Animation(value(5), frameDuration = 10)
+    walkingAnimation = Animation(frames = value(0), frameDuration = 10)
+    walkingUpAnimation = Animation(frames = value(1), frameDuration = 10)
+    walkingDownAnimation = Animation(frames = value(2), frameDuration = 10)
+    idleAnimation = Animation(frames = value(3), frameDuration = 10)
+    fightingAnimation = Animation(frames = value(4), frameDuration = 10, attackStartFrame = 2, attackEndFrame = 8)
+    deadAnimation = Animation(frames = value(5), frameDuration = 10)
 
   def attackPlayer(): Unit =
     gp.getSystemHandler.getStageManager.getCurrentPlayer.foreach(player =>

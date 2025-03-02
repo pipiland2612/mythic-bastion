@@ -31,10 +31,10 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
     )
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
-    idleAnimation = Animation(value(0), frameDuration = 10)
-    walkingAnimation = Animation(value(1), frameDuration = 10)
-    fightingAnimation = Animation(value(2), frameDuration = 10)
-    deadAnimation = Animation(value(3), frameDuration = 10)
+    idleAnimation = Animation(frames = value(0), frameDuration = 10)
+    walkingAnimation = Animation(frames = value(1), frameDuration = 10)
+    fightingAnimation = Animation(frames = value(2), frameDuration = 10)
+    deadAnimation = Animation(frames = value(3), frameDuration = 10)
 
   override protected def findEnemy[T <: Creature](): ListBuffer[T] =
     gp.getSystemHandler.getGrid
