@@ -2,16 +2,20 @@ package entity.creature.alliance
 
 import entity.{Direction, State}
 import entity.creature.Creature
+import entity.creature.enemy.Enemy
 import game.GamePanel
 import utils.{Animation, Tools}
 
 import java.awt.image.BufferedImage
+import scala.collection.mutable.ListBuffer
 
 abstract class Alliance(gp: GamePanel) extends Creature(gp):
   val maxHealth: Double
   var health: Double
   scaleFactor = 1.25
 
+  this.direction = Direction.LEFT
+  needsAnimationUpdate = true
   override def setUpImages(): Unit =
     val mirroredDirections = Seq(Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT)
     this.images =
@@ -29,11 +33,13 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
     walkingAnimation = Animation(value(1), 10)
     fightingAnimation = Animation(value(2), 10)
     deadAnimation = Animation(value(3), 10)
-
+    
+  override protected def findEnemy[T <: Creature](): ListBuffer[T] = 
+    gp.getSystemHandler.getGrid.scanForEnemiesInRange(this).asInstanceOf[ListBuffer[T]]
+  
   override def update(): Unit =
     super.update()
     gp.getSystemHandler.getGrid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
-
     if health <= 0 then
       gp.getSystemHandler.getGrid.remove(this)
 

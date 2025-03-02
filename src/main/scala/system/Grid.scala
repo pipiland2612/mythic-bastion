@@ -38,7 +38,7 @@ class GridCell:
 
 class Grid(gp: GamePanel):
 
-  private val cellSize: Int = 64
+  private val cellSize: Int = 96
   private val rows: Int = gp.screenWidth / cellSize
   private val cols: Int = gp.screenHeight / cellSize
   private val cells: Array[Array[GridCell]] = Array.ofDim[GridCell](rows, cols)
@@ -61,7 +61,7 @@ class Grid(gp: GamePanel):
   def remove(creature: Creature): Unit =
     val (gridX, gridY) = creatureCenterPos(creature)
     if checkBounds(gridX, gridY) then
-      cells(gridX)(gridY).removeCreature(creature) // Rename to a more general method
+      cells(gridX)(gridY).removeCreature(creature)
 
   def updateCreaturePosition(creature: Creature, prevPos: (Int, Int)): Unit =
     val (newGridX, newGridY) = creatureCenterPos(creature)
@@ -74,7 +74,7 @@ class Grid(gp: GamePanel):
         cells(oldGridX)(oldGridY).removeCreature(creature)
 
       if checkBounds(newGridX, newGridY) then
-        cells(newGridX)(newGridY).addCreature(creature) // Rename to a more general method
+        cells(newGridX)(newGridY).addCreature(creature)
     else if prevX == creature.attackBox.getCenterX && prevY == creature.attackBox.getCenterY then
       if checkBounds(oldGridX, oldGridY) then
         cells(oldGridX)(oldGridY).addCreature(creature)

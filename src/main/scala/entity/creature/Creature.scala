@@ -1,11 +1,13 @@
 package entity.creature
 
+import entity.creature.alliance.Alliance
 import entity.{Attacker, Defender, Direction, Entity, State}
 import game.GamePanel
 import utils.Animation
 
 import java.awt.geom.{Ellipse2D, Rectangle2D}
 import java.awt.Graphics2D
+import scala.collection.mutable.ListBuffer
 
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
   currentAnimation = Some(idleAnimation)
@@ -38,6 +40,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   def getMaxHealth: Double = maxHealth
   def getHealth: Double = health
 
+  protected def findEnemy[T <: Creature](): ListBuffer[T]
   def takeDamage(damage: Double) = health -= damage
   def dealDamage(creature: Creature): Unit =
     val apDamge = Math.max(getApDmg - creature.getApDefense, 0)
@@ -61,8 +64,34 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
         case Direction.DOWN_LEFT => this.move(-this.speed, this.speed)
         case Direction.DOWN_RIGHT => this.move(this.speed, this.speed)
 
+  private def attack(creature: Creature): Unit =
+    if state != State.ATTACK && this.attackCoolDown <= 0 then
+      state = State.ATTACK
+      needsAnimationUpdate = true
+      attackCoolDown = attackCoolDown
+
+      if fightingAnimation.isInAttackInterval then
+        dealDamage(creature)
+
+  protected def setAction(): Unit =
+    val enemyList = findEnemy()
+    if enemyList.nonEmpty then
+      attack(enemyList.head)
+
+  private var attackCounter = 0
+  private val maxAttackCounter = 40
+  private def handleAttackAnimation(): Unit =
+    attackCounter += 1
+    if (attackCounter >= maxAttackCounter) then
+      attackCounter = 0
+      state = State.IDLE
+    needsAnimationUpdate = true
+    checkAnimationUpdate()
+
   override def update(): Unit =
     lastPosition = (attackBox.getCenterX, attackBox.getCenterY)
+    setAction()
+    handleAttackAnimation()
     if health <= 0 then
       needsAnimationUpdate = true
       this.state = State.DEAD

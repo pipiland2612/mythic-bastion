@@ -3,10 +3,8 @@ package gui
 import entity.tower.Frame
 import game.{GamePanel, GameState}
 import utils.Constant.{downTopLeftCoords, nextTopLeftCoords, topLeftCoords, topRightCoords}
-import utils.Tools
 
 import java.awt.{BasicStroke, Color, Graphics2D}
-import java.awt.image.BufferedImage
 
 class GUI(gp: GamePanel):
   private var g2d: Graphics2D = _

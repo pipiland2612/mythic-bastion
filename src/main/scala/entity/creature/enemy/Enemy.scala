@@ -4,7 +4,7 @@ import entity.creature.Creature
 import entity.creature.alliance.Alliance
 import game.GamePanel
 import utils.{Animation, Tools}
-import entity.{Direction, State}
+import entity.{Direction, State, creature}
 
 import java.awt.image.BufferedImage
 import scala.collection.mutable.ListBuffer
@@ -49,18 +49,8 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       player.updateHealth(-(this.playerDamage.toInt))
     )
 
-  private def findAlliance(): ListBuffer[Alliance] =
-    gp.getSystemHandler.getGrid.scanForAlliancesInRange(this)
-
-  private def attack(alliance: Alliance): Unit =
-    if state != State.ATTACK && this.attackCoolDown <= 0 then
-      state = State.ATTACK
-      needsAnimationUpdate = true
-      attackCoolDown = attackCoolDown
-
-      if fightingAnimation.isInAttackInterval then
-        dealDamage(alliance)
-
+  protected def findEnemy[T <: Creature](): ListBuffer[T] =
+    gp.getSystemHandler.getGrid.scanForAlliancesInRange(this).asInstanceOf[ListBuffer[T]]
 
   private def followPath(goal: (Double, Double)): Unit =
     val (xDist, yDist) = (goal._1 - this.pos._1, goal._2 - this.pos._2)
@@ -85,11 +75,8 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
         else
           if (yDist < 0) Direction.UP else Direction.DOWN
 
-  private def setAction(): Unit =
-    val allianceList = findAlliance()
-    if allianceList.nonEmpty then
-      attack(allianceList.head)
-
+  override def setAction(): Unit =
+    super.setAction()
     if this.state != State.ATTACK then
       path.foreach(path =>
         if index < path.length then
@@ -98,21 +85,10 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
         else this.haveReachBase = true
       )
 
-  private var attackCounter = 0
-  private val maxAttackCounter = 40
-  private def handleAttackAnimation(): Unit =
-    attackCounter += 1
-    if (attackCounter >= maxAttackCounter) then
-      attackCounter = 0
-      state = State.IDLE
-    needsAnimationUpdate = true
-    checkAnimationUpdate()
-
   override def update(): Unit =
     super.update()
     if this.state != State.DEAD then
       setAction()
-      handleAttackAnimation()
       gp.getSystemHandler.getGrid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
       if this.haveReachBase then attackPlayer()
 
