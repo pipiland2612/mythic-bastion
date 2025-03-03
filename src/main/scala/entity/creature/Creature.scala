@@ -117,11 +117,6 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
       if deadCounter >= maxDeadCounter then
         hasDied = true
 
-  override def draw(g2d: Graphics2D): Unit =
-    super.draw(g2d)
-    g2d.draw(attackCircle)
-    g2d.drawRect(attackBox.getX.toInt, attackBox.getY.toInt, attackBox.getWidth.toInt, attackBox.getHeight.toInt)
-
   override def hashCode(): Int = id.hashCode()
 
   override def equals(obj: Any): Boolean = obj match

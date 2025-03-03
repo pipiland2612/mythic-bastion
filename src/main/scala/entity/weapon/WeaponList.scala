@@ -46,7 +46,7 @@ object Explo:
 //  (apDmg, adDmg, speed, aoeDmg)
     1 -> (0.0, 20.0, 0.7, 3, 15),
     2 -> (0.0, 30.0, 0.6, 5, 17),
-    3 -> (0.0, 40.0, 0.6, 7, 20)
+    3 -> (0.0, 40.0, 0.6, 10, 20)
   )
 
   def get(gp: GamePanel, enemy: Enemy, pos: (Double, Double), level: Int = 1): Explo =

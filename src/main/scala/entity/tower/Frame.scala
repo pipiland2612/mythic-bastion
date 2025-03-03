@@ -82,6 +82,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
         towerButtons.get(button) match
           case Some(tower) =>
             towerBuild.setCurrentTower(Some(tower))
+            gp.getGUI.currentFrame = None
           case _ =>
       case None =>
         setOffFrame(x, y)
@@ -91,7 +92,9 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
       case Some(button) =>
         towerBuild.getCurrentTower.foreach (tower =>
           optionButtons(button) match
-            case "L" => towerBuild.setCurrentTower(Some(Tower.levelUp(tower)))
+            case "L" =>
+              towerBuild.setCurrentTower(Some(Tower.levelUp(tower)))
+              gp.getGUI.currentFrame = None
             case "S" => towerBuild.setCurrentTower(None)
             case "U" if (tower.getTowerType == BarrackTower.towerType) =>
               drawingFrame = false

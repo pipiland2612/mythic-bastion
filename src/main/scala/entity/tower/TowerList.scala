@@ -210,6 +210,7 @@ class BarrackTower(
     barrackTrainers.zip(rad).foreach((trainer, rad) =>
       val x = triangleCenter._1 + triangleRadius * Math.cos(rad) - allianceWidth/2
       val y = triangleCenter._2 + triangleRadius * Math.sin(rad) - allianceHeight/2
+      trainer.pos = (x,y)
       trainer.getCurrentSoldier.foreach(_.followPath((x, y)))
     )
 

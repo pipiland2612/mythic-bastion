@@ -45,9 +45,9 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
 
   override def update(): Unit =
     super.update()
-    updateGridPosition()
     setAction()
     handleAttackAnimation()
+    updateGridPosition()
     checkHealthStatus()
 
   override def setAction(): Unit =
