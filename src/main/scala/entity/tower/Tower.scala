@@ -45,6 +45,8 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   val attackCircle: Ellipse2D = createAttackCircle()
   var isShowingRange: Boolean = false
 
+  protected def chooseEnemy(enemyList: ListBuffer[Enemy]): Option[Enemy]
+
   def bulletPosition: (Double, Double) =
     val frame = idleAnimation.getCurrentFrame
     (centerCoords._1 + frame.getWidth() / 2, centerCoords._2 + frame.getHeight() / 4)
@@ -106,8 +108,7 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   private def handleEnemyAttack(): Unit =
     val enemyList = findEnemy()
     if enemyList.nonEmpty then
-      val randInd = random.nextInt(enemyList.length)
-      attack(enemyList(randInd))
+      chooseEnemy(enemyList).foreach(attack(_))
 
   private def updateBullets(): Unit =
     bulletList.toList.foreach(_.update())

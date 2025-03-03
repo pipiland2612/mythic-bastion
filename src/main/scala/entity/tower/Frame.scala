@@ -72,7 +72,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild):
     buttons.keys.find(_.contains(x, y)) match
       case Some(button) =>
         buttons.get(button).foreach(tower =>
-          towerBuild.setCurrentTower(tower)
+          towerBuild.setCurrentTower(Some(tower))
         )
       case None =>
         setOffFrame(x, y)
@@ -80,12 +80,14 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild):
   private def handleLevelUpSelection(x: Int, y: Int): Unit =
     levelUpButtons.keys.find(_.contains(x, y)) match
       case Some(button) =>
-        if button == levelUpButton then
-          towerBuild.getCurrentTower match
-            case Some(tower: Tower) =>
-              println(tower.level)
-              towerBuild.setCurrentTower(Tower.levelUp(tower))
-            case _ =>
+        towerBuild.getCurrentTower match
+          case Some(tower: Tower) =>
+            if button == levelUpButton then
+              val towerLevelUp = Tower.levelUp(tower)
+              towerBuild.setCurrentTower(Some(towerLevelUp))
+            else if button == sellButton then
+              towerBuild.setCurrentTower(None)
+          case _ =>
       case None =>
         setOffFrame(x, y)
 

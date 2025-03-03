@@ -17,7 +17,7 @@ case class TowerBuild(gp: GamePanel, pos: (Double, Double), towerBuildImage: Buf
   private val range: Ellipse2D = new Ellipse2D.Double(drawCoords._1 + offsetX, drawCoords._2 + offsetY, radius * 2, radius)
 
   def getCurrentTower: Option[Tower] = currentTower
-  def setCurrentTower(tower: Tower): Unit = currentTower = Some(tower)
+  def setCurrentTower(tower: Option[Tower]): Unit = currentTower = tower
 
   def draw(g2d: Graphics2D): Unit =
     currentTower match

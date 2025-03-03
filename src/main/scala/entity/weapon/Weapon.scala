@@ -15,7 +15,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   private var angleOffset: Double = 0
   private var hasHit: Boolean = false
 
-  protected val deadDuration: Int = 100
+  protected val deadDuration: Int = 110
   protected val maxAttackCoolDown: Double = 0
   protected val range: Double = 0
   protected var hitAnimation: Animation = _
@@ -128,15 +128,13 @@ object Weapon :
 
   def clone(weapon: String, enemy: Enemy, pos: (Double, Double), l: Int = 1): Weapon =
     val level = Math.min(l, 3)
+    val extractedLevel = extractLevel(weapon, level)
     weapon match
       case s if s.startsWith("Explo") =>
-        val extractedLevel = extractLevel(s, level)
         Explo.get(gp, enemy, pos, extractedLevel)
       case s if s.startsWith("Arrow") =>
-        val extractedLevel = extractLevel(s, level)
         Arrow.get(gp, enemy, pos, extractedLevel)
       case s if s.startsWith("MagicBullet") =>
-        val extractedLevel = extractLevel(s, level)
         MagicBullet(gp, enemy, pos)
       case _ => throw new IllegalArgumentException(s"Unknown weapon type: $weapon")
 

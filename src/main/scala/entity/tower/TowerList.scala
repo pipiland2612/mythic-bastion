@@ -1,14 +1,16 @@
 package entity.tower
 
 import entity.creature.alliance.{Alliance, Soldier01}
-import entity.weapon.{Arrow, Explo, MagicBullet}
+import entity.creature.enemy.Enemy
+import entity.weapon.MagicBullet
 import entity.{Direction, State}
 import game.GamePanel
 import utils.{Animation, Tools}
 
 import java.awt.geom.AffineTransform
-import java.awt.{Color, Graphics2D}
+import java.awt.Graphics2D
 import java.awt.image.BufferedImage
+import scala.collection.mutable.ListBuffer
 
 class ExploTower(
   gp: GamePanel,
@@ -53,6 +55,9 @@ class ExploTower(
       case _ =>
         Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform, centerCoords, offsetX, offsetY)
 
+  override protected def chooseEnemy(enemyList: ListBuffer[Enemy]): Option[Enemy] =
+    enemyList.sortBy(_.getHealth).lastOption
+
 object ExploTower:
   val towerType = "Explo"
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ExploTower =
@@ -93,6 +98,9 @@ class ArrowTower(
 
   override def bulletPosition: (Double, Double) =
     (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
+
+  override protected def chooseEnemy(enemyList: ListBuffer[Enemy]): Option[Enemy] =
+    enemyList.sortBy(_.getPosition._1).lastOption
 
 object ArrowTower:
   val towerType = "Arrow"
@@ -135,6 +143,9 @@ class MagicTower(
   override def bulletPosition: (Double, Double) =
     (centerCoords._1 + drawOffsetX, centerCoords._2 + drawOffsetY)
 
+  override protected def chooseEnemy(enemyList: ListBuffer[Enemy]): Option[Enemy] =
+    enemyList.sortBy(_.getAdDefense).headOption
+
 object MagicTower:
   val towerType = "Magic"
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): MagicTower =
@@ -152,7 +163,7 @@ class BarrackTower(
   val maxAttackCounter: Int = 0
   val maxPrepareCounter: Int = 0
   val maxAttackCoolDown: Double = 0
-  val range: Double = 120
+  val range: Double = 0
 
   protected val jsonPath: String = s"towers/BarrackTower$level.json"
   protected val imagePath: String = s"towers/BarrackTower$level.png"
@@ -180,6 +191,9 @@ class BarrackTower(
 
   private def drawSoldiers(g2d: Graphics2D): Unit =
     barrackTrainers.flatMap(_.getCurrentSoldier).foreach(_.draw(g2d))
+
+  override protected def chooseEnemy(enemyList: ListBuffer[Enemy]): Option[Enemy] =
+    enemyList.headOption
 
   class BarrackTrainer(var pos: (Double, Double)):
     private val soldierTrainingTime = 10 * 60
