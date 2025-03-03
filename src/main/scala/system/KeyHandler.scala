@@ -21,7 +21,9 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
         isUniting = false
         frame.handleUniting(x, y)
         frame.drawingFrame = true
-      frame.handleFrameOnClick(x,y)
+        gp.getGUI.currentFrame = None
+      else
+        frame.handleFrameOnClick(x,y)
     )
 
     if x <= 210 && y <= 255 then
