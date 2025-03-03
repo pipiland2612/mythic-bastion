@@ -6,7 +6,7 @@ import game.GamePanel
 import utils.{Animation, Tools}
 
 import java.awt.Graphics2D
-import java.awt.geom.AffineTransform
+import java.awt.geom.{AffineTransform, Ellipse2D}
 import java.awt.image.BufferedImage
 
 case class Explo(
@@ -20,24 +20,42 @@ case class Explo(
   protected val apDmg: Double,
   protected val adDmg: Double,
   protected val speed: Double,
+  protected val aoeDmg: Double,
   protected val curveConst: Double = 2,
-  protected val yDrawOffSet: Double = 45
-) extends Weapon(gp, enemy)
+  private val aoeRange: Double
+) extends Weapon(gp, enemy):
+  private val yDrawOffSet: Double = 45
+  override def attackCircle: Ellipse2D = Ellipse2D.Double(pos._1 - (3 + 2 * level), pos._2, aoeRange * 2, aoeRange * 4 / 3)
+
+  override protected def dealDamage(): Unit =
+    super.dealDamage()
+    val enemiesInRange = gp.getSystemHandler.getGrid.scanForEnemiesInRange(this)
+    enemiesInRange.foreach(_.takeDamage(aoeDmg))
+
+  override def finalizeAttack(): Unit =
+    if attackT >= hitTime then
+      attackInProgress = false
+      dealDamage()
+      this.state = State.ATTACK
+      needsAnimationUpdate = true
+      checkAnimationUpdate()
+      this.pos = (enemy.getPosition._1, enemy.getPosition._2 - yDrawOffSet)
 
 object Explo:
   private val baseStats = Map(
-    1 -> (0.0, 20.0, 0.7),  // (apDmg, adDmg, speed) for level 1
-    2 -> (0.0, 30.0, 0.6),  // (apDmg, adDmg, speed) for level 2
-    3 -> (0.0, 40.0, 0.6)   // (apDmg, adDmg, speed) for level 3
+//  (apDmg, adDmg, speed, aoeDmg)
+    1 -> (0.0, 20.0, 0.7, 3, 15),
+    2 -> (0.0, 30.0, 0.6, 5, 17),
+    3 -> (0.0, 40.0, 0.6, 7, 20)
   )
 
   def get(gp: GamePanel, enemy: Enemy, pos: (Double, Double), level: Int = 1): Explo =
     require(level >= 1 && level <= 3, "Level must be between 1 and 3")
     val name = s"Explo0$level"
-    val (apDmg, adDmg, speed) = baseStats(level)
+    val (apDmg, adDmg, speed, aoeDmg, aoeRange) = baseStats(level)
     new Explo(
       gp = gp, level = level, name = name, jsonPath = s"weapons/$name.json", imagePath = s"weapons/$name.png", enemy = enemy,
-      pos = pos, apDmg = apDmg, adDmg = adDmg, speed = speed
+      pos = pos, apDmg = apDmg, adDmg = adDmg, speed = speed, aoeDmg = aoeDmg, aoeRange = aoeRange
     )
 
 case class Arrow(
@@ -52,7 +70,6 @@ case class Arrow(
   protected val adDmg: Double,
   protected val speed: Double,
   protected val curveConst: Double,
-  protected val yDrawOffSet: Double
 ) extends Weapon(gp, enemy) :
   private val transform = new AffineTransform()
   override protected val deadDuration = 30
@@ -87,19 +104,19 @@ case class Arrow(
 
 object Arrow :
   private val baseStats = Map(
-    1 -> (0.0, 10.0, 2.0, 0.5, 0.0),  // (apDmg, adDmg, speed, curveConst, yDrawOffSet)
-    2 -> (0.0, 15.0, 2.2, 0.5, 0.0),  // Example stats for level 2
-    3 -> (0.0, 20.0, 2.4, 0.5, 0.0)   // Example stats for level 3
+    1 -> (0.0, 10.0, 2.0, 0.5),  // (apDmg, adDmg, speed, curveConst, yDrawOffSet)
+    2 -> (0.0, 15.0, 2.2, 0.5),  // Example stats for level 2
+    3 -> (0.0, 20.0, 2.4, 0.5)   // Example stats for level 3
   )
 
   // Main apply method with required level
   def get(gp: GamePanel, enemy: Enemy, pos: (Double, Double), l: Int): Arrow =
     val level = Math.min(3, l)
     val name = s"Arrow0$level"
-    val (apDmg, adDmg, speed, curveConst, yDrawOffSet) = baseStats(level)
+    val (apDmg, adDmg, speed, curveConst) = baseStats(level)
     new Arrow(
       gp = gp, level = level, name = name, jsonPath = s"weapons/$name.json", imagePath = s"weapons/$name.png", enemy = enemy,
-      pos = pos, apDmg = apDmg, adDmg = adDmg, speed = speed, curveConst = curveConst, yDrawOffSet = yDrawOffSet
+      pos = pos, apDmg = apDmg, adDmg = adDmg, speed = speed, curveConst = curveConst
     )
 
 case class MagicBullet(
@@ -112,8 +129,7 @@ case class MagicBullet(
   apDmg: Double = 20,
   protected val adDmg: Double = 0,
   protected val speed: Double = 2,
-  protected val curveConst: Double = 0,
-  protected val yDrawOffSet: Double = 0
+  protected val curveConst: Double = 0
 ) extends Weapon(gp, enemy):
   override protected val deadDuration = 30
 

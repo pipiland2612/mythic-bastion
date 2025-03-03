@@ -8,8 +8,6 @@ import utils.{Animation, Tools}
 
 import java.awt.{Color, Graphics2D}
 import java.awt.geom.{AffineTransform, Ellipse2D}
-import java.security.SecureRandom
-import java.util.Random
 import scala.collection.mutable.ListBuffer
 
 abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
@@ -24,9 +22,6 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   private var attackCounter: Int = 0
   private var hasShoot = false
   private var prepareCounter: Int = 0
-  private val secureRandom: SecureRandom = SecureRandom()
-  private val dynamicSeed = secureRandom.nextLong()
-  private val random: Random = Random(dynamicSeed)
 
   protected val towerType: String
   protected val towerImagePath: String

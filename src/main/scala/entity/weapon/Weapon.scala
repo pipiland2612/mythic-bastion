@@ -5,23 +5,23 @@ import entity.{Attacker, Direction, Entity, State}
 import game.GamePanel
 import utils.{Animation, Tools}
 
+import java.awt.Graphics2D
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 
 abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel) with Attacker:
   this.currentAnimation = Some(idleAnimation)
   private var deadCounter: Int = 0
-  private var attackInProgress: Boolean = false
   private var angleOffset: Double = 0
   private var hasHit: Boolean = false
 
+  protected var attackInProgress: Boolean = false
   protected val deadDuration: Int = 110
   protected val maxAttackCoolDown: Double = 0
   protected val range: Double = 0
   protected var hitAnimation: Animation = _
   protected var hitEndAnimation: Animation = _
   protected val curveConst: Double
-  protected val yDrawOffSet: Double
   protected val hitTime: Double = 1.0
   protected val weight: Double = 2
   protected var attackT: Double = 0.0
@@ -63,6 +63,10 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       updateDeadState()
     else
       attack()
+
+  override def draw(g2d: Graphics2D): Unit =
+    super.draw(g2d)
+    g2d.draw(attackCircle)
 
   private def updateDeadState(): Unit =
     deadCounter += 1
@@ -111,14 +115,13 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     move(angle)
     angleOffset *= 0.98
 
-  private def finalizeAttack(): Unit =
+  protected def finalizeAttack(): Unit =
     if attackT >= hitTime then
       attackInProgress = false
       dealDamage()
       this.state = State.ATTACK
       needsAnimationUpdate = true
       checkAnimationUpdate()
-      this.pos = (enemy.getPosition._1, enemy.getPosition._2 - yDrawOffSet)
 
 object Weapon :
   private var gp: GamePanel = _
