@@ -49,6 +49,7 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   def updateTowerImage(): Unit =
     this.towerImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")
 
+  def getTowerType: String = towerType
   def getBulletList: List[Weapon] = bulletList.toList
 
   override def update(): Unit =

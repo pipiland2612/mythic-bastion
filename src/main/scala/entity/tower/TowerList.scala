@@ -157,13 +157,13 @@ class BarrackTower(
   val name: String,
   var pos: (Double, Double),
   val towerImagePath: String,
-  val towerType: String = BarrackTower.towerType
+  val towerType: String = BarrackTower.towerType,
+  val range: Double = 110
 ) extends Tower(gp, level):
   val weaponType: String = ""
   val maxAttackCounter: Int = 0
   val maxPrepareCounter: Int = 0
   val maxAttackCoolDown: Double = 0
-  val range: Double = 0
 
   protected val jsonPath: String = s"towers/BarrackTower$level.json"
   protected val imagePath: String = s"towers/BarrackTower$level.png"

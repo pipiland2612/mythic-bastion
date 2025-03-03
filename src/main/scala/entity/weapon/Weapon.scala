@@ -64,10 +64,6 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     else
       attack()
 
-  override def draw(g2d: Graphics2D): Unit =
-    super.draw(g2d)
-    g2d.draw(attackCircle)
-
   private def updateDeadState(): Unit =
     deadCounter += 1
     needsAnimationUpdate = true

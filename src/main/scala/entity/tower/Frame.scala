@@ -4,90 +4,100 @@ import game.GamePanel
 import gui.Image
 
 import java.awt.geom.AffineTransform
+import java.awt.image.BufferedImage
 import java.awt.{Color, Graphics2D, RadialGradientPaint, Rectangle}
 
-class Frame(gp: GamePanel, towerBuild: TowerBuild):
-  private val upgradeCoords: (Double, Double) =
-    ((towerBuild.drawCoords._1) - (Image.frame.getWidth - towerBuild.towerBuildImage.getWidth)/2,
-    (towerBuild.drawCoords._2) - (Image.frame.getHeight - towerBuild.towerBuildImage.getHeight)/2)
-  private val transform: AffineTransform = AffineTransform()
+object Frame :
+  case class TowerButtonConfig(
+    coords: (Int, Int),
+    image: BufferedImage,
+    createTower: (GamePanel, Int, (Double, Double)) => Tower
+  )
 
+  case class OptionButtonConfig(
+    coords: (Int, Int),
+    image: BufferedImage,
+    action: String
+  )
+
+  // Constants for gradient
+  private val DIST = Array(0.0f, 0.3f, 0.6f, 0.8f, 1.0f)
+  private val COLORS = Array(
+    Color(12, 227, 12, 0),
+    Color(12, 227, 12, 25),
+    Color(12, 227, 12, 75),
+    Color(12, 227, 12, 200),
+    Color(12, 227, 12, 255)
+  )
+end Frame
+
+class Frame(gp: GamePanel, towerBuild: TowerBuild) :
+  import Frame._
+
+  private val upgradeCoords: (Double, Double) = calculateUpgradeCoords()
+  private val transform: AffineTransform = new AffineTransform()
   var isDrawingFrame: Boolean = true
-  val pos = towerBuild.pos
-  private val barrackCoords: (Int, Int) = (upgradeCoords._1.toInt + towerBuild.towerBuildImage.getWidth / 2 - 40, upgradeCoords._2.toInt + 7)
-  private val exploCoords: (Int, Int) =  (upgradeCoords._1.toInt + towerBuild.towerBuildImage.getWidth / 2 + 55, upgradeCoords._2.toInt + 7)
-  private val arrowCoords: (Int, Int) = (upgradeCoords._1.toInt + towerBuild.towerBuildImage.getWidth / 2 - 40, upgradeCoords._2.toInt + 92)
-  private val magicCoords: (Int, Int) = (upgradeCoords._1.toInt + towerBuild.towerBuildImage.getWidth / 2 + 55, upgradeCoords._2.toInt + 92)
-  private val levelUpCoords: (Int, Int) = (upgradeCoords._1.toInt + towerBuild.towerBuildImage.getWidth / 2 + 9, upgradeCoords._2.toInt - 20)
-  private val sellCoords: (Int, Int) = (upgradeCoords._1.toInt + towerBuild.towerBuildImage.getWidth / 2 + 16, upgradeCoords._2.toInt + 120)
-  private val barrackButton: Rectangle = Rectangle(
-    barrackCoords._1, barrackCoords._2,
-    Image.barrack01.getWidth, Image.barrack01.getHeight
-  )
+  val pos: (Double, Double) = towerBuild.pos
 
-  private val exploButton: Rectangle = Rectangle(
-    exploCoords._1, exploCoords._2,
-    Image.explo01.getWidth, Image.explo01.getHeight
-  )
+  private val towerButtons: Map[Rectangle, Tower] = initTowerButtons()
+  private val optionButtons: Map[Rectangle, String] = initOptionButtons()
 
-  private val arrowButton: Rectangle = Rectangle(
-    arrowCoords._1, arrowCoords._2,
-    Image.arrow01.getWidth, Image.arrow01.getHeight
-  )
+  private def calculateUpgradeCoords(): (Double, Double) =
+    val xOffset = (Image.frame.getWidth - towerBuild.towerBuildImage.getWidth) / 2
+    val yOffset = (Image.frame.getHeight - towerBuild.towerBuildImage.getHeight) / 2
+    (towerBuild.drawCoords._1 - xOffset, towerBuild.drawCoords._2 - yOffset)
 
-  private val magicButton: Rectangle = Rectangle(
-    magicCoords._1, magicCoords._2,
-    Image.magic01.getWidth, Image.magic01.getHeight
-  )
+  private def initTowerButtons(): Map[Rectangle, Tower] =
+    val centerX = upgradeCoords._1.toInt + towerBuild.towerBuildImage.getWidth / 2
+    val topY = upgradeCoords._2.toInt + 7
+    val bottomY = upgradeCoords._2.toInt + 92
 
-  private val sellButton: Rectangle = Rectangle(
-    sellCoords._1, sellCoords._2,
-    Image.sell.getWidth, Image.sell.getHeight
-  )
+    val configs = List(
+      TowerButtonConfig((centerX - 40, topY), Image.barrack01, (gp, level, pos) => BarrackTower(gp, level, pos)),
+      TowerButtonConfig((centerX + 55, topY), Image.explo01, (gp, level, pos) => ExploTower(gp, level, pos)),
+      TowerButtonConfig((centerX - 40, bottomY), Image.arrow01, (gp, level, pos) => ArrowTower(gp, level, pos)),
+      TowerButtonConfig((centerX + 55, bottomY), Image.magic01, (gp, level, pos) => MagicTower(gp, level, pos))
+    )
 
-  private val levelUpButton: Rectangle = Rectangle(
-    levelUpCoords._1, levelUpCoords._2,
-    Image.upgrade.getWidth, Image.upgrade.getHeight
-  )
+    configs.map(config =>
+      val rect = Rectangle(config.coords._1, config.coords._2, config.image.getWidth, config.image.getHeight)
+      rect -> config.createTower(gp, 1, pos)
+    ).toMap
 
-  private val buttons: Map[Rectangle, Tower] = Map(
-    barrackButton -> BarrackTower(gp, 1, pos),
-    exploButton -> ExploTower(gp, 1, pos),
-    arrowButton -> ArrowTower(gp, 1, pos),
-    magicButton -> MagicTower(gp, 1, pos)
-  )
-
-  private val levelUpButtons = Map(
-    sellButton -> "S",
-    levelUpButton -> "L",
-  )
+  private def initOptionButtons(): Map[Rectangle, String] =
+    val centerX = upgradeCoords._1.toInt + towerBuild.towerBuildImage.getWidth / 2
+    Map(
+      Rectangle(centerX + 9, upgradeCoords._2.toInt - 20, Image.upgrade.getWidth, Image.upgrade.getHeight) -> "L",
+      Rectangle(centerX + 16, upgradeCoords._2.toInt + 120, Image.sell.getWidth, Image.sell.getHeight) -> "S",
+      Rectangle(centerX + 20, upgradeCoords._2.toInt + 100, Image.unite.getWidth, Image.unite.getHeight) -> "U"
+    )
 
   def handleFrameOnClick(x: Int, y: Int): Unit =
-    if (towerBuild.getCurrentTower.isEmpty) then
-      handleTowerSelection(x, y)
-    else
-      handleLevelUpSelection(x, y)
+    towerBuild.getCurrentTower match
+      case None => handleTowerSelection(x, y)
+      case Some(_) => handleLevelUpSelection(x, y)
 
   private def handleTowerSelection(x: Int, y: Int): Unit =
-    buttons.keys.find(_.contains(x, y)) match
+    towerButtons.keys.find(_.contains(x, y)) match
       case Some(button) =>
-        buttons.get(button).foreach(tower =>
-          towerBuild.setCurrentTower(Some(tower))
-        )
+        towerButtons.get(button) match
+          case Some(tower) =>
+            towerBuild.setCurrentTower(Some(tower))
+          case _ =>
       case None =>
         setOffFrame(x, y)
 
   private def handleLevelUpSelection(x: Int, y: Int): Unit =
-    levelUpButtons.keys.find(_.contains(x, y)) match
+    optionButtons.keys.find(_.contains(x, y)) match
       case Some(button) =>
-        towerBuild.getCurrentTower match
-          case Some(tower: Tower) =>
-            if button == levelUpButton then
-              val towerLevelUp = Tower.levelUp(tower)
-              towerBuild.setCurrentTower(Some(towerLevelUp))
-            else if button == sellButton then
-              towerBuild.setCurrentTower(None)
-          case _ =>
+        towerBuild.getCurrentTower.foreach (tower =>
+          optionButtons(button) match
+            case "L" => towerBuild.setCurrentTower(Some(Tower.levelUp(tower)))
+            case "S" => towerBuild.setCurrentTower(None)
+            case "U" => if (tower.getTowerType == BarrackTower.towerType) then {}
+            case _ => // No-op
+        )
+
       case None =>
         setOffFrame(x, y)
 
@@ -95,34 +105,53 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild):
     if (!towerBuild.isInBuildRange(x, y)) then
       gp.getGUI.currentFrame = None
 
-  private val dist = Array(0.0f, 0.3f, 0.6f, 0.8f, 1.0f)
-  private val colors = Array(
-    Color(12, 227, 12, 0),
-    Color(12, 227, 12, 25),
-    Color(12, 227, 12, 75),
-    Color(12, 227, 12, 200),
-    Color(12, 227, 12, 255)
-  )
-
   def draw(g2d: Graphics2D): Unit =
-    if isDrawingFrame then
-      val g2dCopy = g2d.create().asInstanceOf[Graphics2D]
-      transform.setToTranslation(upgradeCoords._1, upgradeCoords._2)
-      g2dCopy.drawImage(Image.frame, transform, None.orNull)
-      towerBuild.getCurrentTower match
-        case Some(tower) =>
-          val (centerX, centerY) = (tower.attackCircle.getCenterX.toInt, tower.attackCircle.getCenterY.toInt)
-          val (x, y, w, h) = (tower.attackCircle.getX.toInt, tower.attackCircle.getY.toInt, tower.attackCircle.getWidth.toInt, tower.attackCircle.getHeight.toInt)
-          val gradient: RadialGradientPaint = RadialGradientPaint(centerX, centerY, w, dist, colors)
-          g2dCopy.setPaint(gradient)
-          g2dCopy.fillOval(x, y, w, h)
-          g2dCopy.drawOval(x, y, w, h)
-          g2dCopy.drawImage(Image.upgrade, levelUpCoords._1, levelUpCoords._2, None.orNull)
-          g2dCopy.drawImage(Image.sell, sellCoords._1, sellCoords._2, None.orNull)
-        case _ =>
-          g2dCopy.drawImage(Image.barrack01, barrackCoords._1, barrackCoords._2, None.orNull)
-          g2dCopy.drawImage(Image.explo01, exploCoords._1, exploCoords._2, None.orNull)
-          g2dCopy.drawImage(Image.arrow01, arrowCoords._1, arrowCoords._2, None.orNull)
-          g2dCopy.drawImage(Image.magic01, magicCoords._1, magicCoords._2, None.orNull)
+    if (!isDrawingFrame) return
 
-      g2dCopy.dispose()
+    val g2dCopy = g2d.create().asInstanceOf[Graphics2D]
+    transform.setToTranslation(upgradeCoords._1, upgradeCoords._2)
+    g2dCopy.drawImage(Image.frame, transform, null)
+
+    towerBuild.getCurrentTower match
+      case Some(tower) =>
+        drawTowerRange(g2dCopy, tower)
+        drawOptionButtons(g2dCopy, tower)
+      case None =>
+        drawTowerSelectionButtons(g2dCopy)
+
+    g2dCopy.dispose()
+
+  private def drawTowerRange(g2d: Graphics2D, tower: Tower): Unit =
+    val circle = tower.attackCircle
+    val (centerX, centerY) = (circle.getCenterX.toInt, circle.getCenterY.toInt)
+    val (x, y, w, h) = (circle.getX.toInt, circle.getY.toInt, circle.getWidth.toInt, circle.getHeight.toInt)
+    val gradient = new RadialGradientPaint(centerX, centerY, w, DIST, COLORS)
+    g2d.setPaint(gradient)
+    g2d.fillOval(x, y, w, h)
+    g2d.drawOval(x, y, w, h)
+
+  private def drawTowerSelectionButtons(g2d: Graphics2D): Unit =
+    towerButtons.foreach ((rect, _) =>
+      val image: Option[BufferedImage] = rect match
+        case r if r == towerButtons.keys.find(_.contains(rect.x, rect.y)).get =>
+          towerButtons(r).getTowerType match
+            case BarrackTower.towerType => Some(Image.barrack01)
+            case ExploTower.towerType => Some(Image.explo01)
+            case ArrowTower.towerType => Some(Image.arrow01)
+            case MagicTower.towerType => Some(Image.magic01)
+            case _ => None
+        case _ => None
+
+      image.foreach(g2d.drawImage(_, rect.x, rect.y, None.orNull))
+    )
+
+  private def drawOptionButtons(g2d: Graphics2D, tower: Tower): Unit =
+    optionButtons.foreach ((rect, action) =>
+      val image: Option[BufferedImage] = action match
+        case "L" => Some(Image.upgrade)
+        case "S" => Some(Image.sell)
+        case "U" if tower.getTowerType == BarrackTower.towerType => Some(Image.unite)
+        case _ => None
+
+      image.foreach(g2d.drawImage(_, rect.x, rect.y, None.orNull))
+    )

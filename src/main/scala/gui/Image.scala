@@ -46,3 +46,5 @@ object Image:
   val towerBuildWidth = towerBuildImage.getWidth
   val towerBuildHeight = towerBuildImage.getHeight
 
+  val unite: BufferedImage = Tools.loadImage("build/Unite.png")
+
