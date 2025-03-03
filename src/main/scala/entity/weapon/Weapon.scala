@@ -5,7 +5,6 @@ import entity.{Attacker, Direction, Entity, State}
 import game.GamePanel
 import utils.{Animation, Tools}
 
-import java.awt.Graphics2D
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 

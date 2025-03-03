@@ -8,7 +8,9 @@ class PlayerStage (private var coins: Int):
   def getHealth: Int = health
   def getCoins: Int = coins
 
-  def updateCoin(dx: Int): Unit = coins += dx
+  def updateCoin(dx: Int): Unit =
+    if coins + dx < 0 then return
+    coins += dx
 
   def updateHealth(dx: Int): Unit =
     var result = health + dx

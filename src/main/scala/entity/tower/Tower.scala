@@ -138,9 +138,21 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
       g2d.draw(attackCircle)
 
 object Tower:
-  def levelUp(tower: Tower): Tower =
+  def moneyToLevelUp(tower: Tower, level: Int): Option[Int] =
+    tower.getTowerType match
+      case BarrackTower.towerType =>
+        BarrackTower.updatePrice(level)
+      case ArrowTower.towerType =>
+        ArrowTower.updatePrice(level)
+      case MagicTower.towerType =>
+        MagicTower.updatePrice(level)
+      case ExploTower.towerType =>
+        ExploTower.updatePrice(level)
+      case _ => None
+
+  def levelUp(tower: Tower, currentLevel: Int): Tower =
     tower.towerType match
-      case BarrackTower.towerType => BarrackTower(tower.gp, tower.level + 1, tower.getPosition)
-      case ArrowTower.towerType => ArrowTower(tower.gp, tower.level + 1, tower.getPosition)
-      case MagicTower.towerType => MagicTower(tower.gp, tower.level + 1, tower.getPosition)
-      case ExploTower.towerType => ExploTower(tower.gp, tower.level + 1, tower.getPosition)
+      case BarrackTower.towerType => BarrackTower(tower.gp, currentLevel + 1, tower.getPosition)
+      case ArrowTower.towerType => ArrowTower(tower.gp, currentLevel + 1, tower.getPosition)
+      case MagicTower.towerType => MagicTower(tower.gp, currentLevel + 1, tower.getPosition)
+      case ExploTower.towerType => ExploTower(tower.gp, currentLevel + 1, tower.getPosition)

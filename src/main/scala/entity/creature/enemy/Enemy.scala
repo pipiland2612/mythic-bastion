@@ -12,6 +12,8 @@ import scala.collection.mutable.ListBuffer
 abstract class Enemy(gp: GamePanel) extends Creature(gp):
   private var path: Option[Vector[(Double, Double)]] = None
   private var index = 0
+  private var hasGiveCoin: Boolean = false
+  protected val coin: Double
 
   protected var haveReachBase: Boolean = false
   protected val playerDamage: Double
@@ -22,6 +24,8 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
 
   def setPath(path: Vector[(Double, Double)]): Unit = this.path = Some(path)
   def haveReach: Boolean = haveReachBase
+
+  def getCoin: Double = coin
 
   override def setUpImages(): Unit =
     val mirroredDirections = Seq(Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT)
@@ -47,9 +51,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     deadAnimation = Animation(frames = value(5), frameDuration = 10)
 
   def attackPlayer(): Unit =
-    gp.getSystemHandler.getStageManager.getCurrentPlayer.foreach(player =>
-      player.updateHealth(-(this.playerDamage.toInt))
-    )
+    gp.getSystemHandler.getStageManager.updateHealth(-(this.playerDamage.toInt))
 
   protected def findEnemy[T <: Creature](): ListBuffer[T] =
     gp.getSystemHandler.getGrid.scanForAlliancesInRange(this).asInstanceOf[ListBuffer[T]]
@@ -90,6 +92,10 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
 
   private def checkHealthStatus(): Unit =
     if this.health <= 0 then
+      if !hasGiveCoin then
+        hasGiveCoin = true
+        gp.getSystemHandler.getStageManager.updateCoin(coin.toInt)
+
       gp.getSystemHandler.getGrid.remove(this)
 
 end Enemy
@@ -112,8 +118,9 @@ object Enemy:
         adDefense = adjustedData(5),
         range = adjustedData(6),
         speed = adjustedData(7),
-        maxAttackCoolDown = adjustedData(8) / difficulty,
+        maxAttackCoolDown = data.stats(8),
         maxDeadCounter = adjustedData(9),
+        coin = data.stats(10),
         jsonPath = data.jsonPath,
         imagePath = data.imagePath,
         rect = data.rect,
@@ -134,6 +141,7 @@ object Enemy:
       speed = enemy.getSpeed,
       maxAttackCoolDown = enemy.getMaxAttackCoolDown,
       maxDeadCounter = enemy.getMaxDeadCounter,
+      coin = enemy.getCoin,
       jsonPath = enemy.getJsonPath,
       imagePath = enemy.getImagePath,
       rect = enemy.getRect,

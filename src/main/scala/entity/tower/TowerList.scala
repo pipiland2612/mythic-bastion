@@ -60,6 +60,15 @@ class ExploTower(
 
 object ExploTower:
   val towerType = "Explo"
+  val prices: Map[Int, Int] = Map(
+    1 -> 125,
+    2 -> 220,
+    3 -> 320
+  )
+
+  def updatePrice(currentLevel: Int): Option[Int] =
+    prices.get(currentLevel + 1)
+
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ExploTower =
     new ExploTower(gp, level, s"ExploTower0$level", s"Explo0$level", pos, "ExploTower")
 
@@ -104,6 +113,16 @@ class ArrowTower(
 
 object ArrowTower:
   val towerType = "Arrow"
+  val prices: Map[Int, Int] = Map(
+    1 -> 70,
+    2 -> 110,
+    3 -> 160,
+    4 -> 230,
+  )
+
+  def updatePrice(currentLevel: Int): Option[Int] =
+    prices.get(currentLevel + 1)
+
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): ArrowTower =
     new ArrowTower(gp, level, s"ArrowShooter0$level", s"Arrow0$level", pos, "ArrowTower")
 
@@ -148,6 +167,14 @@ class MagicTower(
 
 object MagicTower:
   val towerType = "Magic"
+  val prices: Map[Int, Int] = Map(
+    1 -> 100,
+    2 -> 160,
+    3 -> 240,
+    4 -> 300,
+  )
+  def updatePrice(currentLevel: Int): Option[Int] =
+    prices.get(currentLevel + 1)
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): MagicTower =
     new MagicTower(gp, level, "MagicWizard", MagicBullet.name, pos, "MagicTower")
 
@@ -245,6 +272,16 @@ class BarrackTower(
 
 object BarrackTower:
   val towerType = "Barrack"
+  val prices: Map[Int, Int] = Map(
+    1 -> 70,
+    2 -> 110,
+    3 -> 160,
+    4 -> 230,
+  )
+
+  def updatePrice(currentLevel: Int): Option[Int] =
+    prices.get(currentLevel + 1)
+
   def apply(gp: GamePanel, level: Int, pos: (Double, Double)): BarrackTower =
     new BarrackTower(gp, level, s"BarrackTower0$level", pos, "BarrackTower")
 

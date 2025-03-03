@@ -74,27 +74,40 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
   def handleFrameOnClick(x: Int, y: Int): Unit =
     towerBuild.getCurrentTower match
       case None => handleTowerSelection(x, y)
-      case Some(_) => handleLevelUpSelection(x, y)
+      case Some(_) => handleOptionButton(x, y)
 
   private def handleTowerSelection(x: Int, y: Int): Unit =
     towerButtons.keys.find(_.contains(x, y)) match
       case Some(button) =>
         towerButtons.get(button) match
           case Some(tower) =>
-            towerBuild.setCurrentTower(Some(tower))
+            handleLevelUp(tower, 0)
             gp.getGUI.currentFrame = None
           case _ =>
       case None =>
         setOffFrame(x, y)
 
-  private def handleLevelUpSelection(x: Int, y: Int): Unit =
+  private def handleLevelUp(tower: Tower, level: Int): Unit =
+    val coin = Tower.moneyToLevelUp(tower, level)
+    coin match
+      case Some(value) =>
+        gp.getSystemHandler.getStageManager.getCurrentPlayer.foreach(player =>
+          if player.getCoins >= value then
+            towerBuild.setCurrentTower(Some(Tower.levelUp(tower, level)))
+            player.updateCoin(-value)
+          else
+            println("Dont have enough coin")
+        )
+      case _ => println("Dont have data for this tower level")
+
+  private def handleOptionButton(x: Int, y: Int): Unit =
     optionButtons.keys.find(_.contains(x, y)) match
       case Some(button) =>
         towerBuild.getCurrentTower.foreach (tower =>
           optionButtons(button) match
             case "L" =>
-              towerBuild.setCurrentTower(Some(Tower.levelUp(tower)))
-              gp.getGUI.currentFrame = None
+                handleLevelUp(tower, tower.level)
+                gp.getGUI.currentFrame = None
             case "S" => towerBuild.setCurrentTower(None)
             case "U" if (tower.getTowerType == BarrackTower.towerType) =>
               drawingFrame = false
