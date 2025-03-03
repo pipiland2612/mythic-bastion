@@ -18,6 +18,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   protected var walkingUpAnimation: Animation = _
   protected var walkingDownAnimation: Animation = _
   scaleFactor = 1.25
+  isGoing = true
 
   def setPath(path: Vector[(Double, Double)]): Unit = this.path = Some(path)
   def haveReach: Boolean = haveReachBase
@@ -62,17 +63,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       index += 1
       return
 
-    direction = determineDirection(xDist, yDist, absX, absY)
-
-  private def determineDirection(xDist: Double, yDist: Double, absX: Double, absY: Double): Direction =
-    if absX > 0 && absY > 0 then
-      if xDist < 0 && yDist < 0 then Direction.UP_LEFT
-      else if xDist > 0 && yDist < 0 then Direction.UP_RIGHT
-      else if xDist < 0 && yDist > 0 then Direction.DOWN_LEFT
-      else Direction.DOWN_RIGHT
-    else if absX > absY then
-      if xDist < 0 then Direction.LEFT else Direction.RIGHT
-    else if yDist < 0 then Direction.UP else Direction.DOWN
+    direction = determineDirection(xDist, yDist)
 
   override def setAction(): Unit =
     super.setAction()

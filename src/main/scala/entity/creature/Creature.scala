@@ -16,7 +16,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   protected val rect: Rectangle2D
   protected val maxDeadCounter: Double
 
-  protected var isCollided: Boolean = false
+  protected var isGoing: Boolean = true
   protected var lastPosition: (Double, Double) = (0, 0)
   protected var hasDied: Boolean = false
   private var deadCounter: Int = 0
@@ -49,7 +49,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
     needsAnimationUpdate = true
 
   protected def continueMove(): Unit =
-    if !isCollided then
+    if isGoing then
       direction match
         case Direction.UP => this.move(0, -this.speed)
         case Direction.DOWN => this.move(0, this.speed)
@@ -82,6 +82,17 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
     val enemyList = findEnemy()
     if enemyList.nonEmpty then
       attack(enemyList.head)
+
+  protected def determineDirection(xDist: Double, yDist: Double): Direction =
+    val (absX, absY) = (Math.abs(xDist), Math.abs(yDist))
+    if absX > 0 && absY > 0 then
+      if xDist < 0 && yDist < 0 then Direction.UP_LEFT
+      else if xDist > 0 && yDist < 0 then Direction.UP_RIGHT
+      else if xDist < 0 && yDist > 0 then Direction.DOWN_LEFT
+      else Direction.DOWN_RIGHT
+    else if absX > absY then
+      if xDist < 0 then Direction.LEFT else Direction.RIGHT
+    else if yDist < 0 then Direction.UP else Direction.DOWN
 
   def handleAttackAnimation(): Unit =
     attackCounter += 1

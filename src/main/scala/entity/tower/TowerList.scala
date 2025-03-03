@@ -169,11 +169,10 @@ class BarrackTower(
   protected val imagePath: String = s"towers/BarrackTower$level.png"
   private val allianceType: String = Soldier01.name
   private val transform: AffineTransform = AffineTransform()
-  private val triangleRadius: Double = 20.0
+  private val triangleRadius: Double = 10.0
   private var triangleCenter: (Double, Double) = pos
   private val barrackTrainers: Vector[BarrackTrainer] = initializeTrainers()
 
-  private val rad: Vector[Double] = Vector(0,120,240).map(Math.toRadians(_))
   private val allianceWidth = 74
   private val allianceHeight = 42
 
@@ -186,6 +185,7 @@ class BarrackTower(
     drawSoldiers(g2d)
 
   private def initializeTrainers(): Vector[BarrackTrainer] =
+    val rad: Vector[Double] = Vector(0,120,240).map(Math.toRadians(_))
     rad.map (rad =>
       val x = triangleCenter._1 + triangleRadius * Math.cos(rad) - allianceWidth/2
       val y = triangleCenter._2 + triangleRadius * Math.sin(rad) - allianceHeight/2
@@ -206,10 +206,11 @@ class BarrackTower(
     updateAlliancePositions()
 
   private def updateAlliancePositions(): Unit =
+    val rad: Vector[Double] = Vector(0,120,240).map(Math.toRadians(_))
     barrackTrainers.zip(rad).foreach((trainer, rad) =>
       val x = triangleCenter._1 + triangleRadius * Math.cos(rad) - allianceWidth/2
       val y = triangleCenter._2 + triangleRadius * Math.sin(rad) - allianceHeight/2
-      trainer.getCurrentSoldier.foreach(_.setPosition((x, y)))
+      trainer.getCurrentSoldier.foreach(_.followPath((x, y)))
     )
 
   class BarrackTrainer(var pos: (Double, Double)):

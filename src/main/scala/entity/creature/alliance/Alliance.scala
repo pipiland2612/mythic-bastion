@@ -41,12 +41,29 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
       .scanForEnemiesInRange(this)
       .asInstanceOf[ListBuffer[T]]
 
+  private var currentGoal: (Double, Double) = (-1, -1)
+
   override def update(): Unit =
     super.update()
     updateGridPosition()
     setAction()
     handleAttackAnimation()
     checkHealthStatus()
+
+  override def setAction(): Unit =
+    super.setAction()
+    handleMovement()
+
+  private def handleMovement(): Unit =
+    if this.state != State.ATTACK && this.currentGoal != (-1, -1) then
+      val (xDist, yDist) = (currentGoal._1 - this.pos._1, currentGoal._2 - this.pos._2)
+      val absX = Math.abs(xDist)
+      val absY = Math.abs(yDist)
+      if absX <= this.speed && absY <= this.speed then
+        this.pos = this.currentGoal
+      else
+        direction = determineDirection(xDist, yDist)
+        continueMove()
 
   private def updateGridPosition(): Unit =
     gp.getSystemHandler.getGrid.updateCreaturePosition(
@@ -57,6 +74,9 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
   private def checkHealthStatus(): Unit =
     if health <= 0 then
       gp.getSystemHandler.getGrid.remove(this)
+
+  def followPath(goal: (Double, Double)): Unit =
+    this.currentGoal = goal
 
 object Alliance:
   private var gp: GamePanel = _
