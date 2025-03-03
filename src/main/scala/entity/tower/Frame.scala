@@ -36,7 +36,6 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
 
   private val upgradeCoords: (Double, Double) = calculateUpgradeCoords()
   private val transform: AffineTransform = new AffineTransform()
-  var isDrawingFrame: Boolean = true
   val pos: (Double, Double) = towerBuild.pos
 
   private val towerButtons: Map[Rectangle, Tower] = initTowerButtons()
@@ -69,7 +68,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
     Map(
       Rectangle(centerX + 9, upgradeCoords._2.toInt - 20, Image.upgrade.getWidth, Image.upgrade.getHeight) -> "L",
       Rectangle(centerX + 16, upgradeCoords._2.toInt + 120, Image.sell.getWidth, Image.sell.getHeight) -> "S",
-      Rectangle(centerX + 20, upgradeCoords._2.toInt + 100, Image.unite.getWidth, Image.unite.getHeight) -> "U"
+      Rectangle(centerX + 60, upgradeCoords._2.toInt + 100, Image.unite.getWidth, Image.unite.getHeight) -> "U"
     )
 
   def handleFrameOnClick(x: Int, y: Int): Unit =
@@ -94,7 +93,9 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
           optionButtons(button) match
             case "L" => towerBuild.setCurrentTower(Some(Tower.levelUp(tower)))
             case "S" => towerBuild.setCurrentTower(None)
-            case "U" => if (tower.getTowerType == BarrackTower.towerType) then {}
+            case "U" if (tower.getTowerType == BarrackTower.towerType) =>
+              drawingFrame = false
+              gp.getSystemHandler.getKeyHandler.isUniting = true
             case _ => // No-op
         )
 
@@ -105,17 +106,28 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
     if (!towerBuild.isInBuildRange(x, y)) then
       gp.getGUI.currentFrame = None
 
-  def draw(g2d: Graphics2D): Unit =
-    if (!isDrawingFrame) return
+  var drawingFrame = true
 
+  def handleUniting(x: Int, y: Int): Unit =
+    this.towerBuild.getCurrentTower.foreach(tower =>
+      if
+        tower.getTowerType == BarrackTower.towerType &&
+        tower.attackCircle.contains(x, y) &&
+        !towerBuild.isInBuildRange(x,y)
+      then
+        tower.asInstanceOf[BarrackTower].moveTriangleTo(x, y)
+    )
+
+  def draw(g2d: Graphics2D): Unit =
     val g2dCopy = g2d.create().asInstanceOf[Graphics2D]
     transform.setToTranslation(upgradeCoords._1, upgradeCoords._2)
-    g2dCopy.drawImage(Image.frame, transform, null)
+    if drawingFrame then
+      g2dCopy.drawImage(Image.frame, transform, null)
 
     towerBuild.getCurrentTower match
       case Some(tower) =>
         drawTowerRange(g2dCopy, tower)
-        drawOptionButtons(g2dCopy, tower)
+        if drawingFrame then drawOptionButtons(g2dCopy, tower)
       case None =>
         drawTowerSelectionButtons(g2dCopy)
 

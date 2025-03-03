@@ -9,13 +9,20 @@ import java.awt.event.{KeyEvent, KeyListener, MouseEvent, MouseListener}
 class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
 
   private val offSetY = 30
+  var isUniting: Boolean = false
 
   override def mouseClicked(e: MouseEvent): Unit =
     val (x,y) = (e.getX, e.getY - offSetY)
     System.out.println("Mouse clicked at: " + x + ", " + y)
     handleTowerBuildOnClick(x, y)
 
-    gp.getGUI.currentFrame.foreach(_.handleFrameOnClick(x,y))
+    gp.getGUI.currentFrame.foreach(frame =>
+      if isUniting then
+        isUniting = false
+        frame.handleUniting(x, y)
+        frame.drawingFrame = true
+      frame.handleFrameOnClick(x,y)
+    )
 
     if x <= 210 && y <= 255 then
       gp.getSystemHandler.getStageManager.startWave()
