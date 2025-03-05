@@ -2,10 +2,9 @@ package gui
 
 import entity.tower.Frame
 import game.{GamePanel, GameState}
-import utils.{Constant, Tools}
-import utils.Constant.{downTopLeftCoords, nextTopLeftCoords, stage01Coords, startCoords, topLeftCoords, topRightCoords}
+import utils.Constant
+import utils.Constant.{downTopLeftCoords, nextTopLeftCoords, startCoords, topLeftCoords, topRightCoords}
 
-import java.awt.geom.Rectangle2D
 import java.awt.{BasicStroke, Color, Font, Graphics2D}
 
 class GUI(gp: GamePanel):
@@ -28,7 +27,7 @@ class GUI(gp: GamePanel):
     val darkColor = new Color(49, 47, 46, 150)
     g2d.setColor(darkColor)
     g2d.fillRoundRect(topLeftCoords._1 + 15, topLeftCoords._2 + 5, 40, 20, 10, 10)
-    g2d.fillRoundRect(nextTopLeftCoords._1 + 20, nextTopLeftCoords._2 + 5, 40, 20, 10, 10)
+    g2d.fillRoundRect(nextTopLeftCoords._1 + 20, nextTopLeftCoords._2 + 5, 50, 20, 10, 10)
     g2d.fillRoundRect(downTopLeftCoords._1 + 15, downTopLeftCoords._2 + 5, 100, 20, 10, 10)
 
     g2d.setColor(Color.WHITE)

@@ -14,6 +14,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
   private val pauseButton: Rectangle2D = Tools.getRectInRange(Constant.topRightCoords, Image.pause)
   private val cancelButton: Rectangle2D = Rectangle2D.Double(680, 165, 40, 40)
   private val startButton: Rectangle2D = Tools.getRectInRange(Constant.startCoords, Image.start)
+  private val quitButton: Rectangle2D = Rectangle2D.Double(500, 335, 270, 50)
   var isUniting: Boolean = false
 
   override def mouseClicked(e: MouseEvent): Unit =
@@ -25,7 +26,6 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       case GameState.TitleState => handleTitleState(x, y)
       case GameState.PlayState => handlePlayState(x, y)
       case GameState.PauseState => handlePauseState(x, y)
-    handlePauseClick(x, y)
 
   override def mousePressed(e: MouseEvent): Unit = {}
 
@@ -38,14 +38,10 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
   override def keyTyped(e: KeyEvent): Unit = {}
 
   override def keyPressed(e: KeyEvent): Unit =
-    e.getKeyCode match
-      case KeyEvent.VK_P =>
-        val state =
-          if gp.getCurrentGameState == GameState.PlayState then GameState.PauseState
-          else GameState.PlayState
-        gp.handleReloadGameState(state)
-      case _ =>
-
+    gp.getCurrentGameState match
+    case GameState.PlayState => handlePlayState(e)
+    case GameState.PauseState => handlePauseState(e)
+    case _ =>
   override def keyReleased(e: KeyEvent): Unit = {}
 
   private def handleGameMenuState(x: Int, y: Int): Unit =
@@ -74,6 +70,10 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       case None =>
 
   private def handlePlayState(x: Int, y: Int): Unit =
+    if pauseButton.contains(x, y) then
+      gp.handleReloadGameState(GameState.PauseState)
+      return
+
     handleTowerBuildOnClick(x, y)
     gp.getGUI.currentFrame.foreach(frame =>
       if isUniting then
@@ -87,13 +87,12 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
 
 //    if x <= 210 && y <= 255 then
 //      gp.getSystemHandler.getStageManager.startWave()
-  private def handlePauseState(x: Int, y: Int): Unit = {}
-
-  private def handlePauseClick(x: Int, y: Int): Unit =
-    if gp.getCurrentGameState == GameState.PlayState && pauseButton.contains(x, y) then
-      gp.handleReloadGameState(GameState.PauseState)
-    else if gp.getCurrentGameState == GameState.PauseState && cancelButton.contains(x, y) then
+  private def handlePauseState(x: Int, y: Int): Unit =
+    if cancelButton.contains(x, y) then
       gp.handleReloadGameState(GameState.PlayState)
+
+    if quitButton.contains(x,y) then
+      gp.handleReloadGameState(GameState.TitleState)
 
   private def handleTowerBuildOnClick(x: Int, y: Int): Unit =
     val towerBuildList: Option[Vector[TowerBuild]] = gp.getSystemHandler.getStageManager.getCurrentStage.map(_.map.towerPos)
@@ -110,3 +109,15 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
               gp.getGUI.currentFrame = Some(frame)
         case _ =>
     )
+
+  private def handlePlayState(e: KeyEvent): Unit =
+    e.getKeyCode match
+      case KeyEvent.VK_P =>
+        gp.handleReloadGameState(GameState.PauseState)
+      case _ =>
+
+  private def handlePauseState(e: KeyEvent): Unit =
+    e.getKeyCode match
+      case KeyEvent.VK_P =>
+        gp.handleReloadGameState(GameState.PlayState)
+      case _ =>
