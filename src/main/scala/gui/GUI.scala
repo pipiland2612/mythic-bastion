@@ -20,8 +20,9 @@ class GUI(gp: GamePanel):
       case GameState.PlayState       => drawPlayState()
       case GameState.PauseState      => drawPauseState()
       case GameState.TitleState      => drawTitleScreen()
+      case GameState.GameMenuState   => drawMenuState()
 
-  def drawPlayState(): Unit =
+  private def drawPlayerStats(): Unit =
     val darkColor = new Color(49, 47, 46, 150)
     g2d.setColor(darkColor)
     g2d.fillRoundRect(topLeftCoords._1 + 15, topLeftCoords._2 + 5, 40, 20, 10, 10)
@@ -48,6 +49,20 @@ class GUI(gp: GamePanel):
 
     currentFrame.foreach(_.draw(g2d))
 
-  def drawPauseState(): Unit = {}
+  def drawPlayState(): Unit =
+    drawPlayerStats()
+
+  private def drawPauseBanner(): Unit =
+    val darkTransparentColor = new Color(0, 0, 0, 150)
+    g2d.setColor(darkTransparentColor)
+    g2d.fillRect(0, 0, gp.getWidth, gp.getHeight)
+    val (drawX, drawY) = (gp.getWidth / 2 - Image.pause.getWidth / 2, gp.getHeight / 2 - Image.pause.getHeight / 2)
+    g2d.drawImage(Image.pause, drawX, drawY, None.orNull)
+
+  def drawPauseState(): Unit =
+    drawPlayerStats()
+    drawPauseBanner()
 
   def drawTitleScreen(): Unit = {}
+
+  def drawMenuState(): Unit = {}
