@@ -3,6 +3,7 @@ package game
 import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
+import game.GameState.GameMenuState
 import gui.GUI
 import system.SystemHandler
 import utils.{Constant, Tools}
@@ -72,6 +73,10 @@ class GamePanel extends JPanel with Runnable:
   def startGameThread(): Unit =
     gameThread = Thread(this)
     gameThread.start()
+
+  def restart(): Unit =
+    systemHandler.restart()
+    handleReloadGameState(GameState.PlayState)
 
   def update(): Unit =
     currentGameState match

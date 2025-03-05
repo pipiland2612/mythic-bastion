@@ -28,7 +28,7 @@ case class Stage(
 
   def addAllianceList(list: Vector[Alliance]): Unit =
     allianceList ++= list
-
+    
   override def toString: String =
     val alliances = allianceList.map(_.toString).mkString(", ")
     val positions = spawnPosition.map ((x, y) => s"($x, $y)" ).mkString(", ")
@@ -36,6 +36,9 @@ case class Stage(
 
     s"Stage($stageName, ID: $stageID, Difficulty: $difficulty, " +
       s"Spawn Positions: [$positions], Waves: [$waveInfo], Alliances: [$alliances])"
+
+object Stage: 
+  def clone(stage: Stage): Stage = Stage(stage.stageName, stage.stageID, stage.difficulty, stage.coins, stage.spawnPosition, stage.waves, stage.map)
 
 case class Wave(
   delay: Int,

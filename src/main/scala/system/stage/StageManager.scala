@@ -9,7 +9,7 @@ import java.awt.geom.AffineTransform
 class StageManager (gp: GamePanel):
 
   private val transform = new AffineTransform()
-  private val waveSpawner: WaveSpawner = WaveSpawner(this)
+  private var waveSpawner: WaveSpawner = WaveSpawner(this)
   private var currentStage: Option[Stage] = None
   private var currentPlayer: Option[PlayerStage] = None
 
@@ -49,3 +49,9 @@ class StageManager (gp: GamePanel):
       stage.map.towerPos.foreach(_.draw(g2d))
       sortedEntities.foreach(_.draw(g2d))
     )
+
+  def restart(): Unit =
+    this.waveSpawner = WaveSpawner(this)
+    currentStage match
+      case Some(stage) => this.currentStage = Some(Stage.clone(stage))
+      case _ =>

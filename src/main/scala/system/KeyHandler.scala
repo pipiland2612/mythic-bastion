@@ -14,7 +14,8 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
   private val pauseButton: Rectangle2D = Tools.getRectInRange(Constant.topRightCoords, Image.pause)
   private val cancelButton: Rectangle2D = Rectangle2D.Double(680, 165, 40, 40)
   private val startButton: Rectangle2D = Tools.getRectInRange(Constant.startCoords, Image.start)
-  private val quitButton: Rectangle2D = Rectangle2D.Double(500, 335, 270, 50)
+  private val quitButton: Rectangle2D = Rectangle2D.Double(500, 335, 170, 50)
+  private val restartButton: Rectangle2D = Rectangle2D.Double(300, 335, 170, 50)
   var isUniting: Boolean = false
 
   override def mouseClicked(e: MouseEvent): Unit =
@@ -93,6 +94,9 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
 
     if quitButton.contains(x,y) then
       gp.handleReloadGameState(GameState.TitleState)
+
+    if restartButton.contains(x,y) then
+      gp.restart()
 
   private def handleTowerBuildOnClick(x: Int, y: Int): Unit =
     val towerBuildList: Option[Vector[TowerBuild]] = gp.getSystemHandler.getStageManager.getCurrentStage.map(_.map.towerPos)
