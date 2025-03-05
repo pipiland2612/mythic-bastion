@@ -5,10 +5,9 @@ import entity.{Direction, State}
 import entity.creature.enemy.Enemy
 import entity.tower.TowerBuild
 import game.GamePanel
-import scalafx.geometry.Rectangle2D
 import system.stage.{EnemyData, GameMap, Stage, Wave}
 
-import java.awt.geom.{AffineTransform, Ellipse2D}
+import java.awt.geom.{AffineTransform, Ellipse2D, Rectangle2D}
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
@@ -215,8 +214,10 @@ object Tools:
     val height = ry * Math.sqrt(2)
 
     // The rectangle is centered on the ellipse center
-    Rectangle2D(cx - width / 2, cy - height / 2, width, height)
+    Rectangle2D.Double(cx - width / 2, cy - height / 2, width, height)
   
   def distance(end: (Double, Double), start: (Double, Double)): Double =
     Math.sqrt(Math.pow(end._1 - start._1, 2) + Math.pow(end._2 - start._2, 2))
-  
+
+  def getRectInRange(coords: (Int, Int), image: BufferedImage): Rectangle2D =
+    Rectangle2D.Double(coords._1, coords._2, image.getWidth, image.getHeight)

@@ -48,4 +48,8 @@ object Image:
 
   val unite: BufferedImage = Tools.scaleImage(Tools.loadImage("build/Unite.png"), 0.45, 0.45)
   val pause: BufferedImage = Tools.scaleImage(Tools.loadImage("maps/pause.jpg"), 0.35, 0.35)
+  val start: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/start.png"), 0.5, 0.5)
 
+  val red_stage: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/red_stage.png"), 0.5, 0.5)
+  val grey_stage: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/grey_stage.png"), 0.5, 0.5)
+  val blue_stage: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/blue_stage.png"), 0.5, 0.5)

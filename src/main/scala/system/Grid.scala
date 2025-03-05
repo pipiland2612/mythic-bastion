@@ -94,10 +94,10 @@ class Grid(gp: GamePanel):
   private def calculateScanBounds(ellipse: Ellipse2D): ScanBounds =
     val maxRect = Tools.getInnerRectangle(ellipse)
     ScanBounds(
-      minX = (maxRect.minX.toInt / cellSize).max(0),
-      maxX = (maxRect.maxX.toInt / cellSize).min(rows - 1),
-      minY = (maxRect.minY.toInt / cellSize).max(0),
-      maxY = (maxRect.maxY.toInt / cellSize).min(cols - 1)
+      minX = (maxRect.getX.toInt / cellSize).max(0),
+      maxX = (maxRect.getMaxX.toInt / cellSize).min(rows - 1),
+      minY = (maxRect.getY.toInt / cellSize).max(0),
+      maxY = (maxRect.getMaxY.toInt / cellSize).min(cols - 1)
     )
 
   def scanForEnemiesInRange(attacker: Entity): ListBuffer[Enemy] =

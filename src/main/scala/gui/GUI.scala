@@ -2,9 +2,11 @@ package gui
 
 import entity.tower.Frame
 import game.{GamePanel, GameState}
-import utils.Constant.{downTopLeftCoords, nextTopLeftCoords, topLeftCoords, topRightCoords}
+import utils.{Constant, Tools}
+import utils.Constant.{downTopLeftCoords, nextTopLeftCoords, stage01Coords, startCoords, topLeftCoords, topRightCoords}
 
-import java.awt.{BasicStroke, Color, Graphics2D}
+import java.awt.geom.Rectangle2D
+import java.awt.{BasicStroke, Color, Font, Graphics2D}
 
 class GUI(gp: GamePanel):
   private var g2d: Graphics2D = _
@@ -19,7 +21,7 @@ class GUI(gp: GamePanel):
     gp.getCurrentGameState match
       case GameState.PlayState       => drawPlayState()
       case GameState.PauseState      => drawPauseState()
-      case GameState.TitleState      => drawTitleScreen()
+      case GameState.TitleState      => drawTitleState()
       case GameState.GameMenuState   => drawMenuState()
 
   private def drawPlayerStats(): Unit =
@@ -63,6 +65,21 @@ class GUI(gp: GamePanel):
     drawPlayerStats()
     drawPauseBanner()
 
-  def drawTitleScreen(): Unit = {}
+  private val map: Vector[(Int, Int)] = Vector(
+    Constant.stage01Coords,
+    Constant.stage02Coords,
+    Constant.stage03Coords,
+    Constant.stage04Coords,
+    Constant.stage05Coords
+  )
 
-  def drawMenuState(): Unit = {}
+  def drawTitleState(): Unit =
+    for coords <- map do
+      g2d.drawImage(Image.red_stage, coords._1, coords._2, None.orNull)
+
+  private val font = Font("Arial", Font.BOLD, 40)
+  def drawMenuState(): Unit =
+    g2d.setColor(Color.YELLOW)
+    g2d.setFont(font)
+    g2d.drawString("Mythic Bastion", startCoords._1 - 65, startCoords._2 - 20)
+    g2d.drawImage(Image.start, startCoords._1, startCoords._2 , None.orNull)

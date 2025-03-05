@@ -5,7 +5,7 @@ import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
 import gui.GUI
 import system.SystemHandler
-import utils.Tools
+import utils.{Constant, Tools}
 
 import java.awt.image.BufferedImage
 import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
@@ -26,7 +26,7 @@ class GamePanel extends JPanel with Runnable:
   // System initialize
   private val systemHandler: SystemHandler = SystemHandler(this)
   private val gui: GUI = GUI(this)
-  private var currentGameState: GameState = GameState.PlayState
+  private var currentGameState: GameState = GameState.GameMenuState
   private var gameThread: Thread = _
   private var backgroundImage: BufferedImage = _
 
@@ -58,12 +58,16 @@ class GamePanel extends JPanel with Runnable:
         changeBackgroundImage(s"maps/mainmenu.png", screenWidth, screenHeight)
 
   def setUpGame(): Unit =
+    Constant.setUp(this)
     Enemy.setUp(this)
     Alliance.setUp(this)
     Weapon.setUp(this)
     Tools.setUp(this)
-    systemHandler.setUp()
     reloadGameBackGround()
+
+  def setUpStage(int: Int): Unit =
+    systemHandler.setUp(int)
+    handleReloadGameState(GameState.PlayState)
 
   def startGameThread(): Unit =
     gameThread = Thread(this)
@@ -82,7 +86,8 @@ class GamePanel extends JPanel with Runnable:
     val startTime: Long = System.nanoTime()
     g2d.drawImage(this.backgroundImage, 0, 0, None.orNull)
 
-    systemHandler.draw(g2d)
+    if currentGameState == GameState.PlayState then
+      systemHandler.draw(g2d)
 
     gui.drawUI(g2d)
     val x = 10

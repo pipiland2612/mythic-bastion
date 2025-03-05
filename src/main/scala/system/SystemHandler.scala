@@ -15,8 +15,9 @@ class SystemHandler (gp: GamePanel):
   def getGrid: Grid = grid
   def getStageManager: StageManager = stageManager
 
-  def setUp(): Unit = 
-    val stage: Stage = Tools.loadStage("stages/Stage01.json")
+  def setUp(int: Int): Unit =
+    require(int >= 1 && int <= 5)
+    val stage: Stage = Tools.loadStage(s"stages/Stage0${int}.json")
     stageManager.setStage(stage)
 
   def update(): Unit =

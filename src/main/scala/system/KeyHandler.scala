@@ -3,7 +3,7 @@ package system
 import entity.tower.{Frame, TowerBuild}
 import game.{GamePanel, GameState}
 import gui.Image
-import utils.{Cache, Constant}
+import utils.{Cache, Constant, Tools}
 
 import java.awt.event.{KeyEvent, KeyListener, MouseEvent, MouseListener}
 import java.awt.geom.Rectangle2D
@@ -11,8 +11,9 @@ import java.awt.geom.Rectangle2D
 class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
 
   private val offSetY = 30
-  private val pauseButton: Rectangle2D = Rectangle2D.Double(Constant.topRightCoords._1, Constant.topRightCoords._2, Image.pause.getWidth, Image.pause.getHeight)
+  private val pauseButton: Rectangle2D = Tools.getRectInRange(Constant.topRightCoords, Image.pause)
   private val cancelButton: Rectangle2D = Rectangle2D.Double(680, 165, 40, 40)
+  private val startButton: Rectangle2D = Tools.getRectInRange(Constant.startCoords, Image.start)
   var isUniting: Boolean = false
 
   override def mouseClicked(e: MouseEvent): Unit =
@@ -47,9 +48,31 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
 
   override def keyReleased(e: KeyEvent): Unit = {}
 
+  private def handleGameMenuState(x: Int, y: Int): Unit =
+    if startButton.contains(x, y) then
+      gp.handleReloadGameState(GameState.TitleState)
 
-  private def handleGameMenuState(x: Int, y: Int): Unit = {}
-  private def handleTitleState(x: Int, y: Int): Unit = {}
+
+  private val stage01Rec: Rectangle2D = Tools.getRectInRange(Constant.stage01Coords, Image.red_stage)
+  private val stage02Rec: Rectangle2D = Tools.getRectInRange(Constant.stage02Coords, Image.red_stage)
+  private val stage03Rec: Rectangle2D = Tools.getRectInRange(Constant.stage03Coords, Image.red_stage)
+  private val stage04Rec: Rectangle2D = Tools.getRectInRange(Constant.stage04Coords, Image.red_stage)
+  private val stage05Rec: Rectangle2D = Tools.getRectInRange(Constant.stage05Coords, Image.red_stage)
+
+  private val map: Map[Rectangle2D, Int] = Map(
+    stage01Rec -> 1,
+    stage02Rec -> 2,
+    stage03Rec -> 3,
+    stage04Rec -> 4,
+    stage05Rec -> 5
+  )
+
+  private def handleTitleState(x: Int, y: Int): Unit =
+    map.keys.find(_.contains(x, y)) match
+      case Some(button) =>
+        map.get(button).foreach(gp.setUpStage(_))
+      case None =>
+
   private def handlePlayState(x: Int, y: Int): Unit =
     handleTowerBuildOnClick(x, y)
     gp.getGUI.currentFrame.foreach(frame =>
