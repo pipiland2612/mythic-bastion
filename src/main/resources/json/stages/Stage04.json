@@ -1,8 +1,8 @@
 {
-  "stageName": "Cavern of Shadows",
-  "stageID": 2,
-  "difficulty": 2,
-  "coins": 800,
+  "stageName": "Twight Light",
+  "stageID": 4,
+  "difficulty": 1,
+  "coins": 1000,
   "spawnPosition": [
     { "x": 25, "y": 430 },
     { "x": 400, "y": 40 }

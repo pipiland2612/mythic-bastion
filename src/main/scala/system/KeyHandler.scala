@@ -62,8 +62,8 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
         frame.handleFrameOnClick(x,y)
     )
 
-    if x <= 210 && y <= 255 then
-      gp.getSystemHandler.getStageManager.startWave()
+//    if x <= 210 && y <= 255 then
+//      gp.getSystemHandler.getStageManager.startWave()
   private def handlePauseState(x: Int, y: Int): Unit = {}
 
   private def handlePauseClick(x: Int, y: Int): Unit =

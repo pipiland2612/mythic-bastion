@@ -16,12 +16,10 @@
       "wave": 1,
       "delay": 1,
       "enemies": [
-        { "type": "Monster01", "count": 7, "spawnInterval": 2, "spawnIndex": 0 },
-        { "type": "Monster02", "count": 3, "spawnInterval": 4, "spawnIndex": 1 },
-        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 2 },
-        { "type": "Monster02", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
-        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
-        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
+        { "type": "Monster01", "count": 15, "spawnInterval": 2, "spawnIndex": 0 },
+        { "type": "Monster01", "count": 10, "spawnInterval": 2, "spawnIndex": 1 },
+        { "type": "Monster01", "count": 15, "spawnInterval": 2, "spawnIndex": 2 },
+        { "type": "Monster01", "count": 15, "spawnInterval": 2, "spawnIndex": 3 }
       ]
     },
     {
@@ -35,6 +33,110 @@
         { "type": "Monster02", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
         { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
         { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
+      ]
+    },
+    {
+      "wave": 3,
+      "delay": 40,
+      "enemies": [
+        { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 2, "spawnInterval": 6, "spawnIndex": 1 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 2 },
+        { "type": "Monster02", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
+      ]
+    },
+    {
+      "wave": 4,
+      "delay": 40,
+      "enemies": [
+        { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 2, "spawnInterval": 6, "spawnIndex": 1 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 2 },
+        { "type": "Monster02", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
+        { "type": "Monster04", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
+        { "type": "Monster05", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
+      ]
+    },
+    {
+      "wave": 5,
+      "delay": 40,
+      "enemies": [
+        { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 2, "spawnInterval": 6, "spawnIndex": 1 },
+        { "type": "Monster05", "count": 5, "spawnInterval": 4, "spawnIndex": 2 },
+        { "type": "Monster04", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
+      ]
+    },
+    {
+      "wave": 6,
+      "delay": 50,
+      "enemies": [
+        { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 2, "spawnInterval": 6, "spawnIndex": 1 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 2 },
+        { "type": "Monster04", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
+        { "type": "Monster01", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
+        { "type": "Monster05", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
+      ]
+    },
+    {
+      "wave": 7,
+      "delay": 50,
+      "enemies": [
+        { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster02", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 2, "spawnInterval": 6, "spawnIndex": 1 },
+        { "type": "Monster01", "count": 5, "spawnInterval": 4, "spawnIndex": 2 },
+        { "type": "Monster02", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
+        { "type": "Monster04", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
+        { "type": "Monster05", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
+      ]
+    },
+    {
+      "wave": 8,
+      "delay": 50,
+      "enemies": [
+        { "type": "Monster04", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster04", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },
+        { "type": "Monster05", "count": 2, "spawnInterval": 6, "spawnIndex": 1 },
+        { "type": "Monster05", "count": 5, "spawnInterval": 4, "spawnIndex": 2 },
+        { "type": "Monster01", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
+        { "type": "Monster01", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
+      ]
+    },
+    {
+      "wave": 9,
+      "delay": 50,
+      "enemies": [
+        { "type": "Monster05", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster04", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },
+        { "type": "Monster05", "count": 2, "spawnInterval": 6, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 5, "spawnInterval": 4, "spawnIndex": 2 },
+        { "type": "Monster01", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
+        { "type": "Monster02", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
+      ]
+    },
+    {
+      "wave": 10,
+      "delay": 50,
+      "enemies": [
+        { "type": "Monster01", "count": 15, "spawnInterval": 1.5, "spawnIndex": 0 },
+        { "type": "Monster01", "count": 8, "spawnInterval": 3, "spawnIndex": 1 },
+        { "type": "Monster02", "count": 2, "spawnInterval": 6, "spawnIndex": 1 },
+        { "type": "Monster03", "count": 5, "spawnInterval": 4, "spawnIndex": 2 },
+        { "type": "Monster05", "count": 3, "spawnInterval": 4, "spawnIndex": 3 },
+        { "type": "Monster05", "count": 5, "spawnInterval": 4, "spawnIndex": 4 },
+        { "type": "Monster04", "count": 5, "spawnInterval": 4, "spawnIndex": 5 }
       ]
     }
   ],
