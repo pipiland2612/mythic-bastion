@@ -99,7 +99,8 @@ object Alliance:
         jsonPath = data.jsonPath,
         imagePath = data.imagePath,
         rect = data.rect,
-        gp = gp
+        gp = gp,
+        healthOffSet = data.healthOffSet
       )
       soldier.setPosition(position)
       soldier
@@ -120,7 +121,8 @@ object Alliance:
       jsonPath = alliance.getJsonPath,
       imagePath = alliance.getImagePath,
       rect = alliance.getRect,
-      gp = gp
+      gp = gp,
+      healthOffSet = alliance.getHealthOffSet
     )
 
 private object AllianceAnimationFactory:
@@ -146,11 +148,12 @@ object AllianceData:
    stats: Vector[Double],
    jsonPath: String,
    imagePath: String,
-   rect: Rectangle2D
+   rect: Rectangle2D,
+   healthOffSet: (Int, Int)
   )
 
   val registry: Map[String, AllianceConfig] = Map(
-    Helper01.name -> AllianceConfig(Helper01.data, Helper01.jsonPath, Helper01.imagePath, Helper01.rect),
-    Helper02.name -> AllianceConfig(Helper02.data, Helper02.jsonPath, Helper02.imagePath, Helper02.rect),
-    Soldier01.name -> AllianceConfig(Soldier01.data, Soldier01.jsonPath, Soldier01.imagePath, Soldier01.rect)
+    Helper01.name -> AllianceConfig(Helper01.data, Helper01.jsonPath, Helper01.imagePath, Helper01.rect, Helper01.healthOffSet),
+    Helper02.name -> AllianceConfig(Helper02.data, Helper02.jsonPath, Helper02.imagePath, Helper02.rect, Helper02.healthOffSet),
+    Soldier01.name -> AllianceConfig(Soldier01.data, Soldier01.jsonPath, Soldier01.imagePath, Soldier01.rect, Soldier01.healthOffSet)
   )

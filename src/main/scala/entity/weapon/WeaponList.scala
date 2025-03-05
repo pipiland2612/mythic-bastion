@@ -73,7 +73,7 @@ case class Arrow(
 ) extends Weapon(gp, enemy) :
   private val transform = new AffineTransform()
   override protected val deadDuration = 30
-  override protected val hitTime = 0.9
+  override protected val hitTime = 0.95
   override protected val weight = 0.5
 
   override def draw(g2d: Graphics2D): Unit =

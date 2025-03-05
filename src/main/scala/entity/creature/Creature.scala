@@ -5,7 +5,7 @@ import game.GamePanel
 import utils.Animation
 
 import java.awt.geom.{Ellipse2D, Rectangle2D}
-import java.awt.Graphics2D
+import java.awt.{Color, Graphics2D}
 import scala.collection.mutable.ListBuffer
 
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
@@ -27,6 +27,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
 
   private var attackCounter = 0
   private val maxAttackCounter = 40
+  protected val healthOffSet: (Int, Int)
 
   currentAnimation = Some(idleAnimation)
 
@@ -36,6 +37,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   def getId: Int = id
   def getMaxHealth: Double = maxHealth
   def getHealth: Double = health
+  def getHealthOffSet: (Int, Int) = healthOffSet
 
   def attackCircle: Ellipse2D =
     Ellipse2D.Double(pos._1 + 5, pos._2, getRange * 2, getRange * 4 / 3)
@@ -105,6 +107,13 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
     super.update()
     updateLastPosition()
     checkDeathStatus()
+    
+  override def draw(g2d: Graphics2D): Unit =
+    super.draw(g2d)
+    val g2dCopy = g2d.create().asInstanceOf[Graphics2D]
+    val oneScale = (32 / this.getMaxHealth).toInt
+    g2d.setColor(Color.GREEN)
+    g2d.fillRect(attackBox.getX.toInt - healthOffSet._1, attackBox.getY.toInt - healthOffSet._2, oneScale * this.getHealth.toInt, 1)
 
   private def updateLastPosition(): Unit =
     lastPosition = (attackBox.getCenterX, attackBox.getCenterY)

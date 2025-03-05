@@ -19,6 +19,7 @@ case class Soldier(
   imagePath: String,
   rect: Rectangle2D,
   gp: GamePanel,
+  healthOffSet: (Int, Int),
   var pos: (Double, Double) = (0, 0),
 ) extends Alliance(gp):
   var health: Double = maxHealth
@@ -33,6 +34,7 @@ object Helper01:
   val jsonPath: String = "alliances/Helper01.json"
   val imagePath: String = "alliances/Helper01.png"
   val rect: Rectangle2D = Rectangle2D.Double(30, 20, 10, 20)
+  val healthOffSet = (5,5)
 
 object Helper02:
   val data: Vector[Double] = Vector(70, 20, 10, 0, 0, 5, 0.5, 1 * 60, 60)
@@ -40,6 +42,7 @@ object Helper02:
   val jsonPath: String = "alliances/Helper02.json"
   val imagePath: String = "alliances/Helper02.png"
   val rect: Rectangle2D = Rectangle2D.Double(30, 20, 20, 10)
+  val healthOffSet = (5,5)
 
 object Soldier01:
   val data: Vector[Double] = Vector(70, 0, 0, 10, 0, 20, 0.5, 1 * 60, 45)
@@ -47,3 +50,4 @@ object Soldier01:
   val jsonPath: String = "alliances/Soldier01.json"
   val imagePath: String = "alliances/Soldier01.png"
   val rect: Rectangle2D = Rectangle2D.Double(32, 15, 10, 20)
+  val healthOffSet = (5,5)

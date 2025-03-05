@@ -74,8 +74,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
         if index < path.length then
           followPath(path(index))
           continueMove()
-        else
-          this.haveReachBase = true
+        else this.haveReachBase = true
       )
 
   override def update(): Unit =
@@ -95,7 +94,6 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       if !hasGiveCoin then
         hasGiveCoin = true
         gp.getSystemHandler.getStageManager.updateCoin(coin.toInt)
-
       gp.getSystemHandler.getGrid.remove(this)
 
 end Enemy
@@ -124,7 +122,8 @@ object Enemy:
         jsonPath = data.jsonPath,
         imagePath = data.imagePath,
         rect = data.rect,
-        gp = gp
+        gp = gp,
+        healthOffSet = data.healthOffSet
       )
     )
 
@@ -145,7 +144,8 @@ object Enemy:
       jsonPath = enemy.getJsonPath,
       imagePath = enemy.getImagePath,
       rect = enemy.getRect,
-      gp = gp
+      gp = gp,
+      healthOffSet = enemy.getHealthOffSet
     )
 
 private object EnemyAnimationFactory:
@@ -175,11 +175,12 @@ private object EnemyData:
     stats: Vector[Double],
     jsonPath: String,
     imagePath: String,
-    rect: Rectangle2D
+    rect: Rectangle2D,
+    healthOffSet: (Int, Int)
   )
 
   val registry: Map[String, EnemyConfig] = Map(
-    Monster01.name -> EnemyConfig(Monster01.data, Monster01.jsonPath, Monster01.imagePath, Monster01.rect),
-    Monster02.name -> EnemyConfig(Monster02.data, Monster02.jsonPath, Monster02.imagePath, Monster02.rect),
-    Monster03.name -> EnemyConfig(Monster03.data, Monster03.jsonPath, Monster03.imagePath, Monster03.rect)
+    Monster01.name -> EnemyConfig(Monster01.data, Monster01.jsonPath, Monster01.imagePath, Monster01.rect, Monster01.healthOffSet),
+    Monster02.name -> EnemyConfig(Monster02.data, Monster02.jsonPath, Monster02.imagePath, Monster02.rect, Monster02.healthOffSet),
+    Monster03.name -> EnemyConfig(Monster03.data, Monster03.jsonPath, Monster03.imagePath, Monster03.rect, Monster03.healthOffSet)
   )

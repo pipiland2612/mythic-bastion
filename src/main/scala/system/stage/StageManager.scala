@@ -18,7 +18,7 @@ class StageManager (gp: GamePanel):
   def getCurrentWave: Int = waveSpawner.getCurrentWave
 
   def updateCoin(dx: Int): Unit = currentPlayer.foreach(_.updateCoin(dx))
-  def updateHealth(dx: Int): Unit = currentPlayer.foreach(_.updateCoin(dx))
+  def updateHealth(dx: Int): Unit = currentPlayer.foreach(_.updateHealth(dx))
 
   def setStage(stage: Stage): Unit =
     currentStage = Some(stage)
