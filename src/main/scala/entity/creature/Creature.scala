@@ -9,7 +9,6 @@ import java.awt.{Color, Graphics2D}
 import scala.collection.mutable.ListBuffer
 
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
-  private val id = Creature.nextId()
 
   protected val maxHealth: Double
   protected var health: Double
@@ -34,7 +33,6 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   def getMaxDeadCounter: Double = maxDeadCounter
   def getRect: Rectangle2D = rect
   def hasDie: Boolean = hasDied
-  def getId: Int = id
   def getMaxHealth: Double = maxHealth
   def getHealth: Double = health
   def getHealthOffSet: (Int, Int) = healthOffSet
@@ -134,16 +132,3 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
       deadCounter += 1
       if deadCounter >= maxDeadCounter then
         hasDied = true
-
-  override def hashCode(): Int = id.hashCode()
-
-  override def equals(obj: Any): Boolean = obj match
-    case other: Creature => this.id == other.id
-    case _ => false
-
-object Creature:
-  private var idCounter: Int = 0
-
-  private def nextId(): Int =
-    idCounter += 1
-    idCounter

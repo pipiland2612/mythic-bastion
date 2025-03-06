@@ -45,6 +45,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
     gp.getSystemHandler.getStageManager.getCurrentStage match
       case Some(stage) => stage.getTower(towerBuild)
       case _ => None
+
   private def removeTower(tower: Tower): Unit =
     gp.getSystemHandler.getStageManager.getCurrentStage match
       case Some(stage) => stage.removeTower(tower)
@@ -118,6 +119,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
                 handleLevelUp(tower, tower.level)
                 gp.getGUI.currentFrame = None
               case "S" =>
+                towerBuild.hasTower = false
                 removeTower(tower)
               case "U" if (tower.getTowerType == BarrackTower.towerType) =>
                 drawingFrame = false

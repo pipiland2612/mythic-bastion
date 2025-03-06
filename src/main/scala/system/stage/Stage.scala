@@ -45,12 +45,15 @@ case class Stage(
     allianceList ++= list
 
   def addTower(tower: Tower, towerBuild: TowerBuild): Unit =
+    towerList.find(tower => tower.getPosition == towerBuild.pos) match
+      case Some(tower) => removeTower(tower)
+      case _ =>
     tower.setPosition(towerBuild.pos)
     towerBuild.hasTower = true
     towerList :+= tower
 
   def removeTower(tower: Tower): Unit =
-    towerList = towerList.filter(to => to.eq(tower))
+    towerList = towerList.filter(to => !(to.equals(tower)))
 
   def getTower(towerBuild: TowerBuild): Option[Tower] =
     if towerBuild.hasTower then

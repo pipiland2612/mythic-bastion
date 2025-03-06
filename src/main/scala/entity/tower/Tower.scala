@@ -106,7 +106,8 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
 
   private def handleEnemyAttack(): Unit =
     findEnemy() match
-      case Some(list) => chooseEnemy(list).foreach(attack(_))
+      case Some(list) if list.nonEmpty => chooseEnemy(list).foreach(attack(_))
+      case _ =>
 
   private def updateBullets(): Unit =
     bulletList.toList.foreach(_.update())
