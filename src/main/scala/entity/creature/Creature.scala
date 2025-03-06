@@ -2,11 +2,12 @@ package entity.creature
 
 import entity.{Attacker, Defender, Direction, Entity, State}
 import game.GamePanel
-import utils.Animation
+import utils.{Animation, SoundConstant}
 
 import java.awt.geom.{Ellipse2D, Rectangle2D}
 import java.awt.{Color, Graphics2D}
 import scala.collection.mutable.ListBuffer
+import scala.util.Random
 
 abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Defender:
 
@@ -27,6 +28,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   private var attackCounter = 0
   private val maxAttackCounter = 40
   protected val healthOffSet: (Int, Int)
+  private val dieSE: Array[String] = Array(SoundConstant.MONSTER_DIE1, SoundConstant.MONSTER_DIE2, SoundConstant.MONSTER_DIE3, SoundConstant.MONSTER_DIE4)
 
   currentAnimation = Some(idleAnimation)
 
@@ -127,10 +129,15 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   private def updateLastPosition(): Unit =
     lastPosition = (attackBox.getCenterX, attackBox.getCenterY)
 
+  private var hasPlayDieSE = false
   private def checkDeathStatus(): Unit =
     if health <= 0 then
       needsAnimationUpdate = true
       this.state = State.DEAD
       deadCounter += 1
       if deadCounter >= maxDeadCounter then
+        if !hasPlayDieSE then
+          hasPlayDieSE = true
+          val num = Random.nextInt(dieSE.length)
+          gp.getSystemHandler.playSE(dieSE(num))
         hasDied = true

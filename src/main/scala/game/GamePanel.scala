@@ -5,7 +5,7 @@ import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
 import gui.GUI
 import system.SystemHandler
-import utils.{Constant, Tools}
+import utils.{Constant, SoundConstant, Tools}
 
 import java.awt.image.BufferedImage
 import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
@@ -65,9 +65,10 @@ class GamePanel extends JPanel with Runnable:
     Weapon.setUp(this)
     Tools.setUp(this)
     reloadGameBackGround()
-    systemHandler.playMusic(21)
+    systemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
 
   def setUpStage(int: Int): Unit =
+    systemHandler.stopMusic()
     systemHandler.setUp(int)
     handleReloadGameState(GameState.PlayState)
 

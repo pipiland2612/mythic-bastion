@@ -3,7 +3,7 @@ package entity.weapon
 import entity.State
 import entity.creature.enemy.Enemy
 import game.GamePanel
-import utils.{Animation, Tools}
+import utils.{Animation, SoundConstant, Tools}
 
 import java.awt.Graphics2D
 import java.awt.geom.{AffineTransform, Ellipse2D}
@@ -26,6 +26,9 @@ case class Explo(
 ) extends Weapon(gp, enemy):
   private val yDrawOffSet: Double = 45
   override def attackCircle: Ellipse2D = Ellipse2D.Double(pos._1 - (3 + 2 * level), pos._2, aoeRange * 2, aoeRange * 4 / 3)
+  protected val flySoundEffect: Array[String] = Array(SoundConstant.EXPLO_FIRESTART1)
+  protected val hitSoundEffect: Array[String] = Array(SoundConstant.EXPLO_FIREEND1)
+
 
   override protected def dealDamage(): Unit =
     super.dealDamage()
@@ -36,12 +39,8 @@ case class Explo(
       case _ =>
 
   override def finalizeAttack(): Unit =
+    super.finalizeAttack()
     if attackT >= 1.0 then
-      attackInProgress = false
-      dealDamage()
-      this.state = State.ATTACK
-      needsAnimationUpdate = true
-      checkAnimationUpdate()
       this.pos = (enemy.getPosition._1, enemy.getPosition._2 - yDrawOffSet)
 
 object Explo:
@@ -77,6 +76,9 @@ case class Arrow(
   private val transform = new AffineTransform()
   override protected val deadDuration = 30
   override protected val weight = 0.5
+
+  protected val flySoundEffect: Array[String] = Array(SoundConstant.ARROW_FIRE1, SoundConstant.ARROW_FIRE2)
+  protected val hitSoundEffect: Array[String] = Array(SoundConstant.ARROW_HIT1, SoundConstant.ARROW_HIT2)
 
   override def draw(g2d: Graphics2D): Unit =
     drawProjectile(g2d)
@@ -134,6 +136,8 @@ case class MagicBullet(
   protected val curveConst: Double = 0
 ) extends Weapon(gp, enemy):
   override protected val deadDuration = 30
+  protected val flySoundEffect: Array[String] = Array(SoundConstant.MAGIC_FIRE1)
+  protected val hitSoundEffect: Array[String] = Array()
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)

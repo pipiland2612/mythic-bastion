@@ -2,6 +2,7 @@ package system.stage
 
 import entity.Entity
 import game.GamePanel
+import utils.SoundConstant
 
 import java.awt.Graphics2D
 import java.awt.geom.AffineTransform
@@ -30,6 +31,7 @@ class StageManager (gp: GamePanel):
   def setStage(stage: Stage): Unit =
     currentStage = Some(stage)
     currentPlayer = Some(PlayerStage(stage.getCoins))
+    gp.getSystemHandler.playMusic(SoundConstant.GAME_BG_SOUND)
 
   def startWave(): Unit =
     currentStage.foreach(stage => stage.getWaveSpawner.scheduleWaveSpawn(stage.getWaves))
@@ -56,10 +58,12 @@ class StageManager (gp: GamePanel):
     )
 
   def restart(): Unit =
+    gp.getSystemHandler.stopMusic()
     currentStage match
       case Some(stage) =>
         this.currentStage = Some(Stage.clone(stage))
         this.currentPlayer match
           case Some(player) => this.currentPlayer = Some(PlayerStage(stage.getCoins))
           case _ =>
+        gp.getSystemHandler.playMusic(SoundConstant.GAME_BG_SOUND)
       case _ =>

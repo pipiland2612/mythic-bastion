@@ -1,6 +1,8 @@
 package system.stage
 
 import entity.creature.enemy.Enemy
+import utils.SoundConstant
+
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 
 class WaveSpawner(stage: Stage):
@@ -20,6 +22,7 @@ class WaveSpawner(stage: Stage):
       val waveTask: Runnable = () => {
         scheduleEnemySpawn(wave.getEnemyData)
         currentWave += 1
+        stage.gp.getSystemHandler.playSE(SoundConstant.BO_START)
       }
       waveScheduler.schedule(waveTask, startDelay, TimeUnit.SECONDS)
       cumulativeDelay = startDelay + waveDuration

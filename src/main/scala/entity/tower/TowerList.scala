@@ -5,7 +5,7 @@ import entity.creature.enemy.Enemy
 import entity.weapon.MagicBullet
 import entity.{Direction, State}
 import game.GamePanel
-import utils.{Animation, Tools}
+import utils.{Animation, SoundConstant, Tools}
 
 import java.awt.geom.AffineTransform
 import java.awt.Graphics2D
@@ -30,6 +30,7 @@ class ExploTower(
   private var prepareAnimation: Animation = _
   private val transform: AffineTransform = AffineTransform()
 
+  protected val readySoundEffect: Array[String] = Array(SoundConstant.EXPLO_READY1, SoundConstant.EXPLO_READY2, SoundConstant.EXPLO_READY3)
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)
     shootAnimation = Animation(frames = value(1), frameDuration = 10, attackStartFrame = 4, attackEndFrame = 6)
@@ -94,6 +95,8 @@ class ArrowTower(
   override val drawOffsetX: Double = 2
   override val drawOffsetY: Double = -16
 
+  protected val readySoundEffect: Array[String] = Array(SoundConstant.ARROW_READY1, SoundConstant.ARROW_READY3)
+
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(1), frameDuration = 10)
     shootAnimation = Animation(frames = value(4), frameDuration = 15, attackStartFrame = 2, attackEndFrame = 8)
@@ -147,6 +150,8 @@ class MagicTower(
   override val offsetY: Double = -30
   override val drawOffsetX: Double = 2
   override val drawOffsetY: Double = -23
+  protected val readySoundEffect: Array[String] = Array(SoundConstant.MAGIC_READY1, SoundConstant.MAGIC_READY2, SoundConstant.MAGIC_READY3)
+
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)
@@ -199,6 +204,7 @@ class BarrackTower(
   private val triangleRadius: Double = 10.0
   private var triangleCenter: (Double, Double) = pos
   private val barrackTrainers: Vector[BarrackTrainer] = initializeTrainers()
+  protected val readySoundEffect: Array[String] = Array()
 
   private val allianceWidth = 74
   private val allianceHeight = 42

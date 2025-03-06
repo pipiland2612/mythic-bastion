@@ -7,6 +7,7 @@ import utils.{Animation, Tools}
 
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
+import scala.util.Random
 
 abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel) with Attacker:
   this.currentAnimation = Some(idleAnimation)
@@ -27,9 +28,15 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
 
   private val baseSpeed: Double = 0.02
 
+  protected val flySoundEffect: Array[String]
+  protected val hitSoundEffect: Array[String]
+
   def hit: Boolean = hasHit
   def getCurrentEnemy: Enemy = enemy
   def attackCircle: Ellipse2D = Ellipse2D.Double(0, 0, 0, 0)
+  def getFlySE: Array[String] = flySoundEffect
+  def getHitSE: Array[String] = hitSoundEffect
+
 
   protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)
@@ -109,13 +116,22 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     move(angle)
     angleOffset *= 0.98
 
+  protected var hasPlayHitSound = false
   protected def finalizeAttack(): Unit =
     if attackT >= 1.0 then
+      if !hasPlayHitSound then playHitSound()
       attackInProgress = false
       dealDamage()
       this.state = State.ATTACK
       needsAnimationUpdate = true
       checkAnimationUpdate()
+      hasPlayHitSound = false
+
+  protected def playHitSound(): Unit =
+    if hitSoundEffect.nonEmpty then
+      hasPlayHitSound = true
+      val random = Random.nextInt(hitSoundEffect.length)
+      gp.getSystemHandler.playSE(hitSoundEffect(random))
 
 object Weapon :
   private var gp: GamePanel = _

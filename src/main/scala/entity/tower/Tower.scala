@@ -4,11 +4,12 @@ import entity.{Entity, State}
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
 import game.GamePanel
-import utils.{Animation, Tools}
+import utils.{Animation, SoundConstant, Tools}
 
 import java.awt.{Color, Graphics2D}
 import java.awt.geom.{AffineTransform, Ellipse2D}
 import scala.collection.mutable.ListBuffer
+import scala.util.Random
 
 abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   this.currentAnimation = Some(idleAnimation)
@@ -35,6 +36,7 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   protected val weaponType: String
   protected val maxAttackCounter: Int
   protected val maxPrepareCounter: Int
+  protected val readySoundEffect: Array[String]
 
   val centerCoords: (Double, Double) = calculateCenterCoords()
   val attackCircle: Ellipse2D = createAttackCircle()
@@ -102,6 +104,10 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
         val pos = bulletPosition
         val bullet = Weapon.clone(weaponType, enemy, pos)
         bulletList += bullet
+        val se = bullet.getFlySE
+        if se.nonEmpty then
+          val random = Random.nextInt(se.length)
+          gp.getSystemHandler.playSE(se(random))
         hasShoot = true
 
   private def handleEnemyAttack(): Unit =
@@ -123,6 +129,7 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
         hasShoot = false
       needsAnimationUpdate = true
 
+  private var hasPlayReadySound: Boolean = false
   private def handlePrepareState(): Unit =
     if this.state == State.PREPARE then
       prepareCounter += 1
@@ -131,6 +138,12 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
         prepareCounter = 0
         this.state = State.IDLE
       needsAnimationUpdate = true
+
+  private def playReadySound(): Unit =
+    if readySoundEffect.nonEmpty then
+      val random = Random.nextInt(readySoundEffect.length)
+      gp.getSystemHandler.playSE(readySoundEffect(random))
+      hasPlayReadySound = true
 
   private def drawBullets(g2d: Graphics2D): Unit =
     bulletList.toList.foreach(_.draw(g2d))

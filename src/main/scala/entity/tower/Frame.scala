@@ -2,6 +2,7 @@ package entity.tower
 
 import game.GamePanel
 import gui.Image
+import utils.SoundConstant
 
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
@@ -121,6 +122,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
               case "S" =>
                 towerBuild.hasTower = false
                 removeTower(tower)
+                gp.getSystemHandler.playSE(SoundConstant.SELL_TOWER)
               case "U" if (tower.getTowerType == BarrackTower.towerType) =>
                 drawingFrame = false
                 gp.getSystemHandler.getKeyHandler.isUniting = true

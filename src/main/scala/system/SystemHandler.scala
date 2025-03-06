@@ -30,13 +30,13 @@ class SystemHandler (gp: GamePanel):
   def draw(g2d: Graphics2D) =
     stageManager.draw(g2d)
 
-  def playMusic (int : Int) =
-    this.sound.setFile(int)
+  def playMusic (path: String) =
+    this.sound.setFile(path)
     this.sound.play()
     this.sound.loop()
 
   def stopMusic (): Unit = this.sound.stop()
 
-  def playSE (int : Int) =
-    this.soundEffect.setFile(int)
+  def playSE (path: String) =
+    this.soundEffect.setFile(path)
     this.soundEffect.play()
