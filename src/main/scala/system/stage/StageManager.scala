@@ -22,18 +22,16 @@ class StageManager (gp: GamePanel):
 
   def setStage(stage: Stage): Unit =
     currentStage = Some(stage)
-    currentPlayer = Some(PlayerStage(stage.coins))
+    currentPlayer = Some(PlayerStage(stage.getCoins))
 
   def startWave(): Unit =
-    currentStage.foreach(stage => waveSpawner.scheduleWaveSpawn(stage.waves))
+    currentStage.foreach(stage => waveSpawner.scheduleWaveSpawn(stage.getWaves))
 
   def update(): Unit =
     currentStage.foreach (stage =>
       stage.getEnemyList.toList.foreach(_.update())
       stage.getAllianceList.toList.foreach(_.update())
-      stage.map.towerPos.foreach(towerBuild =>
-        towerBuild.getCurrentTower.foreach(_.update())
-      )
+      stage.getTowerList.foreach(_.update())
       stage.filterEnemyList(enemy => !enemy.haveReach && !enemy.hasDie)
     )
 
@@ -43,15 +41,19 @@ class StageManager (gp: GamePanel):
       val sortedEntities: List[Entity] = (
         stage.getEnemyList ++
         stage.getAllianceList ++
-        stage.map.towerPos.flatMap(_.getCurrentTower).toList
+        stage.getTowerList
       ).sortBy(_.getPosition._2) // then sort by y coords to draw
 
-      stage.map.towerPos.foreach(_.draw(g2d))
+      stage.getMap.getTowerPos.foreach(_.draw(g2d))
       sortedEntities.foreach(_.draw(g2d))
     )
 
   def restart(): Unit =
     this.waveSpawner = WaveSpawner(this)
     currentStage match
-      case Some(stage) => this.currentStage = Some(Stage.clone(stage))
+      case Some(stage) =>
+        this.currentStage = Some(Stage.clone(stage))
+        this.currentPlayer match
+          case Some(player) => this.currentPlayer = Some(PlayerStage(stage.getCoins))
+          case _ =>
       case _ =>

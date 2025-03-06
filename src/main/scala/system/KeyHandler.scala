@@ -99,7 +99,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       gp.restart()
 
   private def handleTowerBuildOnClick(x: Int, y: Int): Unit =
-    val towerBuildList: Option[Vector[TowerBuild]] = gp.getSystemHandler.getStageManager.getCurrentStage.map(_.map.towerPos)
+    val towerBuildList: Option[Vector[TowerBuild]] = gp.getSystemHandler.getStageManager.getCurrentStage.map(_.getMap.getTowerPos)
     towerBuildList.foreach(towerBuildList =>
       val pos: Option[TowerBuild] = towerBuildList.find(_.isInBuildRange(x, y))
       pos match

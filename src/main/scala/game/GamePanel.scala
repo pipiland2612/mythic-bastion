@@ -50,7 +50,7 @@ class GamePanel extends JPanel with Runnable:
     getCurrentGameState match
       case GameState.PlayState       =>
         getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
-          changeBackgroundImage(s"maps/map${stage.stageID}.jpg", screenWidth, screenHeight)
+          changeBackgroundImage(s"maps/map${stage.getStageID}.jpg", screenWidth, screenHeight)
         )
       case GameState.TitleState      =>
         changeBackgroundImage(s"maps/map.jpg", screenWidth, screenHeight)

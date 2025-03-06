@@ -78,7 +78,5 @@ class GUI(gp: GamePanel):
 
   private val font = Font("Arial", Font.BOLD, 40)
   def drawMenuState(): Unit =
-    g2d.setColor(Color.YELLOW)
-    g2d.setFont(font)
-    g2d.drawString("Mythic Bastion", startCoords._1 - 65, startCoords._2 - 20)
-    g2d.drawImage(Image.start, startCoords._1, startCoords._2 , None.orNull)
+    g2d.drawImage(Image.start, startCoords._1, startCoords._2, None.orNull)
+    g2d.drawImage(Image.mythic_bastion, startCoords._1 - 45, startCoords._2 - 190, None.orNull)

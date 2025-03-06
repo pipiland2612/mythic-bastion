@@ -13,7 +13,7 @@ object Constant:
   val nextTopLeftCoords: (Int, Int) = (70, 10)
   val downTopLeftCoords: (Int, Int) = (10, 40)
   val topRightCoords: (Int, Int) = (900, 10)
-  val startCoords = (48 * 20/2 - Image.start.getWidth/2, 48 * 12/2 - Image.start.getHeight/2 + 50)
+  val startCoords = (48 * 20/2 - Image.start.getWidth/2, 48 * 12/2 - Image.start.getHeight/2 + 50 + 40)
 
 
   val stage01Coords: (Int, Int) = (280, 360)
