@@ -41,6 +41,15 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
   private val towerButtons: Map[Rectangle, Tower] = initTowerButtons()
   private val optionButtons: Map[Rectangle, String] = initOptionButtons()
 
+  private def getCurrentTower: Option[Tower] =
+    gp.getSystemHandler.getStageManager.getCurrentStage match
+      case Some(stage) => stage.getTower(towerBuild)
+      case _ => None
+  private def removeTower(tower: Tower): Unit =
+    gp.getSystemHandler.getStageManager.getCurrentStage match
+      case Some(stage) => stage.removeTower(tower)
+      case _ =>
+
   private def calculateUpgradeCoords(): (Double, Double) =
     val xOffset = (Image.frame.getWidth - towerBuild.towerBuildImage.getWidth) / 2
     val yOffset = (Image.frame.getHeight - towerBuild.towerBuildImage.getHeight) / 2
@@ -72,9 +81,8 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
     )
 
   def handleFrameOnClick(x: Int, y: Int): Unit =
-    towerBuild.getCurrentTower match
-      case None => handleTowerSelection(x, y)
-      case Some(_) => handleOptionButton(x, y)
+    if !towerBuild.hasTower then handleTowerSelection(x, y)
+    else handleOptionButton(x, y)
 
   private def handleTowerSelection(x: Int, y: Int): Unit =
     towerButtons.keys.find(_.contains(x, y)) match
@@ -93,7 +101,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
       case Some(value) =>
         gp.getSystemHandler.getStageManager.getCurrentPlayer.foreach(player =>
           if player.getCoins >= value then
-            towerBuild.setCurrentTower(Some(Tower.levelUp(tower, level)))
+            gp.getSystemHandler.getStageManager.getCurrentStage.foreach(_.addTower(Tower.levelUp(tower, level), towerBuild))
             player.updateCoin(-value)
           else
             println("Dont have enough coin")
@@ -102,20 +110,20 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
 
   private def handleOptionButton(x: Int, y: Int): Unit =
     optionButtons.keys.find(_.contains(x, y)) match
-      case Some(button) =>
-        towerBuild.getCurrentTower.foreach (tower =>
-          optionButtons(button) match
-            case "L" =>
+      case Some(button) if towerBuild.hasTower =>
+        getCurrentTower match
+          case Some(tower) =>
+            optionButtons(button) match
+              case "L" =>
                 handleLevelUp(tower, tower.level)
                 gp.getGUI.currentFrame = None
-            case "S" => towerBuild.setCurrentTower(None)
-            case "U" if (tower.getTowerType == BarrackTower.towerType) =>
-              drawingFrame = false
-              gp.getSystemHandler.getKeyHandler.isUniting = true
-            case _ => // No-op
-        )
-
-      case None =>
+              case "S" =>
+                removeTower(tower)
+              case "U" if (tower.getTowerType == BarrackTower.towerType) =>
+                drawingFrame = false
+                gp.getSystemHandler.getKeyHandler.isUniting = true
+          case _ =>
+      case _ =>
         setOffFrame(x, y)
 
   private def setOffFrame(x: Int, y: Int): Unit =
@@ -125,7 +133,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
   var drawingFrame = true
 
   def handleUniting(x: Int, y: Int): Unit =
-    this.towerBuild.getCurrentTower.foreach(tower =>
+    getCurrentTower.foreach(tower =>
       if
         tower.getTowerType == BarrackTower.towerType &&
         tower.attackCircle.contains(x, y) &&
@@ -140,7 +148,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
     if drawingFrame then
       g2dCopy.drawImage(Image.frame, transform, null)
 
-    towerBuild.getCurrentTower match
+    getCurrentTower match
       case Some(tower) =>
         drawTowerRange(g2dCopy, tower)
         if drawingFrame then drawOptionButtons(g2dCopy, tower)

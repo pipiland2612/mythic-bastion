@@ -15,7 +15,7 @@ case class Stage(
 ):
   private var enemyList: List[Enemy] = List()
   private var allianceList: List[Alliance] = List()
-  private val towerBuildList: List[TowerBuild] = map.getTowerPos.toList
+  private var towerList: List[Tower] = List()
 
   def getStageName: String = stageName
   def getStageID: Int = stageID
@@ -26,7 +26,7 @@ case class Stage(
   def getMap: GameMap = map
   def getEnemyList: List[Enemy] = enemyList.toList
   def getAllianceList: List[Alliance] = allianceList.toList
-  def getTowerList: List[Tower] = towerBuildList.flatMap(_.getCurrentTower)
+  def getTowerList: List[Tower] = towerList.toList
   def totalWave: Int = waves.length
 
   def filterEnemyList(condition: Enemy => Boolean): Unit =
@@ -37,6 +37,20 @@ case class Stage(
 
   def addAllianceList(list: Vector[Alliance]): Unit =
     allianceList ++= list
+
+  def addTower(tower: Tower, towerBuild: TowerBuild): Unit =
+    println(s"Add tower $tower at position ${towerBuild.pos}")
+    tower.setPosition(towerBuild.pos)
+    towerBuild.hasTower = true
+    towerList :+= tower
+
+  def removeTower(tower: Tower): Unit =
+    towerList = towerList.filter(to => to.eq(tower))
+
+  def getTower(towerBuild: TowerBuild): Option[Tower] =
+    if towerBuild.hasTower then
+      getTowerList.find(_.getPosition == towerBuild.pos)
+    else None
 
   override def toString: String =
     val alliances = allianceList.map(_.toString).mkString(", ")

@@ -182,5 +182,17 @@ private object EnemyData:
   val registry: Map[String, EnemyConfig] = Map(
     Monster01.name -> EnemyConfig(Monster01.data, Monster01.jsonPath, Monster01.imagePath, Monster01.rect, Monster01.healthOffSet),
     Monster02.name -> EnemyConfig(Monster02.data, Monster02.jsonPath, Monster02.imagePath, Monster02.rect, Monster02.healthOffSet),
-    Monster03.name -> EnemyConfig(Monster03.data, Monster03.jsonPath, Monster03.imagePath, Monster03.rect, Monster03.healthOffSet)
+    Monster03.name -> EnemyConfig(Monster03.data, Monster03.jsonPath, Monster03.imagePath, Monster03.rect, Monster03.healthOffSet),
+    Monster04.name -> EnemyConfig(Monster04.data, Monster04.jsonPath, Monster04.imagePath, Monster04.rect, Monster04.healthOffSet),
+    Monster05.name -> EnemyConfig(Monster05.data, Monster05.jsonPath, Monster05.imagePath, Monster05.rect, Monster05.healthOffSet),
+    Monster06.name -> EnemyConfig(Monster06.data, Monster06.jsonPath, Monster06.imagePath, Monster06.rect, Monster06.healthOffSet),
+    Monster07.name -> EnemyConfig(Monster07.data, Monster07.jsonPath, Monster07.imagePath, Monster07.rect, Monster07.healthOffSet),
+    Monster08.name -> EnemyConfig(Monster08.data, Monster08.jsonPath, Monster08.imagePath, Monster08.rect, Monster08.healthOffSet),
+    Monster09.name -> EnemyConfig(Monster09.data, Monster09.jsonPath, Monster09.imagePath, Monster09.rect, Monster09.healthOffSet),
+    Monster10.name -> EnemyConfig(Monster10.data, Monster10.jsonPath, Monster10.imagePath, Monster10.rect, Monster10.healthOffSet),
+    Monster11.name -> EnemyConfig(Monster11.data, Monster11.jsonPath, Monster11.imagePath, Monster11.rect, Monster11.healthOffSet),
+    Monster12.name -> EnemyConfig(Monster12.data, Monster12.jsonPath, Monster12.imagePath, Monster12.rect, Monster12.healthOffSet),
+    Monster13.name -> EnemyConfig(Monster13.data, Monster13.jsonPath, Monster13.imagePath, Monster13.rect, Monster13.healthOffSet),
+    Monster14.name -> EnemyConfig(Monster14.data, Monster14.jsonPath, Monster14.imagePath, Monster14.rect, Monster14.healthOffSet),
+    Monster15.name -> EnemyConfig(Monster15.data, Monster15.jsonPath, Monster15.imagePath, Monster15.rect, Monster15.healthOffSet)
   )

@@ -49,7 +49,8 @@ class StageManager (gp: GamePanel):
     )
 
   def restart(): Unit =
-    this.waveSpawner = WaveSpawner(this)
+    this.waveSpawner.stopAllSchedules()
+    this.waveSpawner = new WaveSpawner(this)
     currentStage match
       case Some(stage) =>
         this.currentStage = Some(Stage.clone(stage))
