@@ -45,10 +45,10 @@ case class Explo(
 
 object Explo:
   private val baseStats = Map(
-//  (apDmg, adDmg, speed, aoeDmg)
-    1 -> (0.0, 20.0, 0.7, 3, 15),
-    2 -> (0.0, 30.0, 0.6, 5, 17),
-    3 -> (0.0, 40.0, 0.6, 10, 20)
+//  (apDmg, adDmg, speed, aoeDmg, aoeRange)
+    1 -> (0.0, 20.0, 0.7, 20, 40),
+    2 -> (0.0, 30.0, 0.6, 30, 50),
+    3 -> (0.0, 40.0, 0.6, 40, 55)
   )
 
   def get(gp: GamePanel, enemy: Enemy, pos: (Double, Double), level: Int = 1): Explo =

@@ -54,3 +54,5 @@ object Image:
   val grey_stage: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/grey_stage.png"), 0.5, 0.5)
   val blue_stage: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/blue_stage.png"), 0.5, 0.5)
   val mythic_bastion: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/mythic_bastion.png"), 0.5, 0.5)
+
+  val menu_upgrade: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/upgrade.png"), 0.5, 0.5)

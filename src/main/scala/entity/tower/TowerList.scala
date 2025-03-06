@@ -57,7 +57,7 @@ class ExploTower(
         Tools.drawFrame(g2d, idleAnimation.getCurrentFrame, transform, centerCoords, offsetX, offsetY)
 
   override protected def chooseEnemy(enemyList: ListBuffer[Enemy]): Option[Enemy] =
-    enemyList.sortBy(_.getHealth).lastOption
+    enemyList.sortBy(_.getHealth).headOption
 
 object ExploTower:
   val towerType = "Explo"

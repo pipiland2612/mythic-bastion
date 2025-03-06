@@ -31,7 +31,7 @@ end Creep
 
 // data = [maxHealth, playerDamage, apDmg, apDefense, adDmg, adDefense, range, speed, attackCoolDown, maxDeadCounter, coin]
 object Monster01:
-  val data: Vector[Double] = Vector(20, 1, 0, 0, 5, 2, 20, 0.25, 1 * 60, 45, 5)
+  val data: Vector[Double] = Vector(70, 1, 0, 0, 5, 2, 20, 0.25, 1 * 60, 45, 5)
   val name: String = "Monster01"
   val jsonPath: String = "enemies/Monster01.json"
   val imagePath: String = "enemies/Monster01.png"
@@ -39,7 +39,7 @@ object Monster01:
   val healthOffSet: (Int, Int) = (10, 5)
 
 object Monster02:
-  val data: Vector[Double] = Vector(20, 1, 20, 10, 0, 0, 20, 0.5, 1 * 60, 60, 5)
+  val data: Vector[Double] = Vector(50, 1, 20, 10, 0, 0, 20, 0.5, 1 * 60, 60, 5)
   val name: String = "Monster02"
   val jsonPath: String = "enemies/Monster02.json"
   val imagePath: String = "enemies/Monster02.png"

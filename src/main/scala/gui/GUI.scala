@@ -24,6 +24,7 @@ class GUI(gp: GamePanel):
       case GameState.PauseState      => drawPauseState()
       case GameState.TitleState      => drawTitleState()
       case GameState.GameMenuState   => drawMenuState()
+      case GameState.UpgradeState    => drawUpgradeState()
 
   private def drawPlayerStats(): Unit =
     val darkColor = new Color(49, 47, 46, 150)
@@ -52,7 +53,9 @@ class GUI(gp: GamePanel):
 
     currentFrame.foreach(_.draw(g2d))
 
-  def drawPlayState(): Unit =
+  private def drawUpgradeState(): Unit = {}
+
+  private def drawPlayState(): Unit =
     drawPlayerStats()
 
   private def drawPauseBanner(): Unit =
@@ -62,7 +65,7 @@ class GUI(gp: GamePanel):
     val (drawX, drawY) = (gp.getWidth / 2 - Image.pause.getWidth / 2, gp.getHeight / 2 - Image.pause.getHeight / 2)
     g2d.drawImage(Image.pause, drawX, drawY, None.orNull)
 
-  def drawPauseState(): Unit =
+  private def drawPauseState(): Unit =
     drawPlayerStats()
     drawPauseBanner()
 
@@ -74,11 +77,13 @@ class GUI(gp: GamePanel):
     Constant.stage05Coords
   )
 
-  def drawTitleState(): Unit =
+  private def drawTitleState(): Unit =
     for coords <- map do
       g2d.drawImage(Image.red_stage, coords._1, coords._2, None.orNull)
 
+    g2d.drawImage(Image.menu_upgrade, 700, 500, None.orNull)
+
   private val font = Font("Arial", Font.BOLD, 40)
-  def drawMenuState(): Unit =
+  private def drawMenuState(): Unit =
     g2d.drawImage(Image.start, startCoords._1, startCoords._2, None.orNull)
     g2d.drawImage(Image.mythic_bastion, startCoords._1 - 45, startCoords._2 - 190, None.orNull)
