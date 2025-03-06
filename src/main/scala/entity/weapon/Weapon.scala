@@ -21,7 +21,6 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   protected var hitAnimation: Animation = _
   protected var hitEndAnimation: Animation = _
   protected val curveConst: Double
-  protected val hitTime: Double = 1.0
   protected val weight: Double = 2
   protected var attackT: Double = 0.0
   protected var attackCurve: Option[((Double, Double), (Double, Double), (Double, Double))] = None
@@ -111,7 +110,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     angleOffset *= 0.98
 
   protected def finalizeAttack(): Unit =
-    if attackT >= hitTime then
+    if attackT >= 1.0 then
       attackInProgress = false
       dealDamage()
       this.state = State.ATTACK

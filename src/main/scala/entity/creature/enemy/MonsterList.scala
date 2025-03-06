@@ -52,7 +52,7 @@ object Monster03:
   val jsonPath: String = "enemies/Monster03.json"
   val imagePath: String = "enemies/Monster03.png"
   val rect: Rectangle2D = Rectangle2D.Double(20, 5, 10, 20)
-  val healthOffSet: (Int, Int) = (10, 5)
+  val healthOffSet: (Int, Int) = (5, 5)
 
 object Monster04:
   val data: Vector[Double] = Vector(20, 1, 0, 0, 5, 2, 20, 0.25, 1 * 60, 45, 5)
@@ -60,7 +60,7 @@ object Monster04:
   val jsonPath: String = "enemies/Monster04.json"
   val imagePath: String = "enemies/Monster04.png"
   val rect: Rectangle2D = Rectangle2D.Double(20, 0, 10, 20)
-  val healthOffSet: (Int, Int) = (10, 5)
+  val healthOffSet: (Int, Int) = (-5, 5)
 
 object Monster05:
   val data: Vector[Double] = Vector(20, 1, 20, 10, 0, 0, 20, 0.5, 1 * 60, 60, 5)
@@ -76,7 +76,7 @@ object Monster06:
   val jsonPath: String = "enemies/Monster06.json"
   val imagePath: String = "enemies/Monster06.png"
   val rect: Rectangle2D = Rectangle2D.Double(20, 5, 10, 20)
-  val healthOffSet: (Int, Int) = (10, 5)
+  val healthOffSet: (Int, Int) = (5, 5)
 
 object Monster07:
   val data: Vector[Double] = Vector(20, 1, 0, 0, 5, 2, 20, 0.25, 1 * 60, 45, 5)
@@ -84,7 +84,7 @@ object Monster07:
   val jsonPath: String = "enemies/Monster07.json"
   val imagePath: String = "enemies/Monster07.png"
   val rect: Rectangle2D = Rectangle2D.Double(20, 0, 10, 20)
-  val healthOffSet: (Int, Int) = (10, 5)
+  val healthOffSet: (Int, Int) = (5, 5)
 
 object Monster08:
   val data: Vector[Double] = Vector(20, 1, 20, 10, 0, 0, 20, 0.5, 1 * 60, 60, 5)
@@ -100,7 +100,7 @@ object Monster09:
   val jsonPath: String = "enemies/Monster09.json"
   val imagePath: String = "enemies/Monster09.png"
   val rect: Rectangle2D = Rectangle2D.Double(20, 5, 10, 20)
-  val healthOffSet: (Int, Int) = (10, 5)
+  val healthOffSet: (Int, Int) = (5, 5)
 
 object Monster10:
   val data: Vector[Double] = Vector(20, 1, 0, 0, 5, 2, 20, 0.25, 1 * 60, 45, 5)
@@ -108,7 +108,7 @@ object Monster10:
   val jsonPath: String = "enemies/Monster10.json"
   val imagePath: String = "enemies/Monster10.png"
   val rect: Rectangle2D = Rectangle2D.Double(20, 0, 10, 20)
-  val healthOffSet: (Int, Int) = (10, 5)
+  val healthOffSet: (Int, Int) = (5, 5)
 
 object Monster11:
   val data: Vector[Double] = Vector(20, 1, 20, 10, 0, 0, 20, 0.5, 1 * 60, 60, 5)
@@ -124,7 +124,7 @@ object Monster12:
   val jsonPath: String = "enemies/Monster12.json"
   val imagePath: String = "enemies/Monster12.png"
   val rect: Rectangle2D = Rectangle2D.Double(20, 5, 10, 20)
-  val healthOffSet: (Int, Int) = (10, 5)
+  val healthOffSet: (Int, Int) = (5, 5)
 
 object Monster13:
   val data: Vector[Double] = Vector(20, 1, 0, 0, 5, 2, 20, 0.25, 1 * 60, 45, 5)
@@ -132,7 +132,7 @@ object Monster13:
   val jsonPath: String = "enemies/Monster13.json"
   val imagePath: String = "enemies/Monster13.png"
   val rect: Rectangle2D = Rectangle2D.Double(20, 0, 10, 20)
-  val healthOffSet: (Int, Int) = (10, 5)
+  val healthOffSet: (Int, Int) = (5, 5)
 
 object Monster14:
   val data: Vector[Double] = Vector(20, 1, 20, 10, 0, 0, 20, 0.5, 1 * 60, 60, 5)
@@ -148,4 +148,4 @@ object Monster15:
   val jsonPath: String = "enemies/Monster15.json"
   val imagePath: String = "enemies/Monster15.png"
   val rect: Rectangle2D = Rectangle2D.Double(20, 5, 10, 20)
-  val healthOffSet: (Int, Int) = (10, 5)
+  val healthOffSet: (Int, Int) = (5, 5)

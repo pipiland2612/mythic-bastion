@@ -36,7 +36,7 @@ case class Explo(
       case _ =>
 
   override def finalizeAttack(): Unit =
-    if attackT >= hitTime then
+    if attackT >= 1.0 then
       attackInProgress = false
       dealDamage()
       this.state = State.ATTACK
@@ -76,7 +76,6 @@ case class Arrow(
 ) extends Weapon(gp, enemy) :
   private val transform = new AffineTransform()
   override protected val deadDuration = 30
-  override protected val hitTime = 0.95
   override protected val weight = 0.5
 
   override def draw(g2d: Graphics2D): Unit =

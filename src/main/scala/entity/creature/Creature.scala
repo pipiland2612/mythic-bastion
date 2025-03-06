@@ -118,9 +118,11 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   override def draw(g2d: Graphics2D): Unit =
     super.draw(g2d)
     val g2dCopy = g2d.create().asInstanceOf[Graphics2D]
-    val oneScale = (32 / this.getMaxHealth).toInt
+    val maxBarWidth = 16
+    val healthRatio = this.getHealth.toFloat / this.getMaxHealth.toFloat
+    val healthBarWidth = (maxBarWidth * healthRatio).toInt.max(1)
     g2d.setColor(Color.GREEN)
-    g2d.fillRect(attackBox.getX.toInt - healthOffSet._1, attackBox.getY.toInt - healthOffSet._2, oneScale * this.getHealth.toInt, 1)
+    g2d.fillRect(attackBox.getX.toInt - healthOffSet._1, attackBox.getY.toInt - healthOffSet._2, healthBarWidth, 1)
 
   private def updateLastPosition(): Unit =
     lastPosition = (attackBox.getCenterX, attackBox.getCenterY)

@@ -63,7 +63,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     val absX = Math.abs(xDist)
     val absY = Math.abs(yDist)
 
-    if absX <= this.speed * 3 && absY <= this.speed * 3 then
+    if absX <= this.speed * 5 && absY <= this.speed * 5 then
       index += 1
       return
 
