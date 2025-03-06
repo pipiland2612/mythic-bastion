@@ -15,6 +15,8 @@ class GUI(gp: GamePanel):
   private def setUpGraphics(g: Graphics2D): Unit =
     this.g2d = g
 
+  def reset(): Unit = currentFrame = None
+
   def drawUI(g2d: Graphics2D): Unit =
     setUpGraphics(g2d)
     gp.getCurrentGameState match

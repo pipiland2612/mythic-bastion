@@ -44,6 +44,7 @@ class GamePanel extends JPanel with Runnable:
   def handleReloadGameState(gameState: GameState) =
     currentGameState = gameState
     reloadGameBackGround()
+    gui.reset()
 
   def reloadGameBackGround(): Unit =
     getCurrentGameState match
