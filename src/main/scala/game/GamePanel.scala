@@ -65,6 +65,7 @@ class GamePanel extends JPanel with Runnable:
     Weapon.setUp(this)
     Tools.setUp(this)
     reloadGameBackGround()
+    systemHandler.playMusic(21)
 
   def setUpStage(int: Int): Unit =
     systemHandler.setUp(int)

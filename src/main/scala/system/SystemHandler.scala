@@ -9,9 +9,12 @@ import java.awt.Graphics2D
 class SystemHandler (gp: GamePanel):
   private val keyHandler: KeyHandler = KeyHandler(gp)
   private val stageManager: StageManager = StageManager(gp)
+  private val sound: Sound = Sound()
+  private val soundEffect: Sound = Sound()
 
   def getKeyHandler: KeyHandler = keyHandler
   def getStageManager: StageManager = stageManager
+  def getSound: Sound = sound
 
   def setUp(int: Int): Unit =
     require(int >= 1 && int <= 5)
@@ -26,3 +29,14 @@ class SystemHandler (gp: GamePanel):
 
   def draw(g2d: Graphics2D) =
     stageManager.draw(g2d)
+
+  def playMusic (int : Int) =
+    this.sound.setFile(int)
+    this.sound.play()
+    this.sound.loop()
+
+  def stopMusic (): Unit = this.sound.stop()
+
+  def playSE (int : Int) =
+    this.soundEffect.setFile(int)
+    this.soundEffect.play()
