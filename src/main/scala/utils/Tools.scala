@@ -115,7 +115,7 @@ object Tools:
         waves = waves :+ wave
       )
 
-      Stage(stageName, stageID, difficulty, coins, spawnPosition, waves, map)
+      Stage(gp, stageName, stageID, difficulty, coins, spawnPosition, waves, map)
 
     catch
       case e: Exception =>

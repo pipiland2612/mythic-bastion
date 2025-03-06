@@ -1,4 +1,4 @@
-package system
+package system.stage
 
 import entity.Entity
 import entity.creature.Creature
@@ -55,6 +55,13 @@ class Grid(gp: GamePanel):
   private def creatureCenterPos(creature: Creature): (Int, Int) =
     val pos = (creature.attackBox.getCenterX.toInt / cellSize, creature.attackBox.getCenterY.toInt / cellSize)
     (pos._1, pos._2)
+
+  def reset(): Unit =
+    for
+      i <- 0 until rows
+      j <- 0 until cols
+    do
+      cells(i)(j) = new GridCell
 
   def remove(creature: Creature): Unit =
     val (gridX, gridY) = creatureCenterPos(creature)

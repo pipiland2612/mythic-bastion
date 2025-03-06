@@ -87,8 +87,11 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
     if attackCoolDown > 0 then
       attackCoolDown -= 1
 
-  private def findEnemy(): ListBuffer[Enemy] =
-    gp.getSystemHandler.getGrid.scanForEnemiesInRange(this)
+  private def findEnemy(): Option[ListBuffer[Enemy]] =
+    gp.getSystemHandler.getStageManager.getGrid match
+      case Some(grid) =>
+        Some(grid.scanForEnemiesInRange(this))
+      case _ => None
 
   private def attack(enemy: Enemy): Unit =
     if attackCoolDown <= 0 && this.state != State.PREPARE then
@@ -102,9 +105,8 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
         hasShoot = true
 
   private def handleEnemyAttack(): Unit =
-    val enemyList = findEnemy()
-    if enemyList.nonEmpty then
-      chooseEnemy(enemyList).foreach(attack(_))
+    findEnemy() match
+      case Some(list) => chooseEnemy(list).foreach(attack(_))
 
   private def updateBullets(): Unit =
     bulletList.toList.foreach(_.update())

@@ -78,12 +78,21 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   def takeDamage(damage: Double): Unit =
     health -= damage
 
-  protected def findEnemy[T <: Creature](): ListBuffer[T]
+  protected def findEnemy[T <: Creature](): Option[ListBuffer[T]]
+  protected def updateGridPosition(): Unit =
+    gp.getSystemHandler.getStageManager.getGrid match
+      case Some(grid) => grid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
+      case _ =>
+
+  protected def removeGrid(): Unit =
+    gp.getSystemHandler.getStageManager.getGrid match
+      case Some(grid) => grid.remove(this)
+      case _ =>
 
   protected def setAction(): Unit =
-    val enemyList = findEnemy()
-    if enemyList.nonEmpty then
-      attack(enemyList.head)
+    findEnemy() match
+      case Some(list) if list.nonEmpty => attack(list.head)
+      case _ =>
 
   protected def determineDirection(xDist: Double, yDist: Double): Direction =
     val (absX, absY) = (Math.abs(xDist), Math.abs(yDist))

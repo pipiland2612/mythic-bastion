@@ -36,10 +36,10 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
     fightingAnimation = Animation(frames = value(2), frameDuration = 10)
     deadAnimation = Animation(frames = value(3), frameDuration = 10)
 
-  override protected def findEnemy[T <: Creature](): ListBuffer[T] =
-    gp.getSystemHandler.getGrid
-      .scanForEnemiesInRange(this)
-      .asInstanceOf[ListBuffer[T]]
+  override protected def findEnemy[T <: Creature](): Option[ListBuffer[T]] =
+    gp.getSystemHandler.getStageManager.getGrid match
+      case Some(grid) => Some(grid.scanForEnemiesInRange(this).asInstanceOf[ListBuffer[T]])
+      case _ => None
 
   private var currentGoal: (Double, Double) = (-1, -1)
 
@@ -65,15 +65,9 @@ abstract class Alliance(gp: GamePanel) extends Creature(gp):
         direction = determineDirection(xDist, yDist)
         continueMove()
 
-  private def updateGridPosition(): Unit =
-    gp.getSystemHandler.getGrid.updateCreaturePosition(
-      this,
-      (lastPosition._1.toInt, lastPosition._2.toInt)
-    )
-
   private def checkHealthStatus(): Unit =
     if health <= 0 then
-      gp.getSystemHandler.getGrid.remove(this)
+      removeGrid()
 
   def followPath(goal: (Double, Double)): Unit =
     this.currentGoal = goal

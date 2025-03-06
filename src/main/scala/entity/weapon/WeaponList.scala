@@ -29,8 +29,11 @@ case class Explo(
 
   override protected def dealDamage(): Unit =
     super.dealDamage()
-    val enemiesInRange = gp.getSystemHandler.getGrid.scanForEnemiesInRange(this)
-    enemiesInRange.foreach(_.takeDamage(aoeDmg))
+    gp.getSystemHandler.getStageManager.getGrid match
+      case Some(grid) =>
+        val enemiesInrange = grid.scanForEnemiesInRange(this)
+        enemiesInrange.foreach(_.takeDamage(aoeDmg))
+      case _ =>
 
   override def finalizeAttack(): Unit =
     if attackT >= hitTime then

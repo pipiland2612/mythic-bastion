@@ -104,13 +104,8 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       val pos: Option[TowerBuild] = towerBuildList.find(_.isInBuildRange(x, y))
       pos match
         case Some(towerBuild) =>
-          Cache.frameCached.get(towerBuild.pos) match
-            case Some(frame) =>
-              gp.getGUI.currentFrame = Some(frame)
-            case _ =>
-              val frame: Frame = Frame(towerBuild.gp, towerBuild)
-              Cache.frameCached += towerBuild.pos -> frame
-              gp.getGUI.currentFrame = Some(frame)
+          val frame: Frame = Frame(towerBuild.gp, towerBuild)
+          gp.getGUI.currentFrame = Some(frame)
         case _ =>
     )
 

@@ -18,6 +18,11 @@ class StageManager (gp: GamePanel):
     currentStage match
       case Some(stage) => Some(stage.getWaveSpawner.getCurrentWave)
       case _ => None
+      
+  def getGrid: Option[Grid] =
+    currentStage match
+      case Some(stage) => Some(stage.getGrid)
+      case _ => None  
 
   def updateCoin(dx: Int): Unit = currentPlayer.foreach(_.updateCoin(dx))
   def updateHealth(dx: Int): Unit = currentPlayer.foreach(_.updateHealth(dx))

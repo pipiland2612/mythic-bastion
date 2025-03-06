@@ -53,8 +53,10 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   def attackPlayer(): Unit =
     gp.getSystemHandler.getStageManager.updateHealth(-(this.playerDamage.toInt))
 
-  protected def findEnemy[T <: Creature](): ListBuffer[T] =
-    gp.getSystemHandler.getGrid.scanForAlliancesInRange(this).asInstanceOf[ListBuffer[T]]
+  protected def findEnemy[T <: Creature](): Option[ListBuffer[T]] =
+    gp.getSystemHandler.getStageManager.getGrid match
+      case Some(grid) => Some(grid.scanForAlliancesInRange(this).asInstanceOf[ListBuffer[T]])
+      case _ => None
 
   private def followPath(goal: (Double, Double)): Unit =
     val (xDist, yDist) = (goal._1 - this.pos._1, goal._2 - this.pos._2)
@@ -86,15 +88,12 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       if this.haveReachBase then attackPlayer()
     checkHealthStatus()
 
-  private def updateGridPosition(): Unit =
-    gp.getSystemHandler.getGrid.updateCreaturePosition(this, (lastPosition._1.toInt, lastPosition._2.toInt))
-
   private def checkHealthStatus(): Unit =
     if this.health <= 0 then
       if !hasGiveCoin then
         hasGiveCoin = true
         gp.getSystemHandler.getStageManager.updateCoin(coin.toInt)
-      gp.getSystemHandler.getGrid.remove(this)
+      removeGrid()
 
 end Enemy
 

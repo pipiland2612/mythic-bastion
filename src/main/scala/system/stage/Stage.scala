@@ -3,20 +3,23 @@ package system.stage
 import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.tower.{Tower, TowerBuild}
+import game.GamePanel
 
 case class Stage(
+  gp: GamePanel,
   private val stageName: String,
   private val stageID: Int,
   private val difficulty: Int,
   private val coins: Int,
   private val spawnPosition: Vector[(Double, Double)],
   private val waves: Vector[Wave],
-  private val map: GameMap,
+  private val map: GameMap
 ):
   private var enemyList: List[Enemy] = List()
   private var allianceList: List[Alliance] = List()
   private var towerList: List[Tower] = List()
   private val waveSpawner: WaveSpawner = WaveSpawner(this)
+  private val grid: Grid = Grid(this.gp)
 
   def getStageName: String = stageName
   def getStageID: Int = stageID
@@ -30,6 +33,7 @@ case class Stage(
   def getTowerList: List[Tower] = towerList.toList
   def totalWave: Int = waves.length
   def getWaveSpawner: WaveSpawner = waveSpawner
+  def getGrid: Grid = grid
 
   def filterEnemyList(condition: Enemy => Boolean): Unit =
     enemyList = enemyList.filter(condition)
@@ -41,7 +45,6 @@ case class Stage(
     allianceList ++= list
 
   def addTower(tower: Tower, towerBuild: TowerBuild): Unit =
-    println(s"Add tower $tower at position ${towerBuild.pos}")
     tower.setPosition(towerBuild.pos)
     towerBuild.hasTower = true
     towerList :+= tower
@@ -64,7 +67,9 @@ case class Stage(
 
 object Stage:
   def clone(stage: Stage): Stage =
-    new Stage(stage.stageName, stage.stageID, stage.difficulty, stage.coins, stage.spawnPosition, stage.waves, stage.map)
+    new Stage(stage.gp, stage.stageName, stage.stageID, stage.difficulty, stage.coins, stage.spawnPosition, stage.waves, stage.map.reset())
+
+end Stage
 
 case class Wave(
   private val delay: Int,
@@ -78,10 +83,16 @@ case class Wave(
 
 case class GameMap(
   private val path: Vector[Vector[(Double,Double)]],
-  private val towerPos: Vector[TowerBuild],
+  private val towerPos: Vector[TowerBuild]
 ):
   def getPath: Vector[Vector[(Double,Double)]] = path
   def getTowerPos: Vector[TowerBuild] = towerPos
+
+  def reset(): GameMap =
+    val newTowerPos: Vector[TowerBuild] = towerPos.map(towerBuild => new TowerBuild(towerBuild.gp, towerBuild.pos, towerBuild.towerBuildImage))
+    GameMap(path, newTowerPos)
+
+end GameMap
 
 case class EnemyData(
   private val enemyType: Enemy,
