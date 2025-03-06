@@ -38,7 +38,7 @@ class GUI(gp: GamePanel):
     )
 
     gp.getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
-      val currentWave = gp.getSystemHandler.getStageManager.getCurrentWave
+      val currentWave = stage.getWaveSpawner.getCurrentWave
       val totalWave = stage.totalWave
       g2d.drawString(s"Wave ${currentWave}/${totalWave}", downTopLeftCoords._1 + 35, downTopLeftCoords._2 + 20)
     )

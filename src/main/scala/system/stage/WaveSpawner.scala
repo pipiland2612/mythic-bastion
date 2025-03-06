@@ -3,7 +3,7 @@ package system.stage
 import entity.creature.enemy.Enemy
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
 
-class WaveSpawner(stageManager: StageManager):
+class WaveSpawner(stage: Stage):
   private var currentWave: Int = 0
   private var waveScheduler: ScheduledExecutorService = _
   private var spawnerSchedulers: Vector[ScheduledExecutorService] = Vector()
@@ -51,12 +51,10 @@ class WaveSpawner(stageManager: StageManager):
     )
 
   private def spawnEnemy(enemyData: EnemyData): Unit =
-    stageManager.getCurrentStage.foreach { stage =>
-      val enemy: Enemy = Enemy.clone(enemyData.getEnemyType)
-      enemy.setPosition(stage.getSpawnPosition(enemyData.getSpawnIndex))
-      enemy.setPath(stage.getMap.getPath(enemyData.getSpawnIndex))
-      stage.addEnemy(enemy)
-    }
+    val enemy: Enemy = Enemy.clone(enemyData.getEnemyType)
+    enemy.setPosition(stage.getSpawnPosition(enemyData.getSpawnIndex))
+    enemy.setPath(stage.getMap.getPath(enemyData.getSpawnIndex))
+    stage.addEnemy(enemy)
 
   def stopAllSchedules(): Unit =
     if Option(waveScheduler).isDefined then

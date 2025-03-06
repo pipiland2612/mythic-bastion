@@ -3,7 +3,6 @@ package game
 import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
-import game.GameState.GameMenuState
 import gui.GUI
 import system.SystemHandler
 import utils.{Constant, Tools}

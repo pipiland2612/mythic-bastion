@@ -20,7 +20,8 @@ class SystemHandler (gp: GamePanel):
     val stage: Stage = Tools.loadStage(s"stages/Stage0${int}.json")
     stageManager.setStage(stage)
 
-  def restart(): Unit = stageManager.restart()
+  def restart(): Unit = 
+    stageManager.restart()
 
   def update(): Unit =
     stageManager.update()

@@ -16,6 +16,7 @@ case class Stage(
   private var enemyList: List[Enemy] = List()
   private var allianceList: List[Alliance] = List()
   private var towerList: List[Tower] = List()
+  private val waveSpawner: WaveSpawner = WaveSpawner(this)
 
   def getStageName: String = stageName
   def getStageID: Int = stageID
@@ -28,6 +29,7 @@ case class Stage(
   def getAllianceList: List[Alliance] = allianceList.toList
   def getTowerList: List[Tower] = towerList.toList
   def totalWave: Int = waves.length
+  def getWaveSpawner: WaveSpawner = waveSpawner
 
   def filterEnemyList(condition: Enemy => Boolean): Unit =
     enemyList = enemyList.filter(condition)
