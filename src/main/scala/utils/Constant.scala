@@ -5,16 +5,15 @@ import gui.Image
 
 
 object Constant:
-  private var gp: GamePanel = _
-
-  def setUp(gp: GamePanel): Unit = this.gp = gp
-
+  val screenWidth = 48 * 20
+  val screenHeight = 48 * 12
   val topLeftCoords: (Int, Int) = (10, 10)
   val nextTopLeftCoords: (Int, Int) = (70, 10)
   val downTopLeftCoords: (Int, Int) = (10, 40)
   val topRightCoords: (Int, Int) = (900, 10)
-  val startCoords = (48 * 20/2 - Image.start.getWidth/2, 48 * 12/2 - Image.start.getHeight/2 + 50 + 40)
+  val startCoords = (screenWidth/2 - Image.start.getWidth/2, screenHeight/2 - Image.start.getHeight/2 + 50 + 40)
 
+  val restartEndStageCoords = (screenWidth/2 - Image.restart.getWidth/2, screenHeight/2 + Image.restart.getHeight + 60)
 
   val stage01Coords: (Int, Int) = (280, 360)
   val stage02Coords: (Int, Int) = (350, 270)

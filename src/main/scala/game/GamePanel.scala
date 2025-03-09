@@ -57,9 +57,9 @@ class GamePanel extends JPanel with Runnable:
       case GameState.PauseState      => {}
       case GameState.GameMenuState   =>
         changeBackgroundImage(s"maps/mainmenu.png", screenWidth, screenHeight)
+      case _ =>
 
   def setUpGame(): Unit =
-    Constant.setUp(this)
     Enemy.setUp(this)
     Alliance.setUp(this)
     Weapon.setUp(this)
@@ -78,6 +78,10 @@ class GamePanel extends JPanel with Runnable:
 
   def restart(): Unit =
     systemHandler.restart()
+    handleReloadGameState(GameState.PlayState)
+
+  def continue(): Unit =
+    systemHandler.continue()
     handleReloadGameState(GameState.PlayState)
 
   def update(): Unit =

@@ -25,6 +25,8 @@ class GUI(gp: GamePanel):
       case GameState.TitleState      => drawTitleState()
       case GameState.GameMenuState   => drawMenuState()
       case GameState.UpgradeState    => drawUpgradeState()
+      case GameState.EndStageState   => drawEndStageState()
+      case GameState.WinStageState   => drawWinStageState()
 
   private def drawPlayerStats(): Unit =
     val darkColor = new Color(49, 47, 46, 150)
@@ -35,7 +37,8 @@ class GUI(gp: GamePanel):
 
     g2d.setColor(Color.WHITE)
     g2d.setStroke(BasicStroke(5))
-    gp.getSystemHandler.getStageManager.getCurrentPlayer.foreach(player =>
+    gp.getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
+      val player = stage.getCurrentPlayer
       g2d.drawString(player.getCoins.toString, nextTopLeftCoords._1 + 30, nextTopLeftCoords._2 + 20)
       g2d.drawString(player.getHealth.toString, topLeftCoords._1 + 25, topLeftCoords._2 + 20)
     )
@@ -59,11 +62,14 @@ class GUI(gp: GamePanel):
     drawPlayerStats()
 
   private def drawPauseBanner(): Unit =
+    drawDarkScreen()
+    val (drawX, drawY) = (gp.getWidth / 2 - Image.pause.getWidth / 2, gp.getHeight / 2 - Image.pause.getHeight / 2)
+    g2d.drawImage(Image.pause, drawX, drawY, None.orNull)
+
+  private def drawDarkScreen(): Unit =
     val darkTransparentColor = new Color(0, 0, 0, 150)
     g2d.setColor(darkTransparentColor)
     g2d.fillRect(0, 0, gp.getWidth, gp.getHeight)
-    val (drawX, drawY) = (gp.getWidth / 2 - Image.pause.getWidth / 2, gp.getHeight / 2 - Image.pause.getHeight / 2)
-    g2d.drawImage(Image.pause, drawX, drawY, None.orNull)
 
   private def drawPauseState(): Unit =
     drawPlayerStats()
@@ -82,6 +88,18 @@ class GUI(gp: GamePanel):
       g2d.drawImage(Image.red_stage, coords._1, coords._2, None.orNull)
 
     g2d.drawImage(Image.menu_upgrade, 700, 500, None.orNull)
+
+  private def drawEndStageState(): Unit =
+    drawDarkScreen()
+    g2d.drawImage(Image.lose, gp.screenWidth/2 - Image.lose.getWidth/2, gp.screenHeight/2 - Image.lose.getHeight/2 - 40, None.orNull)
+    g2d.drawImage(Image.quit, gp.screenWidth/2 - Image.quit.getWidth/2, gp.screenHeight/2 + Image.quit.getHeight/2 + 10, None.orNull)
+    g2d.drawImage(Image.restart, Constant.restartEndStageCoords._1, Constant.restartEndStageCoords._2, None.orNull)
+
+  private def drawWinStageState(): Unit =
+    drawDarkScreen()
+    g2d.drawImage(Image.win, gp.screenWidth/2 - Image.win.getWidth/2, gp.screenHeight/2 - Image.win.getHeight/2 - 40, None.orNull)
+    g2d.drawImage(Image.continue, gp.screenWidth/2 - Image.continue.getWidth/2, gp.screenHeight/2 + Image.continue.getHeight/2, None.orNull)
+    g2d.drawImage(Image.restart, Constant.restartEndStageCoords._1, Constant.restartEndStageCoords._2, None.orNull)
 
   private val font = Font("Arial", Font.BOLD, 40)
   private def drawMenuState(): Unit =

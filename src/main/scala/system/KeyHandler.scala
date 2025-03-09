@@ -3,7 +3,7 @@ package system
 import entity.tower.{Frame, TowerBuild}
 import game.{GamePanel, GameState}
 import gui.Image
-import utils.{Cache, Constant, Tools}
+import utils.{Cache, Constant, SoundConstant, Tools}
 
 import java.awt.event.{KeyEvent, KeyListener, MouseEvent, MouseListener}
 import java.awt.geom.Rectangle2D
@@ -29,6 +29,8 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       case GameState.PlayState => handlePlayState(x, y)
       case GameState.PauseState => handlePauseState(x, y)
       case GameState.UpgradeState => handleUpgradeState(x,y)
+      case GameState.EndStageState => handleEndStageState(x,y)
+      case GameState.WinStageState => handleEndStageState(x,y)
 
   override def mousePressed(e: MouseEvent): Unit = {}
 
@@ -111,6 +113,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       val pos: Option[TowerBuild] = towerBuildList.find(_.isInBuildRange(x, y))
       pos match
         case Some(towerBuild) =>
+          gp.getSystemHandler.playSE(SoundConstant.SELECT)
           val frame: Frame = Frame(towerBuild.gp, towerBuild)
           gp.getGUI.currentFrame = Some(frame)
         case _ =>
@@ -127,3 +130,22 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       case KeyEvent.VK_P =>
         gp.handleReloadGameState(GameState.PlayState)
       case _ =>
+
+  private val quitButtonEndStage: Rectangle2D =
+    Tools.getRectInRange((gp.screenWidth/2 - Image.quit.getWidth/2, gp.screenHeight/2 + Image.quit.getHeight + 10), Image.quit)
+  private val restartButtonEndStage: Rectangle2D =
+    Tools.getRectInRange(Constant.restartEndStageCoords, Image.restart)
+  private val continueButtonEndStage: Rectangle2D =
+    Tools.getRectInRange((gp.screenWidth/2 - Image.continue.getWidth/2, gp.screenHeight/2 + Image.continue.getHeight), Image.continue)
+
+  private def handleEndStageState(x: Int, y: Int): Unit =
+    if quitButtonEndStage.contains(x, y) then
+      gp.handleReloadGameState(GameState.TitleState)
+    else if restartButtonEndStage.contains(x, y) then
+      gp.restart()
+
+  private def handleWinStageState(x: Int, y: Int): Unit =
+    if quitButtonEndStage.contains(x, y) then
+      gp.handleReloadGameState(GameState.TitleState)
+    else if continueButtonEndStage.contains(x, y) then
+      gp.restart()

@@ -56,3 +56,9 @@ object Image:
   val mythic_bastion: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/mythic_bastion.png"), 0.5, 0.5)
 
   val menu_upgrade: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/upgrade.png"), 0.5, 0.5)
+  val lose: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/lose.png"), 0.7, 0.7)
+  val win: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/win.png"), 0.7, 0.7)
+
+  val quit: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/quit.jpg"), 0.4, 0.4)
+  val restart: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/restart.png"), 0.4, 0.4)
+  val continue: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/continue.png"), 0.4, 0.4)

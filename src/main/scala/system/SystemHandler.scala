@@ -24,13 +24,16 @@ class SystemHandler (gp: GamePanel):
   def restart(): Unit = 
     stageManager.restart()
 
+  def continue(): Unit =
+    stageManager.continue()
+
   def update(): Unit =
     stageManager.update()
 
   def draw(g2d: Graphics2D) =
     stageManager.draw(g2d)
 
-  def playMusic (path: String) =
+  def playMusic(path: String) =
     this.sound.setFile(path)
     this.sound.play()
     this.sound.loop()

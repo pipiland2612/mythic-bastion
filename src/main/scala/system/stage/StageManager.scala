@@ -1,7 +1,7 @@
 package system.stage
 
 import entity.Entity
-import game.GamePanel
+import game.{GamePanel, GameState}
 import utils.SoundConstant
 
 import java.awt.Graphics2D
@@ -11,38 +11,56 @@ class StageManager (gp: GamePanel):
 
   private val transform = new AffineTransform()
   private var currentStage: Option[Stage] = None
-  private var currentPlayer: Option[PlayerStage] = None
 
   def getCurrentStage: Option[Stage] = currentStage
-  def getCurrentPlayer: Option[PlayerStage] = currentPlayer
   def getCurrentWave: Option[Int] =
     currentStage match
       case Some(stage) => Some(stage.getWaveSpawner.getCurrentWave)
       case _ => None
+
+  def updateCoin(dx: Int): Unit = currentStage.foreach(_.updateCoin(dx))
+  def updateHealth(dx: Int): Unit = currentStage.foreach(_.updateHealth(dx))
       
   def getGrid: Option[Grid] =
     currentStage match
       case Some(stage) => Some(stage.getGrid)
-      case _ => None  
-
-  def updateCoin(dx: Int): Unit = currentPlayer.foreach(_.updateCoin(dx))
-  def updateHealth(dx: Int): Unit = currentPlayer.foreach(_.updateHealth(dx))
+      case _ => None
 
   def setStage(stage: Stage): Unit =
     currentStage = Some(stage)
-    currentPlayer = Some(PlayerStage(stage.getCoins))
     gp.getSystemHandler.playMusic(SoundConstant.GAME_BG_SOUND)
 
   def startWave(): Unit =
     currentStage.foreach(stage => stage.getWaveSpawner.scheduleWaveSpawn(stage.getWaves))
 
+  private var endCounter: Int = 0
   def update(): Unit =
     currentStage.foreach (stage =>
-      stage.getEnemyList.toList.foreach(_.update())
-      stage.getAllianceList.toList.foreach(_.update())
-      stage.getTowerList.foreach(_.update())
-      stage.filterEnemyList(enemy => !enemy.haveReach && !enemy.hasDie)
+      if stage.getCurrentPlayer.getHealth <= 0 then handleLoseCondition()
+      else
+        if stage.getWaveSpawner.getCurrentWave == stage.totalWave && stage.getEnemyList.isEmpty then
+          handleWinCondition()
+        else handleUpdateEntity(stage)
     )
+
+  private def handleLoseCondition(): Unit =
+    endCounter += 1
+    if endCounter >= 60 then
+      gp.handleReloadGameState(GameState.EndStageState)
+      endCounter = 0
+  private def handleWinCondition(): Unit =
+    endCounter += 1
+    if endCounter >= 60 then
+      gp.handleReloadGameState(GameState.WinStageState)
+      gp.getSystemHandler.stopMusic()
+      gp.getSystemHandler.playSE(SoundConstant.VICTORY)
+      endCounter = 0
+
+  private def handleUpdateEntity(stage: Stage): Unit =
+    stage.getEnemyList.toList.foreach(_.update())
+    stage.getAllianceList.toList.foreach(_.update())
+    stage.getTowerList.foreach(_.update())
+    stage.filterEnemyList(enemy => !enemy.haveReach && !enemy.hasDie)
 
   def draw(g2d: Graphics2D): Unit =
     currentStage.foreach(stage =>
@@ -62,8 +80,13 @@ class StageManager (gp: GamePanel):
     currentStage match
       case Some(stage) =>
         this.currentStage = Some(Stage.clone(stage))
-        this.currentPlayer match
-          case Some(player) => this.currentPlayer = Some(PlayerStage(stage.getCoins))
-          case _ =>
         gp.getSystemHandler.playMusic(SoundConstant.GAME_BG_SOUND)
       case _ =>
+
+  def continue(): Unit =
+    gp.getSystemHandler.stopMusic()
+      currentStage match
+        case Some(stage) =>
+          this.currentStage = Some(Stage.nextLevel(stage))
+          gp.getSystemHandler.playMusic(SoundConstant.GAME_BG_SOUND)
+        case _ =>

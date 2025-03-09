@@ -101,7 +101,8 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
     val coin = Tower.moneyToLevelUp(tower, level)
     coin match
       case Some(value) =>
-        gp.getSystemHandler.getStageManager.getCurrentPlayer.foreach(player =>
+        gp.getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
+          val player = stage.getCurrentPlayer
           if player.getCoins >= value then
             gp.getSystemHandler.getStageManager.getCurrentStage.foreach(_.addTower(Tower.levelUp(tower, level), towerBuild))
             player.updateCoin(-value)

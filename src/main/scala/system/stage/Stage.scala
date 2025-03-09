@@ -4,6 +4,7 @@ import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.tower.{BarrackTower, Tower, TowerBuild}
 import game.GamePanel
+import utils.Tools
 
 case class Stage(
   gp: GamePanel,
@@ -20,7 +21,7 @@ case class Stage(
   private var towerList: List[Tower] = List()
   private val waveSpawner: WaveSpawner = WaveSpawner(this)
   private val grid: Grid = Grid(this.gp)
-
+  private val currentPlayer: PlayerStage = PlayerStage(coins)
   def getStageName: String = stageName
   def getStageID: Int = stageID
   def getDifficulty: Int = difficulty
@@ -34,6 +35,10 @@ case class Stage(
   def totalWave: Int = waves.length
   def getWaveSpawner: WaveSpawner = waveSpawner
   def getGrid: Grid = grid
+  def getCurrentPlayer: PlayerStage = currentPlayer
+
+  def updateCoin(dx: Int): Unit = currentPlayer.updateCoin(dx)
+  def updateHealth(dx: Int): Unit = currentPlayer.updateHealth(dx)
 
   def filterEnemyList(condition: Enemy => Boolean): Unit =
     enemyList = enemyList.filter(condition)
@@ -71,6 +76,10 @@ case class Stage(
       s"Spawn Positions: [$positions], Waves: [$waveInfo], Alliances: [$alliances])"
 
 object Stage:
+  def nextLevel(stage: Stage): Stage =
+    require(stage.stageID < 5)
+    Tools.loadStage(s"stages/Stage0${stage.stageID + 1}.json")
+
   def clone(stage: Stage): Stage =
     new Stage(stage.gp, stage.stageName, stage.stageID, stage.difficulty, stage.coins, stage.spawnPosition, stage.waves, stage.map.reset())
 
