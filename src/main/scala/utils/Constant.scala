@@ -14,6 +14,8 @@ object Constant:
   val startCoords = (screenWidth/2 - Image.start.getWidth/2, screenHeight/2 - Image.start.getHeight/2 + 50 + 40)
 
   val restartEndStageCoords = (screenWidth/2 - Image.restart.getWidth/2, screenHeight/2 + Image.restart.getHeight + 60)
+  val exitPreStageCoords = (850, 50)
+  val playPreStageCoords = (800, 470)
 
   val stage01Coords: (Int, Int) = (280, 360)
   val stage02Coords: (Int, Int) = (350, 270)

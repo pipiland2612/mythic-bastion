@@ -11,7 +11,7 @@ import java.awt.{BasicStroke, Color, Font, Graphics2D}
 class GUI(gp: GamePanel):
   private var g2d: Graphics2D = _
   private var isBuilding: Boolean = false
-  private var currentPreStagebg: BufferedImage = Tools.scaleImage(Tools.loadImage(s"maps/prestage_map1.png"), 0.5, 0.5)
+  private var currentPreStagebg: BufferedImage = Tools.scaleImage(Tools.loadImage(s"maps/prestage_map1.png"), 0.6, 0.6)
   var currentFrame: Option[Frame] = None
   var currentPreStageId: Option[Int] = None
 
@@ -21,7 +21,7 @@ class GUI(gp: GamePanel):
   def reset(): Unit = currentFrame = None
   def reloadPreStagebg(): Unit =
     currentPreStageId match
-      case Some(id) => currentPreStagebg = Tools.scaleImage(Tools.loadImage(s"maps/prestage_map$id.png"), 0.5, 0.5)
+      case Some(id) => currentPreStagebg = Tools.scaleImage(Tools.loadImage(s"maps/prestage_map$id.png"), 0.6, 0.6)
       case None =>
 
   def drawUI(g2d: Graphics2D): Unit =
@@ -119,6 +119,7 @@ class GUI(gp: GamePanel):
 
   def drawPreStageState(stageId: Int): Unit =
     g2d.drawImage(Image.prestage_bg, 40, 20, None.orNull)
-    g2d.drawImage(currentPreStagebg, 180, 80, None.orNull)
-    g2d.drawImage(Image.glass, 100, 50, None.orNull)
-    g2d.drawImage(Image.exit, 900, 50, None.orNull)
+    g2d.drawImage(currentPreStagebg, 200, 120, None.orNull)
+    g2d.drawImage(Image.glass, 70, 50, None.orNull)
+    g2d.drawImage(Image.exit, Constant.exitPreStageCoords._1, Constant.exitPreStageCoords._2, None.orNull)
+    g2d.drawImage(Image.play, Constant.playPreStageCoords._1, Constant.playPreStageCoords._2, None.orNull)

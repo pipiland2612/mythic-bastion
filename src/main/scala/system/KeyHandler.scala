@@ -106,6 +106,8 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       gp.handleReloadGameState(GameState.PlayState)
 
     if quitButton.contains(x,y) then
+      gp.getSystemHandler.stopMusic()
+      gp.getSystemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
       gp.handleReloadGameState(GameState.TitleState)
 
     if restartButton.contains(x,y) then
@@ -154,4 +156,14 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
     else if continueButtonEndStage.contains(x, y) then
       gp.restart()
 
-  private def handlePreStageState(x: Int, y: Int): Unit = {}
+  private val exitButtonPreStage: Rectangle2D = Tools.getRectInRange(Constant.exitPreStageCoords, Image.exit)
+  private val playButtonPreStage: Rectangle2D = Tools.getRectInRange(Constant.playPreStageCoords, Image.play)
+  private def handlePreStageState(x: Int, y: Int): Unit =
+    if exitButtonPreStage.contains(x, y) then
+      gp.getGUI.currentPreStageId = None
+      gp.getSystemHandler.stopMusic()
+      gp.getSystemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
+      gp.handleReloadGameState(GameState.TitleState)
+    else if playButtonPreStage.contains(x, y) then
+      gp.getGUI.currentPreStageId.foreach(gp.setUpStage(_))
+      gp.getGUI.currentPreStageId = None
