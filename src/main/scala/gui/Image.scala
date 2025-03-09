@@ -70,3 +70,13 @@ object Image:
 
   val board: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/board.png"), 2.0, 2.0)
   val desc_board: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/description_board.png"), 0.6, 0.6)
+
+  val arrow: BufferedImage = Tools.scaleImage(Tools.loadImage(s"upgrade/arrow/arrow.png"), 0.75, 0.75)
+  val mage: BufferedImage = Tools.scaleImage(Tools.loadImage(s"upgrade/mage/mage.png"), 0.75, 0.75)
+  val barrack: BufferedImage = Tools.scaleImage(Tools.loadImage(s"upgrade/barrack/barrack.png"), 0.75, 0.75)
+  val explo: BufferedImage = Tools.scaleImage(Tools.loadImage(s"upgrade/explo/explo.png"), 0.75, 0.75)
+  val rock: BufferedImage = Tools.scaleImage(Tools.loadImage(s"upgrade/rock/rock.png"), 0.75, 0.75)
+  val alliance: BufferedImage = Tools.scaleImage(Tools.loadImage(s"upgrade/alliance/alliance.png"), 0.75, 0.75)
+
+  val starCost: BufferedImage = Tools.scaleImage(Tools.loadImage(s"gui/star_cost.png"), 0.7, 0.6)
+  val grey_starCost: BufferedImage = Tools.scaleImage(Tools.loadImage(s"gui/grey_star_cost.png"), 0.7, 0.6)

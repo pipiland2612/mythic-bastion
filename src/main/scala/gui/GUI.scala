@@ -66,13 +66,9 @@ class GUI(gp: GamePanel):
     currentFrame.foreach(_.draw(g2d))
 
   private def drawUpgradeState(g2d: Graphics2D): Unit =
-    // Enable high-quality rendering
-    g2d.drawImage(Image.board, 70, 0, None.orNull)
-    g2d.drawImage(Image.desc_board, Image.board.getWidth + 70, 0, None.orNull)
-
-    UpgradeGUI.upgradeList.foreach { case ((x, y), component) =>
-      g2d.drawImage(component.image, x, y, None.orNull)
-    }
+    g2d.drawImage(Image.board, 80, 0, None.orNull)
+    g2d.drawImage(Image.desc_board, Image.board.getWidth + 80, 0, None.orNull)
+    UpgradeGUI.draw(g2d)
 
   private def drawPlayState(g2d: Graphics2D): Unit =
     drawPlayerStats(g2d)
