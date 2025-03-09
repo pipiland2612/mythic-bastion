@@ -10,8 +10,8 @@ case class UpgradeComponent(name: String, var image: BufferedImage, description:
   var condition = true
 
   def reloadImage(): Unit =
-    if condition then
-      this.image = Tools.applyGrayscale(image)
+    if condition then this.image = Tools.applyGrayscale(image)
+    else this.image = oriImage
 
 object UpgradeGUI:
 
