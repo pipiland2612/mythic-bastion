@@ -11,10 +11,12 @@ class SystemHandler (gp: GamePanel):
   private val stageManager: StageManager = StageManager(gp)
   private val sound: Sound = Sound()
   private val soundEffect: Sound = Sound()
+  private val upgradeManager: UpgradeManager = UpgradeManager()
 
   def getKeyHandler: KeyHandler = keyHandler
   def getStageManager: StageManager = stageManager
   def getSound: Sound = sound
+  def getUpgradeManager: UpgradeManager = upgradeManager
 
   def setUp(int: Int): Unit =
     require(int >= 1 && int <= 5)

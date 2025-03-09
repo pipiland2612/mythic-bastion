@@ -29,6 +29,8 @@ case class Explo(
   protected val flySoundEffect: Array[String] = Array(SoundConstant.EXPLO_FIRESTART1)
   protected val hitSoundEffect: Array[String] = Array(SoundConstant.EXPLO_FIREEND1)
 
+  protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("explo", "damage")
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("explo", "range")
 
   override protected def dealDamage(): Unit =
     super.dealDamage()
@@ -76,6 +78,9 @@ case class Arrow(
   private val transform = new AffineTransform()
   override protected val deadDuration = 30
   override protected val weight = 0.5
+
+  protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("arrow", "damage")
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("arrow", "range")
 
   protected val flySoundEffect: Array[String] = Array(SoundConstant.ARROW_FIRE1, SoundConstant.ARROW_FIRE2)
   protected val hitSoundEffect: Array[String] = Array(SoundConstant.ARROW_HIT1, SoundConstant.ARROW_HIT2)
@@ -125,12 +130,13 @@ object Arrow :
 
 case class MagicBullet(
   gp: GamePanel,
+  level: Int,
   name: String,
   jsonPath: String,
   imagePath: String,
   enemy: Enemy,
   var pos: (Double, Double),
-  apDmg: Double = 20,
+  apDmg: Double,
   protected val adDmg: Double = 0,
   protected val speed: Double = 2,
   protected val curveConst: Double = 0
@@ -138,6 +144,9 @@ case class MagicBullet(
   override protected val deadDuration = 30
   protected val flySoundEffect: Array[String] = Array(SoundConstant.MAGIC_FIRE1)
   protected val hitSoundEffect: Array[String] = Array()
+
+  protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("magic", "damage")
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("magic", "range")
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)
@@ -163,5 +172,12 @@ object MagicBullet:
   private val jsonPath: String = s"weapons/$name.json"
   private val imagePath: String = s"weapons/$name.png"
 
-  def apply(gp: GamePanel, enemy: Enemy, pos: (Double, Double)): MagicBullet =
-    new MagicBullet(gp, name, jsonPath, imagePath, enemy, pos)
+  private val baseStats = Map(
+    1 -> (20.0),  // (apDmg)
+    2 -> (25.0),
+    3 -> (30.0)
+  )
+
+  def get(gp: GamePanel, enemy: Enemy, pos: (Double, Double), l: Int = 1): MagicBullet =
+    val apDmg = baseStats(l)
+    new MagicBullet(gp, l, name, jsonPath, imagePath, enemy, pos, apDmg)

@@ -37,6 +37,11 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   def getFlySE: Array[String] = flySoundEffect
   def getHitSE: Array[String] = hitSoundEffect
 
+  protected def getDamageMultiplier: Double
+  protected def getRangeMultiplier: Double
+  override def getApDmg: Double = (apDmg * getDamageMultiplier)
+  override def getAdDmg: Double = (adDmg * getDamageMultiplier)
+  override def getRange: Double = range * getRangeMultiplier
 
   protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)
@@ -148,7 +153,7 @@ object Weapon :
       case s if s.startsWith("Arrow") =>
         Arrow.get(gp, enemy, pos, extractedLevel)
       case s if s.startsWith("MagicBullet") =>
-        MagicBullet(gp, enemy, pos)
+        MagicBullet.get(gp, enemy, pos, extractedLevel)
       case _ => throw new IllegalArgumentException(s"Unknown weapon type: $weapon")
 
   private def extractLevel(weaponName: String, defaultLevel: Int): Int =

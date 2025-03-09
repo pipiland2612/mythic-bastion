@@ -55,12 +55,10 @@ class GamePanel extends JPanel with Runnable:
         getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
           changeBackgroundImage(s"maps/map${stage.getStageID}.jpg", screenWidth, screenHeight)
         )
-      case GameState.TitleState      =>
-        changeBackgroundImage(s"maps/map.jpg", screenWidth, screenHeight)
-      case GameState.GameMenuState   =>
-        changeBackgroundImage(s"maps/mainmenu.png", screenWidth, screenHeight)
-      case GameState.PreStageState   =>
-        changeBackgroundImage(s"maps/prestage.png", screenWidth, screenHeight)
+      case GameState.TitleState      => changeBackgroundImage(s"maps/map.jpg", screenWidth, screenHeight)
+      case GameState.GameMenuState   => changeBackgroundImage(s"maps/mainmenu.png", screenWidth, screenHeight)
+      case GameState.PreStageState   => changeBackgroundImage(s"maps/prestage.png", screenWidth, screenHeight)
+      case GameState.UpgradeState    => changeBackgroundImage(s"maps/upgrade_bg.png", screenWidth, screenHeight)
       case _ =>
 
   def setUpGame(): Unit =
