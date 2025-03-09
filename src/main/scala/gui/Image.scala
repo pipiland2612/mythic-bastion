@@ -80,3 +80,4 @@ object Image:
 
   val starCost: BufferedImage = Tools.scaleImage(Tools.loadImage(s"gui/star_cost.png"), 0.7, 0.6)
   val grey_starCost: BufferedImage = Tools.scaleImage(Tools.loadImage(s"gui/grey_star_cost.png"), 0.7, 0.6)
+  val x: BufferedImage = Tools.scaleImage(Tools.loadImage(s"gui/x.png"), 0.5, 0.5)

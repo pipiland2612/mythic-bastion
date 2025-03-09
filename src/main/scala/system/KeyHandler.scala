@@ -2,7 +2,7 @@ package system
 
 import entity.tower.{Frame, TowerBuild}
 import game.{GamePanel, GameState}
-import gui.Image
+import gui.{Image, UpgradeGUI}
 import utils.{Constant, SoundConstant, Tools}
 
 import java.awt.event.{KeyEvent, KeyListener, MouseEvent, MouseListener}
@@ -29,6 +29,15 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       gp.handleReloadGameState(GameState.PreStageState)
     })
   )
+
+  private val upgradeButtons: List[Button] =
+    UpgradeGUI.getUpgradeList.toList.map((coords, component) =>
+      Button(Tools.getRectInRange(coords, component.image),
+      (_, _) => {
+        gp.getSystemHandler.playSE(SoundConstant.SELECT)
+        UpgradeGUI.currentFrame = (coords._1 - 1, coords._2 - 1)
+      })
+    )
 
   // Define buttons for each game state
   private val buttonsByState: Map[GameState, List[Button]] = Map(
@@ -77,7 +86,11 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
           gp.handleReloadGameState(GameState.PlayState)
         })
     ),
-    GameState.UpgradeState -> List()
+    GameState.UpgradeState -> (List(
+      Button(Tools.getRectInRange(Constant.xUpgradeStageCoords, Image.x),
+        (_, _) => gp.handleReloadGameState(GameState.TitleState)
+      )) ++ upgradeButtons
+    )
   )
 
   override def mouseClicked(e: MouseEvent): Unit =

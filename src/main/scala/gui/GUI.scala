@@ -68,6 +68,7 @@ class GUI(gp: GamePanel):
   private def drawUpgradeState(g2d: Graphics2D): Unit =
     g2d.drawImage(Image.board, 80, 0, None.orNull)
     g2d.drawImage(Image.desc_board, Image.board.getWidth + 80, 0, None.orNull)
+    g2d.drawImage(Image.x, Constant.xUpgradeStageCoords._1, Constant.xUpgradeStageCoords._2, None.orNull)
     UpgradeGUI.draw(g2d)
 
   private def drawPlayState(g2d: Graphics2D): Unit =

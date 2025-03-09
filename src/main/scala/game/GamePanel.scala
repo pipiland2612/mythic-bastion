@@ -66,7 +66,6 @@ class GamePanel extends JPanel with Runnable:
     Alliance.setUp(this)
     Weapon.setUp(this)
     Tools.setUp(this)
-    UpgradeGUI.setUp()
     reloadGameBackGround()
     systemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
 

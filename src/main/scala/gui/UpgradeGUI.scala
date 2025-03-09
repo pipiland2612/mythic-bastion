@@ -62,36 +62,38 @@ object UpgradeGUI:
     "UnbreakableBond" -> ("alliance/level5", "Significantly increase overall allied strength and support effectiveness", 4)
   )
 
-  private val startX = 80
+  private val startX = 170
   private val startY = 370
   private val padding = 20
   private val d = (86 * 0.75).toInt
 
-  var upgradeList: Map[(Int, Int), UpgradeComponent] = Map()
+  var currentFrame = (startX - 1, startY - 1)
   private val allUpgrades: List[UpgradeComponent] = list.map { case (name, (path, desc, cost)) =>
     UpgradeComponent(name, Tools.scaleImage(Tools.loadImage(s"upgrade/$path.png"), 0.75, 0.75), desc, cost)
   }.toList
 
-  private def populateList(startX: Int, startY: Int): Unit =
-
+  private def populateList(startX: Int, startY: Int): Map[(Int, Int), UpgradeComponent] =
+    var result: Map[(Int, Int), UpgradeComponent] = Map()
     var (x, y) = (startX, startY)
     for i <- allUpgrades.indices do
-      if i % 5 == 0 then
+      if i % 5 == 0 && i != 0 then
         y = startY
         x = x + d + padding
 
-      upgradeList += (x, y) -> allUpgrades(i)
+      result += (x, y) -> allUpgrades(i)
       y = y - d - padding
-
-  def setUp(): Unit =
-    populateList(startX, startY)
-    reload()
+    result
 
   def reload(): Unit =
     upgradeList.foreach{case ((_,_), com) => com.reloadImage()}
+  private var upgradeList: Map[(Int, Int), UpgradeComponent] = populateList(startX, startY)
+
+  def getUpgradeList = upgradeList
 
   def draw(g2d: Graphics2D): Unit =
     upgradeList.foreach { case ((x, y), component) =>
+      g2d.setColor(Color.GREEN)
+      g2d.drawRect(currentFrame._1, currentFrame._2, d + 1, d + 1)
       g2d.drawImage(component.image, x, y, None.orNull)
       if !component.hasBought then
         var starToDraw = Image.grey_starCost
@@ -103,11 +105,10 @@ object UpgradeGUI:
         g2d.drawImage(starToDraw, x + component.image.getWidth/2, y + component.image.getHeight * 3/4, None.orNull)
         g2d.drawString(component.cost.toString, x + component.image.getWidth * 3/4+ 5, y + component.image.getHeight - 4)
     }
-    val x = startX + d + padding
     val y = startY + d + padding
-    g2d.drawImage(Image.arrow, x, y, None.orNull)
-    g2d.drawImage(Image.barrack, x + padding + d, y , None.orNull)
-    g2d.drawImage(Image.explo, x + (padding + d)*2, y, None.orNull)
-    g2d.drawImage(Image.mage, x + (padding + d)*3, y, None.orNull)
-    g2d.drawImage(Image.rock, x + (padding + d)*4, y, None.orNull)
-    g2d.drawImage(Image.alliance, x + (padding + d)*5, y, None.orNull)
+    g2d.drawImage(Image.arrow, startX, y, None.orNull)
+    g2d.drawImage(Image.barrack, startX + padding + d, y , None.orNull)
+    g2d.drawImage(Image.explo, startX + (padding + d)*2, y, None.orNull)
+    g2d.drawImage(Image.mage, startX + (padding + d)*3, y, None.orNull)
+    g2d.drawImage(Image.rock, startX + (padding + d)*4, y, None.orNull)
+    g2d.drawImage(Image.alliance, startX + (padding + d)*5, y, None.orNull)
