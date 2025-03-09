@@ -30,8 +30,8 @@ object Tools:
     g2d.dispose()
     flippedImage
 
-  def getCenterCoords(coords: (Double, Double), image: BufferedImage): (Double, Double) =
-    (coords._1 - image.getWidth()/2, coords._2 - image.getHeight()/2)
+  def getCenterCoords(coords: (Double, Double), image: BufferedImage, offsetX: Int = 0, offsetY: Int = 0): (Double, Double) =
+    (coords._1 - image.getWidth()/2 + offsetX, coords._2 - image.getHeight()/2 + offsetY)
 
   def flipAnimation(animation: Animation): Animation =
     val vector: Vector[BufferedImage] =

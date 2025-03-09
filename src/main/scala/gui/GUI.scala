@@ -14,9 +14,8 @@ class GUI(gp: GamePanel):
   var currentPreStageId: Option[Int] = None
 
   private def centeredPosition(image: BufferedImage, offsetX: Int = 0, offsetY: Int = 0): (Int, Int) =
-    val x = gp.screenWidth / 2 - image.getWidth / 2 + offsetX
-    val y = gp.screenHeight / 2 - image.getHeight / 2 + offsetY
-    (x, y)
+    val (x, y) = Tools.getCenterCoords((gp.screenWidth/2, gp.screenHeight/2), image, offsetX, offsetY)
+    (x.toInt, y.toInt)
 
   def reset(): Unit = currentFrame = None
 
