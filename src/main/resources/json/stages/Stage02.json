@@ -1,7 +1,7 @@
 {
   "stageName": "Cavern of Shadows",
   "stageID": 2,
-  "difficulty": 2,
+  "difficulty": 1,
   "coins": 800,
   "spawnPosition": [
     { "x": 5, "y": 360 },

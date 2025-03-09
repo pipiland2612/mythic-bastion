@@ -209,6 +209,13 @@ class BarrackTower(
   private val allianceWidth = 74
   private val allianceHeight = 42
 
+  def removeAllAlliance(): Unit =
+    barrackTrainers.flatMap(_.getCurrentSoldier).foreach(alliance =>
+      gp.getSystemHandler.getStageManager.getGrid match
+        case Some(grid) => grid.remove(alliance)
+        case _ =>
+    )
+
   override def update(): Unit =
     barrackTrainers.foreach(_.update())
     updateSoldiers()

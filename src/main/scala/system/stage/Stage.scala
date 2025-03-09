@@ -2,7 +2,7 @@ package system.stage
 
 import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
-import entity.tower.{Tower, TowerBuild}
+import entity.tower.{BarrackTower, Tower, TowerBuild}
 import game.GamePanel
 
 case class Stage(
@@ -53,6 +53,8 @@ case class Stage(
     towerList :+= tower
 
   def removeTower(tower: Tower): Unit =
+    if tower.getTowerType == BarrackTower.towerType then
+      tower.asInstanceOf[BarrackTower].removeAllAlliance()
     towerList = towerList.filter(to => !(to.equals(tower)))
 
   def getTower(towerBuild: TowerBuild): Option[Tower] =
