@@ -42,6 +42,9 @@ class GamePanel extends JPanel with Runnable:
     this.backgroundImage = Tools.scaleImage(Tools.loadImage(imgPath), scaleX, scaleY)
 
   def handleReloadGameState(gameState: GameState) =
+    if gameState == GameState.TitleState then
+      getSystemHandler.stopMusic()
+      getSystemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
     currentGameState = gameState
     reloadGameBackGround()
     gui.reset()

@@ -119,7 +119,7 @@ class GUI(gp: GamePanel):
 
   def drawPreStageState(stageId: Int): Unit =
     g2d.drawImage(Image.prestage_bg, 40, 20, None.orNull)
-    g2d.drawImage(currentPreStagebg, 200, 120, None.orNull)
+    g2d.drawImage(currentPreStagebg, 200, 110, None.orNull)
     g2d.drawImage(Image.glass, 70, 50, None.orNull)
     g2d.drawImage(Image.exit, Constant.exitPreStageCoords._1, Constant.exitPreStageCoords._2, None.orNull)
     g2d.drawImage(Image.play, Constant.playPreStageCoords._1, Constant.playPreStageCoords._2, None.orNull)
