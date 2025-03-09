@@ -221,3 +221,24 @@ object Tools:
 
   def getRectInRange(coords: (Int, Int), image: BufferedImage): Rectangle2D =
     Rectangle2D.Double(coords._1, coords._2, image.getWidth, image.getHeight)
+    
+  def applyGrayscale(img: BufferedImage): BufferedImage = 
+    val width = img.getWidth
+    val height = img.getHeight
+    val grayImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+  
+    for (x <- 0 until width; y <- 0 until height) do
+      val rgba = img.getRGB(x, y)
+      val alpha = (rgba >> 24) & 0xFF // Extract alpha channel
+  
+      // Extract RGB channels and convert to grayscale
+      val red = (rgba >> 16) & 0xFF
+      val green = (rgba >> 8) & 0xFF
+      val blue = rgba & 0xFF
+      val gray = (red * 0.299 + green * 0.587 + blue * 0.114).toInt
+  
+      // Preserve transparency
+      val grayColor = (alpha << 24) | (gray << 16) | (gray << 8) | gray
+      grayImage.setRGB(x, y, grayColor)
+  
+    grayImage

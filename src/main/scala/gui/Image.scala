@@ -67,3 +67,6 @@ object Image:
   val prestage_bg: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/prestage_background.png"), 0.8, 0.8)
   val exit: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/exit.png"), 0.4, 0.4)
   val play: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/play.png"), 0.2, 0.2)
+
+  val board: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/board.png"), 2.0, 2.0)
+  val desc_board: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/description_board.png"), 0.6, 0.6)

@@ -6,7 +6,7 @@ import utils.{Constant, Tools}
 import utils.Constant.{downTopLeftCoords, nextTopLeftCoords, startCoords, topLeftCoords, topRightCoords}
 
 import java.awt.image.BufferedImage
-import java.awt.{Color, Font, Graphics2D}
+import java.awt.{Color, Font, Graphics2D, RenderingHints}
 
 class GUI(gp: GamePanel):
   private var currentPreStagebg: BufferedImage = Tools.scaleImage(Tools.loadImage("maps/prestage_map1.png"), 0.6, 0.6)
@@ -65,7 +65,14 @@ class GUI(gp: GamePanel):
 
     currentFrame.foreach(_.draw(g2d))
 
-  private def drawUpgradeState(g2d: Graphics2D): Unit = {}
+  private def drawUpgradeState(g2d: Graphics2D): Unit =
+    // Enable high-quality rendering
+    g2d.drawImage(Image.board, 70, 0, None.orNull)
+    g2d.drawImage(Image.desc_board, Image.board.getWidth + 70, 0, None.orNull)
+
+    UpgradeGUI.upgradeList.foreach { case ((x, y), component) =>
+      g2d.drawImage(component.image, x, y, None.orNull)
+    }
 
   private def drawPlayState(g2d: Graphics2D): Unit =
     drawPlayerStats(g2d)
