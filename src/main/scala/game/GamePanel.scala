@@ -54,9 +54,10 @@ class GamePanel extends JPanel with Runnable:
         )
       case GameState.TitleState      =>
         changeBackgroundImage(s"maps/map.jpg", screenWidth, screenHeight)
-      case GameState.PauseState      => {}
       case GameState.GameMenuState   =>
         changeBackgroundImage(s"maps/mainmenu.png", screenWidth, screenHeight)
+      case GameState.PreStageState   =>
+        changeBackgroundImage(s"maps/prestage.png", screenWidth, screenHeight)
       case _ =>
 
   def setUpGame(): Unit =

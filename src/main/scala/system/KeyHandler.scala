@@ -30,7 +30,8 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       case GameState.PauseState => handlePauseState(x, y)
       case GameState.UpgradeState => handleUpgradeState(x,y)
       case GameState.EndStageState => handleEndStageState(x,y)
-      case GameState.WinStageState => handleEndStageState(x,y)
+      case GameState.WinStageState => handleWinStageState(x,y)
+      case GameState.PreStageState => handlePreStageState(x,y)
 
   override def mousePressed(e: MouseEvent): Unit = {}
 
@@ -52,7 +53,6 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
   private def handleGameMenuState(x: Int, y: Int): Unit =
     if startButton.contains(x, y) then
       gp.handleReloadGameState(GameState.TitleState)
-
 
   private val stage01Rec: Rectangle2D = Tools.getRectInRange(Constant.stage01Coords, Image.red_stage)
   private val stage02Rec: Rectangle2D = Tools.getRectInRange(Constant.stage02Coords, Image.red_stage)
@@ -76,7 +76,11 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       gp.handleReloadGameState(GameState.UpgradeState)
     map.keys.find(_.contains(x, y)) match
       case Some(button) =>
-        map.get(button).foreach(gp.setUpStage(_))
+        map.get(button).foreach(id =>
+          gp.handleReloadGameState(GameState.PreStageState)
+          gp.getGUI.currentPreStageId = Some(id)
+          gp.getGUI.reloadPreStagebg()
+        )
       case None =>
 
   private def handlePlayState(x: Int, y: Int): Unit =
@@ -149,3 +153,5 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       gp.handleReloadGameState(GameState.TitleState)
     else if continueButtonEndStage.contains(x, y) then
       gp.restart()
+
+  private def handlePreStageState(x: Int, y: Int): Unit = {}

@@ -2,20 +2,27 @@ package gui
 
 import entity.tower.Frame
 import game.{GamePanel, GameState}
-import utils.Constant
+import utils.{Constant, Tools}
 import utils.Constant.{downTopLeftCoords, nextTopLeftCoords, startCoords, topLeftCoords, topRightCoords}
 
+import java.awt.image.BufferedImage
 import java.awt.{BasicStroke, Color, Font, Graphics2D}
 
 class GUI(gp: GamePanel):
   private var g2d: Graphics2D = _
   private var isBuilding: Boolean = false
+  private var currentPreStagebg: BufferedImage = Tools.scaleImage(Tools.loadImage(s"maps/prestage_map1.png"), 0.5, 0.5)
   var currentFrame: Option[Frame] = None
+  var currentPreStageId: Option[Int] = None
 
   private def setUpGraphics(g: Graphics2D): Unit =
     this.g2d = g
 
   def reset(): Unit = currentFrame = None
+  def reloadPreStagebg(): Unit =
+    currentPreStageId match
+      case Some(id) => currentPreStagebg = Tools.scaleImage(Tools.loadImage(s"maps/prestage_map$id.png"), 0.5, 0.5)
+      case None =>
 
   def drawUI(g2d: Graphics2D): Unit =
     setUpGraphics(g2d)
@@ -27,6 +34,10 @@ class GUI(gp: GamePanel):
       case GameState.UpgradeState    => drawUpgradeState()
       case GameState.EndStageState   => drawEndStageState()
       case GameState.WinStageState   => drawWinStageState()
+      case GameState.PreStageState   =>
+        currentPreStageId match
+          case Some(id) => drawPreStageState(id)
+          case None =>
 
   private def drawPlayerStats(): Unit =
     val darkColor = new Color(49, 47, 46, 150)
@@ -105,3 +116,9 @@ class GUI(gp: GamePanel):
   private def drawMenuState(): Unit =
     g2d.drawImage(Image.start, startCoords._1, startCoords._2, None.orNull)
     g2d.drawImage(Image.mythic_bastion, startCoords._1 - 45, startCoords._2 - 190, None.orNull)
+
+  def drawPreStageState(stageId: Int): Unit =
+    g2d.drawImage(Image.prestage_bg, 40, 20, None.orNull)
+    g2d.drawImage(currentPreStagebg, 180, 80, None.orNull)
+    g2d.drawImage(Image.glass, 100, 50, None.orNull)
+    g2d.drawImage(Image.exit, 900, 50, None.orNull)

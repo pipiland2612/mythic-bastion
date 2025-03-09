@@ -62,3 +62,7 @@ object Image:
   val quit: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/quit.jpg"), 0.4, 0.4)
   val restart: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/restart.png"), 0.4, 0.4)
   val continue: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/continue.png"), 0.4, 0.4)
+
+  val glass: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/glass.png"), 0.5, 0.5)
+  val prestage_bg: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/prestage_background.png"), 0.8, 0.8)
+  val exit: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/exit.png"), 0.3, 0.3)
