@@ -17,7 +17,7 @@ object Constant:
   val exitPreStageCoords = (850, 50)
   val playPreStageCoords = (800, 470)
   val xUpgradeStageCoords = (30, 20)
-  val buyUpgradeStageCoords = (800, 400)
+  val buyUpgradeStageCoords = (750, 400)
 
   val stage01Coords: (Int, Int) = (280, 360)
   val stage02Coords: (Int, Int) = (350, 270)

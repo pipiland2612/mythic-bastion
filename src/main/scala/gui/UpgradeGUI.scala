@@ -151,16 +151,17 @@ object UpgradeGUI:
     val allComponents = UpgradeCategory.categories.flatMap(createUpgradeComponents)
     layoutUpgrades(allComponents, StartX, StartY)
 
-  private var currentFrame: (Int, Int) = (StartX - 1, StartY - 1)
-  def setCurrentFrame(coords: (Int, Int)): Unit = currentFrame = coords
-  def getCurrentFrame: (Int, Int) = currentFrame
+  private var currentComponent: UpgradeComponent = upgradeMap.head._2
+  def setCurrentFrame(comp: UpgradeComponent): Unit = currentComponent = comp
+  def getCurrentFrame: UpgradeComponent = currentComponent
 
   def reload(): Unit = upgradeMap.values.foreach(_.reloadImage())
   def getUpgradeList: Map[(Int, Int), UpgradeComponent] = upgradeMap
 
   def draw(g2d: Graphics2D): Unit =
     g2d.setColor(Color.GREEN)
-    g2d.drawRect(currentFrame._1, currentFrame._2, IconSize + 1, IconSize + 1)
+    val coords = upgradeMap.collectFirst{case (k, v) if v == currentComponent => k}.getOrElse((StartX, StartY))
+    g2d.drawRect(coords._1 - 1, coords._2 - 1, IconSize + 2, IconSize + 2)
 
     upgradeMap.foreach{case ((x, y), component) =>
       g2d.drawImage(component.getCurrentImage, x, y, None.orNull)

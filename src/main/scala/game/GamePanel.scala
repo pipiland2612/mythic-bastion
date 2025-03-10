@@ -24,6 +24,7 @@ class GamePanel extends JPanel with Runnable:
   val screenHeight: Int = tileSize * maxScreenRow
 
   // System initialize
+  private val player: Player = Player()
   private val systemHandler: SystemHandler = SystemHandler(this)
   private val gui: GUI = GUI(this)
   private var currentGameState: GameState = GameState.GameMenuState
@@ -37,6 +38,7 @@ class GamePanel extends JPanel with Runnable:
   def getGUI: GUI = gui
   def getCurrentGameState: GameState = currentGameState
   def setCurrentGameState(gst: GameState) = currentGameState = gst
+  def getPlayer = player
 
   private def changeBackgroundImage(imgPath: String, scaleX: Int, scaleY: Int): Unit =
     this.backgroundImage = Tools.scaleImage(Tools.loadImage(imgPath), scaleX, scaleY)

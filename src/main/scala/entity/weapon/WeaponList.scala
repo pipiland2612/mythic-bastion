@@ -3,6 +3,8 @@ package entity.weapon
 import entity.State
 import entity.creature.enemy.Enemy
 import game.GamePanel
+import system.upgrade.UpgradeTowerType.{ARROW, EXPLO, MAGE}
+import system.upgrade.UpgradeType.{DAMAGE, RANGE}
 import utils.{Animation, SoundConstant, Tools}
 
 import java.awt.Graphics2D
@@ -29,8 +31,8 @@ case class Explo(
   protected val flySoundEffect: Array[String] = Array(SoundConstant.EXPLO_FIRESTART1)
   protected val hitSoundEffect: Array[String] = Array(SoundConstant.EXPLO_FIREEND1)
 
-  protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("explo", "damage")
-  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("explo", "range")
+  protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(EXPLO, DAMAGE)
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(EXPLO, RANGE)
 
   override protected def dealDamage(): Unit =
     super.dealDamage()
@@ -79,8 +81,8 @@ case class Arrow(
   override protected val deadDuration = 30
   override protected val weight = 0.5
 
-  protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("arrow", "damage")
-  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("arrow", "range")
+  protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(ARROW, DAMAGE)
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(ARROW, RANGE)
 
   protected val flySoundEffect: Array[String] = Array(SoundConstant.ARROW_FIRE1, SoundConstant.ARROW_FIRE2)
   protected val hitSoundEffect: Array[String] = Array(SoundConstant.ARROW_HIT1, SoundConstant.ARROW_HIT2)
@@ -145,8 +147,8 @@ case class MagicBullet(
   protected val flySoundEffect: Array[String] = Array(SoundConstant.MAGIC_FIRE1)
   protected val hitSoundEffect: Array[String] = Array()
 
-  protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("magic", "damage")
-  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier("magic", "range")
+  protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(MAGE, DAMAGE)
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(MAGE, RANGE)
 
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)

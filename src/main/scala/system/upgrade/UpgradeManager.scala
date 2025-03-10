@@ -1,7 +1,6 @@
 package system.upgrade
 
-import system.Player
-
+import game.Player
 import java.io.{File, FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream}
 import scala.collection.mutable
 
