@@ -2,6 +2,7 @@ package system
 
 import game.GamePanel
 import system.stage.{Grid, Stage, StageManager}
+import system.upgrade.UpgradeManager
 import utils.Tools
 
 import java.awt.Graphics2D
