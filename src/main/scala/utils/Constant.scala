@@ -18,6 +18,8 @@ object Constant:
   val playPreStageCoords = (800, 470)
   val xUpgradeStageCoords = (30, 20)
   val buyUpgradeStageCoords = (750, 400)
+  val quitEndStageCoords = (screenWidth / 2 - Image.quit.getWidth / 2, screenHeight / 2 + Image.quit.getHeight / 2)
+  val continueEndStageCoords = (screenWidth / 2 - Image.continue.getWidth / 2, screenHeight / 2 + Image.continue.getHeight)
 
   val stage01Coords: (Int, Int) = (280, 360)
   val stage02Coords: (Int, Int) = (350, 270)

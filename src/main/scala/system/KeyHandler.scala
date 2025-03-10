@@ -62,15 +62,15 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
         (_, _) => gp.restart())
     ),
     GameState.EndStageState -> List(
-      Button(Tools.getRectInRange((gp.screenWidth / 2 - Image.quit.getWidth / 2, gp.screenHeight / 2 + Image.quit.getHeight + 10), Image.quit),
+      Button(Tools.getRectInRange(Constant.quitEndStageCoords, Image.quit),
         (_, _) => gp.handleReloadGameState(GameState.TitleState)),
       Button(Tools.getRectInRange(Constant.restartEndStageCoords, Image.restart),
         (_, _) => gp.restart())
     ),
     GameState.WinStageState -> List(
-      Button(Tools.getRectInRange((gp.screenWidth / 2 - Image.quit.getWidth / 2, gp.screenHeight / 2 + Image.quit.getHeight + 10), Image.quit),
+      Button(Tools.getRectInRange(Constant.quitEndStageCoords, Image.quit),
         (_, _) => gp.handleReloadGameState(GameState.TitleState)),
-      Button(Tools.getRectInRange((gp.screenWidth / 2 - Image.continue.getWidth / 2, gp.screenHeight / 2 + Image.continue.getHeight), Image.continue),
+      Button(Tools.getRectInRange(Constant.continueEndStageCoords, Image.continue),
         (_, _) => gp.restart())
     ),
     GameState.PreStageState -> List(

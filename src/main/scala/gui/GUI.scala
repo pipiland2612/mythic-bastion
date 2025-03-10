@@ -106,16 +106,14 @@ class GUI(gp: GamePanel):
     drawDarkScreen(g2d)
     val (loseX, loseY) = centeredPosition(Image.lose, offsetY = -40)
     g2d.drawImage(Image.lose, loseX, loseY, None.orNull)
-    val (quitX, quitY) = centeredPosition(Image.quit, offsetY = Image.quit.getHeight / 2 + 10)
-    g2d.drawImage(Image.quit, quitX, quitY, None.orNull)
+    g2d.drawImage(Image.quit, Constant.quitEndStageCoords._1, Constant.quitEndStageCoords._2, None.orNull)
     g2d.drawImage(Image.restart, Constant.restartEndStageCoords._1, Constant.restartEndStageCoords._2, None.orNull)
 
   private def drawWinStageState(g2d: Graphics2D): Unit =
     drawDarkScreen(g2d)
     val (winX, winY) = centeredPosition(Image.win, offsetY = -40)
     g2d.drawImage(Image.win, winX, winY, None.orNull)
-    val (continueX, continueY) = centeredPosition(Image.continue, offsetY = Image.continue.getHeight / 2)
-    g2d.drawImage(Image.continue, continueX, continueY, None.orNull)
+    g2d.drawImage(Image.continue, Constant.continueEndStageCoords._1, Constant.continueEndStageCoords._2, None.orNull)
     g2d.drawImage(Image.restart, Constant.restartEndStageCoords._1, Constant.restartEndStageCoords._2, None.orNull)
 
   private val font = new Font("Arial", Font.BOLD, 40)
