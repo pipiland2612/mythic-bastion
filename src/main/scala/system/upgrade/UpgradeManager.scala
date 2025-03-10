@@ -8,6 +8,13 @@ import scala.collection.mutable
 class UpgradeManager:
   private val purchasedUpgrades: mutable.Set[PermanentUpgrade] = mutable.Set()
 
+  def getPurchasedUpgrades = purchasedUpgrades
+
+  def findUpgrade(towerType: UpgradeTowerType, level: Int): Boolean =
+    purchasedUpgrades.find(upgrade => upgrade.towerType == towerType && upgrade.level == level) match
+      case Some(upgrade) => true
+      case _ => false
+
   def purchaseUpgrade(upgrade: PermanentUpgrade, player: Player): Boolean =
     if (player.stars >= upgrade.cost && !purchasedUpgrades.contains(upgrade)) then
       player.stars -= upgrade.cost

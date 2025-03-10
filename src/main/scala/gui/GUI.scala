@@ -10,6 +10,7 @@ import java.awt.{Color, Font, Graphics2D, RenderingHints}
 
 class GUI(gp: GamePanel):
   private var currentPreStagebg: BufferedImage = Tools.scaleImage(Tools.loadImage("maps/prestage_map1.png"), 0.6, 0.6)
+  private val upgradeGUI: UpgradeGUI = UpgradeGUI(gp)
   var currentFrame: Option[Frame] = None
   var currentPreStageId: Option[Int] = None
 
@@ -18,7 +19,7 @@ class GUI(gp: GamePanel):
     (x.toInt, y.toInt)
 
   def reset(): Unit = currentFrame = None
-
+  def getupgradeGUI = upgradeGUI
   def reloadPreStagebg(): Unit =
     currentPreStageId match
       case Some(id) => currentPreStagebg = Tools.scaleImage(Tools.loadImage(s"maps/prestage_map$id.png"), 0.6, 0.6)
@@ -73,7 +74,7 @@ class GUI(gp: GamePanel):
     g2dCopy.drawImage(Image.x, Constant.xUpgradeStageCoords._1, Constant.xUpgradeStageCoords._2, None.orNull)
     g2dCopy.drawImage(Image.buy_upgrade, Constant.buyUpgradeStageCoords._1, Constant.buyUpgradeStageCoords._2, None.orNull)
 
-    val currentFrame = UpgradeGUI.getCurrentFrame
+    val currentFrame = upgradeGUI.getCurrentFrame
 
     val centerX = 820
     g2dCopy.drawImage(currentFrame.getCurrentImage, 790, 115, None.orNull)
@@ -97,7 +98,7 @@ class GUI(gp: GamePanel):
     g2dCopy.setColor(Color.WHITE)
     g2dCopy.drawString(gp.getPlayer.stars.toString, 820, 52)
     g2dCopy.dispose()
-    UpgradeGUI.draw(g2d)
+    upgradeGUI.draw(g2d)
 
   private def drawPlayState(g2d: Graphics2D): Unit =
     drawPlayerStats(g2d)

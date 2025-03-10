@@ -25,8 +25,8 @@ class GamePanel extends JPanel with Runnable:
 
   // System initialize
   private val player: Player = Player()
-  private val systemHandler: SystemHandler = SystemHandler(this)
   private val gui: GUI = GUI(this)
+  private val systemHandler: SystemHandler = SystemHandler(this)
   private var currentGameState: GameState = GameState.GameMenuState
   private var gameThread: Thread = _
   private var backgroundImage: BufferedImage = _

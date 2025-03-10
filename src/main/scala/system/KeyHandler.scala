@@ -31,11 +31,11 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
   )
 
   private val upgradeButtons: List[Button] =
-    UpgradeGUI.getUpgradeList.toList.map((coords, component) =>
+    gp.getGUI.getupgradeGUI.getUpgradeList.toList.map((coords, component) =>
       Button(Tools.getRectInRange(coords, component.getCurrentImage),
       (_, _) => {
         gp.getSystemHandler.playSE(SoundConstant.SELECT)
-        UpgradeGUI.setCurrentFrame(component)
+        gp.getGUI.getupgradeGUI.setCurrentFrame(component)
       })
     )
 
@@ -92,9 +92,13 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       ),
       Button(Tools.getRectInRange(Constant.buyUpgradeStageCoords, Image.buy_upgrade),
         (_, _) => {
-          val currentUpgrade = UpgradeGUI.getCurrentFrame.upgrade
-          if gp.getSystemHandler.getUpgradeManager.purchaseUpgrade(currentUpgrade, gp.getPlayer) then
+          val currentFrame = gp.getGUI.getupgradeGUI.getCurrentFrame
+          if currentFrame.canBuy && gp.getSystemHandler.getUpgradeManager.purchaseUpgrade(currentFrame.upgrade, gp.getPlayer) then
+            currentFrame.hasBought = true
             gp.getSystemHandler.getUpgradeManager.saveUpgrades()
+            gp.getGUI.getupgradeGUI.getNextComponent(currentFrame) match
+              case Some(component) => gp.getGUI.getupgradeGUI.setCurrentFrame(component)
+              case _ =>
         }
       )
     )
