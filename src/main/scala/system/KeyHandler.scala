@@ -35,7 +35,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       Button(Tools.getRectInRange(coords, component.image),
       (_, _) => {
         gp.getSystemHandler.playSE(SoundConstant.SELECT)
-        UpgradeGUI.currentFrame = (coords._1 - 1, coords._2 - 1)
+        UpgradeGUI.setCurrentFrame((coords._1 - 1, coords._2 - 1))
       })
     )
 
