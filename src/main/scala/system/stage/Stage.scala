@@ -67,6 +67,12 @@ case class Stage(
       getTowerList.find(_.getPosition == towerBuild.pos)
     else None
 
+  private var hasSpawn: Boolean = false
+  def startWave(): Unit =
+    if !hasSpawn then
+      hasSpawn = true
+      waveSpawner.scheduleWaveSpawn(waves)
+
   override def toString: String =
     val alliances = allianceList.map(_.toString).mkString(", ")
     val positions = spawnPosition.map ((x, y) => s"($x, $y)" ).mkString(", ")

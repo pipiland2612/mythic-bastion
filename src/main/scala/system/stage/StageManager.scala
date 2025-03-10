@@ -31,7 +31,7 @@ class StageManager (gp: GamePanel):
     gp.getSystemHandler.playMusic(SoundConstant.GAME_BG_SOUND)
 
   def startWave(): Unit =
-    currentStage.foreach(stage => stage.getWaveSpawner.scheduleWaveSpawn(stage.getWaves))
+    currentStage.foreach(_.startWave())
 
   private var endCounter: Int = 0
   def update(): Unit =
