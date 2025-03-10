@@ -42,4 +42,4 @@ class UpgradeManager:
       purchasedUpgrades ++= loadedUpgrades
       ois.close()
     catch
-      case e: Exception => e.printStackTrace()
+      case e: Exception =>

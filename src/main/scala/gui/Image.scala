@@ -69,7 +69,7 @@ object Image:
   val play: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/play.png"), 0.2, 0.2)
 
   val board: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/board.png"), 2.0, 2.0)
-  val desc_board: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/description_board.png"), 0.6, 0.6)
+  val desc_board: BufferedImage = Tools.scaleImage(Tools.loadImage("gui/description_board.png"), 0.6, 0.7)
 
   val arrow: BufferedImage = Tools.scaleImage(Tools.loadImage(s"upgrade/arrow/arrow.png"), 0.75, 0.75)
   val mage: BufferedImage = Tools.scaleImage(Tools.loadImage(s"upgrade/mage/mage.png"), 0.75, 0.75)

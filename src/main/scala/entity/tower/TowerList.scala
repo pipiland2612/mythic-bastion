@@ -5,6 +5,8 @@ import entity.creature.enemy.Enemy
 import entity.weapon.MagicBullet
 import entity.{Direction, State}
 import game.GamePanel
+import system.upgrade.UpgradeTowerType.{ARROW, BARRACK, EXPLO, MAGE}
+import system.upgrade.UpgradeType.RANGE
 import utils.{Animation, SoundConstant, Tools}
 
 import java.awt.geom.AffineTransform
@@ -31,6 +33,7 @@ class ExploTower(
   private val transform: AffineTransform = AffineTransform()
 
   protected val readySoundEffect: Array[String] = Array(SoundConstant.EXPLO_READY1, SoundConstant.EXPLO_READY2, SoundConstant.EXPLO_READY3)
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(EXPLO, RANGE)
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)
     shootAnimation = Animation(frames = value(1), frameDuration = 10, attackStartFrame = 4, attackEndFrame = 6)
@@ -96,7 +99,7 @@ class ArrowTower(
   override val drawOffsetY: Double = -16
 
   protected val readySoundEffect: Array[String] = Array(SoundConstant.ARROW_READY1, SoundConstant.ARROW_READY3)
-
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(ARROW, RANGE)
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(1), frameDuration = 10)
     shootAnimation = Animation(frames = value(4), frameDuration = 15, attackStartFrame = 2, attackEndFrame = 8)
@@ -152,7 +155,7 @@ class MagicTower(
   override val drawOffsetY: Double = -23
   protected val readySoundEffect: Array[String] = Array(SoundConstant.MAGIC_READY1, SoundConstant.MAGIC_READY2, SoundConstant.MAGIC_READY3)
 
-
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(MAGE, RANGE)
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)
     shootAnimation = Animation(frames = value(2), frameDuration = 10, attackStartFrame = 5, attackEndFrame = 8)
@@ -209,6 +212,7 @@ class BarrackTower(
   private val allianceWidth = 74
   private val allianceHeight = 42
 
+  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(BARRACK, RANGE)
   def removeAllAlliance(): Unit =
     barrackTrainers.flatMap(_.getCurrentSoldier).foreach(alliance =>
       gp.getSystemHandler.getStageManager.getGrid match

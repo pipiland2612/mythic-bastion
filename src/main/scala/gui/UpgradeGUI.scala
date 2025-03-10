@@ -32,16 +32,16 @@ object UpgradeCategory:
   case object Arrow extends Category:
     val icon: BufferedImage = Image.arrow
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
-      "SteadyHand"   -> ("arrow/level1", "Increase marksman attack damage by 2%", 2,
-        MultiplierUpgrade("SteadyHand", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.02, 2)),
-      "LumberMill"   -> ("arrow/level2", "Increase marksman attack damage by 3%", 3,
-        MultiplierUpgrade("LumberMill", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.03, 3)),
-      "PiercingShot" -> ("arrow/level3", "Increase marksman attack damage by 4%", 2,
-        MultiplierUpgrade("PiercingShot", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.04, 2)),
-      "SharpFocus"   -> ("arrow/level4", "Increase marksman accuracy and range by 5%", 3,
-        MultiplierUpgrade("SharpFocus", UpgradeTowerType.ARROW, UpgradeType.RANGE, 1.05, 3)),
-      "EagleEye"     -> ("arrow/level5", "Increase marksman attack range by 10%", 4,
-        MultiplierUpgrade("EagleEye", UpgradeTowerType.ARROW, UpgradeType.RANGE, 1.10, 4))
+      "SteadyHand"   -> ("arrow/level1", "Increase marksman attack damage by 10%", 2,
+        MultiplierUpgrade("SteadyHand", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.10, 2)),
+      "LumberMill"   -> ("arrow/level2", "Increase marksman attack damage by 12%", 3,
+        MultiplierUpgrade("LumberMill", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.12, 3)),
+      "PiercingShot" -> ("arrow/level3", "Increase marksman attack damage by 15%", 2,
+        MultiplierUpgrade("PiercingShot", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.15, 2)),
+      "SharpFocus"   -> ("arrow/level4", "Increase marksman attack range by 10%", 3,
+        MultiplierUpgrade("SharpFocus", UpgradeTowerType.ARROW, UpgradeType.RANGE, 1.10, 3)),
+      "EagleEye"     -> ("arrow/level5", "Increase marksman attack range by 15%", 4,
+        MultiplierUpgrade("EagleEye", UpgradeTowerType.ARROW, UpgradeType.RANGE, 1.15, 4))
     )
 
   case object Barrack extends Category:

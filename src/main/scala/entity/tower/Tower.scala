@@ -17,7 +17,7 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   override def getName: String = s"$name"
   override def getImagePath: String = s"towers/${getName}.png"
   override def getJsonPath: String = s"towers/${getName}.json"
-  override def getRange: Double = range + level * 5
+  override def getRange: Double = (range + level * 5) * getRangeMultiplier
 
   private val transform: AffineTransform = AffineTransform()
   private var attackCounter: Int = 0
@@ -43,6 +43,8 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   var isShowingRange: Boolean = false
 
   protected def chooseEnemy(enemyList: ListBuffer[Enemy]): Option[Enemy]
+
+  protected def getRangeMultiplier: Double
 
   def bulletPosition: (Double, Double) =
     val frame = idleAnimation.getCurrentFrame

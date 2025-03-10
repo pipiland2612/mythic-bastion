@@ -38,10 +38,8 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   def getHitSE: Array[String] = hitSoundEffect
 
   protected def getDamageMultiplier: Double
-  protected def getRangeMultiplier: Double
   override def getApDmg: Double = (apDmg * getDamageMultiplier)
   override def getAdDmg: Double = (adDmg * getDamageMultiplier)
-  override def getRange: Double = range * getRangeMultiplier
 
   protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)

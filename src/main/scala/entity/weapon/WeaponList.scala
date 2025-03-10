@@ -32,7 +32,6 @@ case class Explo(
   protected val hitSoundEffect: Array[String] = Array(SoundConstant.EXPLO_FIREEND1)
 
   protected def getDamageMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(EXPLO, DAMAGE)
-  protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(EXPLO, RANGE)
 
   override protected def dealDamage(): Unit =
     super.dealDamage()

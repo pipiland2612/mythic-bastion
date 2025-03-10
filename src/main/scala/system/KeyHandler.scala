@@ -1,6 +1,6 @@
 package system
 
-import entity.tower.{Frame, TowerBuild}
+import entity.tower.Frame
 import game.{GamePanel, GameState}
 import gui.{Image, UpgradeGUI}
 import utils.{Constant, SoundConstant, Tools}
@@ -94,7 +94,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
         (_, _) => {
           val currentUpgrade = UpgradeGUI.getCurrentFrame.upgrade
           if gp.getSystemHandler.getUpgradeManager.purchaseUpgrade(currentUpgrade, gp.getPlayer) then
-            println("Buy successfully")
+            gp.getSystemHandler.getUpgradeManager.saveUpgrades()
         }
       )
     )
