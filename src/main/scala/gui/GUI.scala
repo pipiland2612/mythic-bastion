@@ -65,11 +65,38 @@ class GUI(gp: GamePanel):
 
     currentFrame.foreach(_.draw(g2d))
 
+  private val font2 = new Font("Arial", Font.BOLD, 25)
   private def drawUpgradeState(g2d: Graphics2D): Unit =
-    g2d.drawImage(Image.board, 80, 0, None.orNull)
-    g2d.drawImage(Image.desc_board, Image.board.getWidth + 80, 0, None.orNull)
-    g2d.drawImage(Image.x, Constant.xUpgradeStageCoords._1, Constant.xUpgradeStageCoords._2, None.orNull)
-    g2d.drawImage(Image.buy_upgrade, Constant.buyUpgradeStageCoords._1, Constant.buyUpgradeStageCoords._2, None.orNull)
+    val g2dCopy = g2d.create().asInstanceOf[Graphics2D]
+    g2dCopy.drawImage(Image.board, 60, 0, None.orNull)
+    g2dCopy.drawImage(Image.desc_board, Image.board.getWidth + 50, 0, None.orNull)
+    g2dCopy.drawImage(Image.x, Constant.xUpgradeStageCoords._1, Constant.xUpgradeStageCoords._2, None.orNull)
+    g2dCopy.drawImage(Image.buy_upgrade, Constant.buyUpgradeStageCoords._1, Constant.buyUpgradeStageCoords._2, None.orNull)
+
+    val currentFrame = UpgradeGUI.getCurrentFrame
+
+    val centerX = 820
+    g2dCopy.drawImage(currentFrame.getCurrentImage, 790, 115, None.orNull)
+    val fm = g2dCopy.getFontMetrics
+    var y = 220
+
+    g2dCopy.setColor(Color.RED)
+    val nameW = fm.stringWidth(currentFrame.name)
+    g2dCopy.drawString(currentFrame.name ,centerX - (nameW / 2), 200)
+
+    g2dCopy.setColor(Color.BLACK)
+    currentFrame.description.split("\n").foreach(string =>
+      val textWidth = fm.stringWidth(string)
+      val x = centerX - (textWidth / 2)
+      g2dCopy.drawString(string, x, y)
+      y += fm.getHeight
+    )
+
+    g2dCopy.drawString(currentFrame.cost.toString, 900, 122)
+    g2dCopy.setFont(font2)
+    g2dCopy.setColor(Color.WHITE)
+    g2dCopy.drawString(gp.getPlayer.stars.toString, 820, 52)
+    g2dCopy.dispose()
     UpgradeGUI.draw(g2d)
 
   private def drawPlayState(g2d: Graphics2D): Unit =
@@ -116,11 +143,11 @@ class GUI(gp: GamePanel):
     g2d.drawImage(Image.continue, Constant.continueEndStageCoords._1, Constant.continueEndStageCoords._2, None.orNull)
     g2d.drawImage(Image.restart, Constant.restartEndStageCoords._1, Constant.restartEndStageCoords._2, None.orNull)
 
-  private val font = new Font("Arial", Font.BOLD, 40)
   private def drawMenuState(g2d: Graphics2D): Unit =
     g2d.drawImage(Image.start, startCoords._1, startCoords._2, None.orNull)
     g2d.drawImage(Image.mythic_bastion, startCoords._1 - 45, startCoords._2 - 190, None.orNull)
 
+  private val font = new Font("Arial", Font.BOLD, 30)
   private def drawPreStageState(g2d: Graphics2D, stageId: Int): Unit =
     g2d.drawImage(Image.prestage_bg, 40, 20, None.orNull)
     g2d.drawImage(currentPreStagebg, 200, 110, None.orNull)

@@ -32,97 +32,97 @@ object UpgradeCategory:
   case object Arrow extends Category:
     val icon: BufferedImage = Image.arrow
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
-      "SteadyHand"   -> ("arrow/level1", "Increase marksman attack damage by 10%", 2,
-        MultiplierUpgrade("SteadyHand", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.10, 2)),
-      "LumberMill"   -> ("arrow/level2", "Increase marksman attack damage by 12%", 3,
-        MultiplierUpgrade("LumberMill", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.12, 3)),
-      "PiercingShot" -> ("arrow/level3", "Increase marksman attack damage by 15%", 2,
-        MultiplierUpgrade("PiercingShot", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.15, 2)),
-      "SharpFocus"   -> ("arrow/level4", "Increase marksman attack range by 10%", 3,
-        MultiplierUpgrade("SharpFocus", UpgradeTowerType.ARROW, UpgradeType.RANGE, 1.10, 3)),
-      "EagleEye"     -> ("arrow/level5", "Increase marksman attack range by 15%", 4,
-        MultiplierUpgrade("EagleEye", UpgradeTowerType.ARROW, UpgradeType.RANGE, 1.15, 4))
+      "Steady Hand"   -> ("arrow/level1", "Increase marksman attack\ndamage by 10%", 2,
+        MultiplierUpgrade("Steady Hand", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.10, 2)),
+      "Lumber Mill"   -> ("arrow/level2", "Increase marksman attack\ndamage by 12%", 3,
+        MultiplierUpgrade("Lumber Mill", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.12, 3)),
+      "Piercing Shot" -> ("arrow/level3", "Increase marksman attack\ndamage by 15%", 2,
+        MultiplierUpgrade("Piercing Shot", UpgradeTowerType.ARROW, UpgradeType.DAMAGE, 1.15, 2)),
+      "Sharp Focus"   -> ("arrow/level4", "Increase marksman attack\nrange by 10%", 3,
+        MultiplierUpgrade("Sharp Focus", UpgradeTowerType.ARROW, UpgradeType.RANGE, 1.10, 3)),
+      "Eagle Eye"     -> ("arrow/level5", "Increase marksman attack\nrange by 15%", 4,
+        MultiplierUpgrade("Eagle Eye", UpgradeTowerType.ARROW, UpgradeType.RANGE, 1.15, 4))
     )
 
   case object Barrack extends Category:
     val icon: BufferedImage = Image.barrack
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
-      "BarrackBoost"    -> ("barrack/level1", "Increase infantry health by 3%", 2,
-        MultiplierUpgrade("BarrackBoost", UpgradeTowerType.BARRACK, UpgradeType.HEALTH, 1.03, 2)),
-      "FortifiedWalls"  -> ("barrack/level2", "Increase infantry health by 5%", 3,
-        MultiplierUpgrade("FortifiedWalls", UpgradeTowerType.BARRACK, UpgradeType.HEALTH, 1.05, 3)),
-      "BattleHardened"  -> ("barrack/level3", "Increase infantry health by 7%", 3,
-        MultiplierUpgrade("BattleHardened", UpgradeTowerType.BARRACK, UpgradeType.HEALTH, 1.07, 3)),
-      "ShieldWall"      -> ("barrack/level4", "Increase infantry health by 8%", 4,
-        MultiplierUpgrade("ShieldWall", UpgradeTowerType.BARRACK, UpgradeType.HEALTH, 1.08, 4)),
-      "Unbreakable"     -> ("barrack/level5", "Increase infantry health by 10%", 4,
+      "Barrack Boost"    -> ("barrack/level1", "Increase infantry health\nby 3%", 2,
+        MultiplierUpgrade("Barrack Boost", UpgradeTowerType.BARRACK, UpgradeType.HEALTH, 1.03, 2)),
+      "Fortified Walls"  -> ("barrack/level2", "Increase infantry health\nby 5%", 3,
+        MultiplierUpgrade("Fortified Walls", UpgradeTowerType.BARRACK, UpgradeType.HEALTH, 1.05, 3)),
+      "Battle Hardened"  -> ("barrack/level3", "Increase infantry health\nby 7%", 3,
+        MultiplierUpgrade("Battle Hardened", UpgradeTowerType.BARRACK, UpgradeType.HEALTH, 1.07, 3)),
+      "Shield Wall"      -> ("barrack/level4", "Increase infantry health\nby 8%", 4,
+        MultiplierUpgrade("Shield Wall", UpgradeTowerType.BARRACK, UpgradeType.HEALTH, 1.08, 4)),
+      "Unbreakable"     -> ("barrack/level5", "Increase infantry health\nby 10%", 4,
         MultiplierUpgrade("Unbreakable", UpgradeTowerType.BARRACK, UpgradeType.HEALTH, 1.1, 4))
     )
 
   case object Explo extends Category:
     val icon: BufferedImage = Image.explo
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
-      "ExplosiveTrap"    -> ("explo/level1", "Increase explosive damage by 3%", 2,
-        MultiplierUpgrade("ExplosiveTrap", UpgradeTowerType.EXPLO, UpgradeType.DAMAGE, 1.03, 2)),
-      "DemolitionExpert" -> ("explo/level2", "Increase explosive damage by 4%", 3,
-        MultiplierUpgrade("DemolitionExpert", UpgradeTowerType.EXPLO, UpgradeType.DAMAGE, 1.04, 3)),
-      "Firestorm"        -> ("explo/level3", "Increase explosive damage by 5%", 3,
+      "Explosive Trap"    -> ("explo/level1", "Increase explosive damage\nby 3%", 2,
+        MultiplierUpgrade("Explosive Trap", UpgradeTowerType.EXPLO, UpgradeType.DAMAGE, 1.03, 2)),
+      "Demolition Expert" -> ("explo/level2", "Increase explosive damage\nby 4%", 3,
+        MultiplierUpgrade("Demolition Expert", UpgradeTowerType.EXPLO, UpgradeType.DAMAGE, 1.04, 3)),
+      "Firestorm"        -> ("explo/level3", "Increase explosive damage\nby 5%", 3,
         MultiplierUpgrade("Firestorm", UpgradeTowerType.EXPLO, UpgradeType.DAMAGE, 1.05, 3)),
-      "ChainReaction"    -> ("explo/level4", "Increase explosive range by 5%", 4,
-        MultiplierUpgrade("ChainReaction", UpgradeTowerType.EXPLO, UpgradeType.RANGE, 1.05, 4)),
-      "MegaBlast"        -> ("explo/level5", "Increase explosive impact and damage by 10%", 4,
-        MultiplierUpgrade("MegaBlast", UpgradeTowerType.EXPLO, UpgradeType.DAMAGE, 1.10, 4))
+      "Chain Reaction"    -> ("explo/level4", "Increase explosive range\nby 5%", 4,
+        MultiplierUpgrade("Chain Reaction", UpgradeTowerType.EXPLO, UpgradeType.RANGE, 1.05, 4)),
+      "Mega Blast"        -> ("explo/level5", "Increase explosive impact\nand damage by\n10%", 4,
+        MultiplierUpgrade("Mega Blast", UpgradeTowerType.EXPLO, UpgradeType.DAMAGE, 1.10, 4))
     )
 
   case object Mage extends Category:
     val icon: BufferedImage = Image.mage
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
-      "ArcaneMastery"  -> ("mage/level1", "Increase mage spell damage by 2%", 2,
-        MultiplierUpgrade("ArcaneMastery", UpgradeTowerType.MAGE, UpgradeType.DAMAGE, 1.02, 2)),
-      "ManaInfusion"   -> ("mage/level2", "Increase mage spell damage by 3%", 3,
-        MultiplierUpgrade("ManaInfusion", UpgradeTowerType.MAGE, UpgradeType.DAMAGE, 1.03, 3)),
-      "ElementalSurge" -> ("mage/level3", "Increase mage spell damage by 6%", 3,
-        MultiplierUpgrade("ElementalSurge", UpgradeTowerType.MAGE, UpgradeType.DAMAGE, 1.06, 3)),
-      "MysticBarrier"  -> ("mage/level4", "Increase mage spell range by 3%", 4,
-        MultiplierUpgrade("MysticBarrier", UpgradeTowerType.MAGE, UpgradeType.RANGE, 1.03, 4)),
-      "EldritchWisdom" -> ("mage/level5", "Increase mage spell range by 10%", 4,
-        MultiplierUpgrade("EldritchWisdom", UpgradeTowerType.MAGE, UpgradeType.RANGE, 1.10, 4))
+      "Arcane Mastery"  -> ("mage/level1", "Increase mage spell\ndamage by 2%", 2,
+        MultiplierUpgrade("Arcane Mastery", UpgradeTowerType.MAGE, UpgradeType.DAMAGE, 1.02, 2)),
+      "Mana Infusion"   -> ("mage/level2", "Increase mage spell\ndamage by 3%", 3,
+        MultiplierUpgrade("Mana Infusion", UpgradeTowerType.MAGE, UpgradeType.DAMAGE, 1.03, 3)),
+      "Elemental Surge" -> ("mage/level3", "Increase mage spell\ndamage by 6%", 3,
+        MultiplierUpgrade("Elemental Surge", UpgradeTowerType.MAGE, UpgradeType.DAMAGE, 1.06, 3)),
+      "Mystic Barrier"  -> ("mage/level4", "Increase mage spell\nrange by 3%", 4,
+        MultiplierUpgrade("Mystic Barrier", UpgradeTowerType.MAGE, UpgradeType.RANGE, 1.03, 4)),
+      "Eldritch Wisdom" -> ("mage/level5", "Increase mage spell\nrange by 10%", 4,
+        MultiplierUpgrade("Eldritch Wisdom", UpgradeTowerType.MAGE, UpgradeType.RANGE, 1.10, 4))
     )
 
   case object Rock extends Category:
     val icon: BufferedImage = Image.rock
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
-      "RockSolid"      -> ("rock/level1", "Increase fortress durability by 5%", 2,
-        MultiplierUpgrade("RockSolid", UpgradeTowerType.ROCK, UpgradeType.NOT_IMPLEMENTED, 1.05, 2)),
-      "StoneFist"      -> ("rock/level2", "Increase melee unit resistance by 4%", 3,
-        MultiplierUpgrade("StoneFist", UpgradeTowerType.ROCK, UpgradeType.NOT_IMPLEMENTED, 1.04, 3)),
-      "Earthquake"     -> ("rock/level3", "Chance to knock back enemies on impact", 3,
+      "Rock Solid"      -> ("rock/level1", "Increase fortress durability\nby 5%", 2,
+        MultiplierUpgrade("Rock Solid", UpgradeTowerType.ROCK, UpgradeType.NOT_IMPLEMENTED, 1.05, 2)),
+      "Stone Fist"      -> ("rock/level2", "Increase melee unit\nresistance by 4%", 3,
+        MultiplierUpgrade("Stone Fist", UpgradeTowerType.ROCK, UpgradeType.NOT_IMPLEMENTED, 1.04, 3)),
+      "Earthquake"     -> ("rock/level3", "Chance to knock\nback enemies on\nimpact", 3,
         AbilityUpgrade("Earthquake", UpgradeTowerType.ROCK, UpgradeType.NOT_IMPLEMENTED, 1, 3)),
-      "TitanStrength"  -> ("rock/level4", "Increase melee unit attack power by 6%", 4,
-        MultiplierUpgrade("TitanStrength", UpgradeTowerType.ROCK, UpgradeType.NOT_IMPLEMENTED, 1.06, 4)),
-      "UnyieldingForce" -> ("rock/level5", "Increase overall defense and structure stability by 10%", 4,
-        MultiplierUpgrade("UnyieldingForce", UpgradeTowerType.ROCK, UpgradeType.NOT_IMPLEMENTED, 1.10, 4))
+      "Titan Strength"  -> ("rock/level4", "Increase melee unit\nattack power by\n6%", 4,
+        MultiplierUpgrade("Titan Strength", UpgradeTowerType.ROCK, UpgradeType.NOT_IMPLEMENTED, 1.06, 4)),
+      "Unyielding Force" -> ("rock/level5", "Increase overall defense\nand structure stability\nby 10%", 4,
+        MultiplierUpgrade("Unyielding Force", UpgradeTowerType.ROCK, UpgradeType.NOT_IMPLEMENTED, 1.10, 4))
     )
 
   case object Alliance extends Category:
     val icon: BufferedImage = Image.alliance
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
-      "UnitedFront"      -> ("alliance/level1", "Increase allied unit cooperation and attack coordination", 2,
-        AbilityUpgrade("UnitedFront", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 1, 2)),
-      "WarCouncil"       -> ("alliance/level2", "Increase allied strategy efficiency and response time", 3,
-        AbilityUpgrade("WarCouncil", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 1, 3)),
-      "SharedWisdom"     -> ("alliance/level3", "Increase knowledge transfer among allies, boosting skill effectiveness", 3,
-        AbilityUpgrade("SharedWisdom", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 1, 3)),
-      "ReinforcementCall" -> ("alliance/level4", "Reduce reinforcement arrival time by 15%", 4,
-        MultiplierUpgrade("ReinforcementCall", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 0.85, 4)),
-      "UnbreakableBond"  -> ("alliance/level5", "Significantly increase overall allied strength and support effectiveness", 4,
-        MultiplierUpgrade("UnbreakableBond", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 1.10, 4))
+      "United Front"      -> ("alliance/level1", "Increase allied unit\ncooperation and attack\ncoordination", 2,
+        AbilityUpgrade("United Front", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 1, 2)),
+      "War Council"       -> ("alliance/level2", "Increase allied strategy\nefficiency and response\ntime", 3,
+        AbilityUpgrade("War Council", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 1, 3)),
+      "Shared Wisdom"     -> ("alliance/level3", "Increase knowledge transfer\namong allies, boosting\nskill effectiveness", 3,
+        AbilityUpgrade("Shared Wisdom", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 1, 3)),
+      "Reinforcement Call" -> ("alliance/level4", "Reduce reinforcement arrival\ntime by 15%", 4,
+        MultiplierUpgrade("Reinforcement Call", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 0.85, 4)),
+      "Unbreakable Bond"  -> ("alliance/level5", "Significantly increase overall\nallied strength and\nsupport effectiveness", 4,
+        MultiplierUpgrade("Unbreakable Bond", UpgradeTowerType.ALLIANCE, UpgradeType.NOT_IMPLEMENTED, 1.10, 4))
     )
 
   val categories: List[Category] = List(Arrow, Barrack, Explo, Mage, Rock, Alliance)
 
 object UpgradeGUI:
-  private val StartX: Int = 170
+  private val StartX: Int = 140
   private val StartY: Int = 370
   private val Padding: Int = 20
   private val IconSize: Int = (86 * 0.75).toInt
