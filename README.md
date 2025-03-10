@@ -2,8 +2,6 @@
 
 **Mythic Bastion** is a tower defense game inspired by the classic *Kingdom Rush*. In this game, players must defend their kingdom from waves of enemies by strategically placing towers and using unique abilities to prevent enemy forces from reaching their base.
 
-This project is a school project focused on game development, implementing core features of tower defense mechanics, game progression, and player interaction.
-
 ## Features
 
 * **Tower Defense Mechanics**: Place different types of towers to defend against enemies.
