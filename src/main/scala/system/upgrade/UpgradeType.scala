@@ -2,7 +2,7 @@ package system.upgrade
 
 abstract class PermanentUpgrade(
   val name: String,
-  val towerType: String,
+  val towerType: UpgradeTowerType,
   val cost: Int,
 ) extends Serializable:
   override def equals(other: Any): Boolean = other match
@@ -12,8 +12,8 @@ abstract class PermanentUpgrade(
 
 class MultiplierUpgrade(
   name: String,
-  towerType: String,
-  val effectType: String,
+  towerType: UpgradeTowerType,
+  val effectType: UpgradeType,
   val multiplier: Double,
   cost: Int
 ) extends PermanentUpgrade(name, towerType, cost):
@@ -21,8 +21,8 @@ class MultiplierUpgrade(
 
 class AbilityUpgrade(
   name: String,
-  towerType: String,
-  val ability: String,
+  towerType: UpgradeTowerType,
+  val ability: UpgradeType,
   val level: Int,
   cost: Int
 ) extends PermanentUpgrade(name, towerType, cost):

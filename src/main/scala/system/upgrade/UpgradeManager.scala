@@ -17,12 +17,12 @@ class UpgradeManager:
     else
       false
 
-  def getCumulativeMultiplier(towerType: String, effectType: String): Double =
+  def getCumulativeMultiplier(towerType: UpgradeTowerType, effectType: UpgradeType): Double =
     purchasedUpgrades.collect {
       case u: MultiplierUpgrade if u.towerType == towerType && u.effectType == effectType => u.multiplier
     }.product
 
-  def getAbilities(towerType: String): List[String] =
+  def getAbilities(towerType: UpgradeTowerType): List[UpgradeType] =
     purchasedUpgrades.collect {
       case u: AbilityUpgrade if u.towerType == towerType => u.ability
     }.toList
