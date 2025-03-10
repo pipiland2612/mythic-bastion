@@ -47,6 +47,8 @@ class GamePanel extends JPanel with Runnable:
     if gameState == GameState.TitleState then
       getSystemHandler.stopMusic()
       getSystemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
+    if gameState == GameState.UpgradeState then
+      gui.getupgradeGUI.reload()
     currentGameState = gameState
     reloadGameBackGround()
     gui.reset()
@@ -70,6 +72,7 @@ class GamePanel extends JPanel with Runnable:
     Tools.setUp(this)
     reloadGameBackGround()
     systemHandler.getUpgradeManager.loadUpgrades()
+    systemHandler.getPlayerDataManager.loadPlayerData()
     systemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
 
   def setUpStage(int: Int): Unit =

@@ -94,11 +94,13 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
         (_, _) => {
           val currentFrame = gp.getGUI.getupgradeGUI.getCurrentFrame
           if currentFrame.canBuy && gp.getSystemHandler.getUpgradeManager.purchaseUpgrade(currentFrame.upgrade, gp.getPlayer) then
-            currentFrame.hasBought = true
+            gp.getGUI.getupgradeGUI.reload()
+            gp.getSystemHandler.getPlayerDataManager.savePlayerData()
             gp.getSystemHandler.getUpgradeManager.saveUpgrades()
             gp.getGUI.getupgradeGUI.getNextComponent(currentFrame) match
               case Some(component) => gp.getGUI.getupgradeGUI.setCurrentFrame(component)
               case _ =>
+
         }
       )
     )

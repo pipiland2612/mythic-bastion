@@ -15,14 +15,14 @@ case class UpgradeComponent(
   description: String,
   cost: Int,
   val upgrade: PermanentUpgrade,
-  var hasBought: Boolean = false
 ):
   private val originalImage: BufferedImage = image
   private var currentImage: BufferedImage = image
 
+  def hasBought = gp.getSystemHandler.getUpgradeManager.findUpgrade(upgrade.towerType, upgrade.level)
   def canBuy: Boolean =
     val condition = if upgrade.level - 1 == 0 then true else gp.getSystemHandler.getUpgradeManager.findUpgrade(upgrade.towerType, upgrade.level-1)
-    gp.getPlayer.stars >= this.cost && condition
+    (gp.getPlayer.stars >= this.cost || hasBought) && condition
 
   def reloadImage(): Unit =
     currentImage = if (!canBuy) Tools.applyGrayscale(originalImage) else originalImage
