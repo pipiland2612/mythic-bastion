@@ -116,7 +116,7 @@ class GamePanel extends JPanel with Runnable:
     g2d.setFont(new Font("Arial",Font.PLAIN, 20))
     g2d.setColor(Color.WHITE)
 
-    g2d.drawString("Draw time: " + passTime, x,y)
+//    g2d.drawString("Draw time: " + passTime, x,y)
 
     g2d.dispose()
 

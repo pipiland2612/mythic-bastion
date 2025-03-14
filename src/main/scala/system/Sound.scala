@@ -1,5 +1,6 @@
 package system
 
+import java.io.BufferedInputStream
 import javax.sound.sampled.{AudioInputStream, AudioSystem, Clip, FloatControl, LineEvent}
 
 class Sound:
@@ -16,7 +17,8 @@ class Sound:
     resourceStream match
       case Some(stream) =>
         try
-          val ais: AudioInputStream = AudioSystem.getAudioInputStream(stream)
+          val bufferedStream = BufferedInputStream(stream)
+          val ais: AudioInputStream = AudioSystem.getAudioInputStream(bufferedStream)
           clip = AudioSystem.getClip()
           clip.open(ais)
           fc = clip.getControl(FloatControl.Type.MASTER_GAIN).asInstanceOf[FloatControl]
