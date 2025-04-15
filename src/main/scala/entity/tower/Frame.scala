@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
 import java.awt.{Color, Graphics2D, RadialGradientPaint, Rectangle}
 
 object Frame :
-  case class TowerButtonConfig(
+  private case class TowerButtonConfig(
     coords: (Int, Int),
     image: BufferedImage,
     createTower: (GamePanel, Int, (Double, Double)) => Tower
@@ -124,7 +124,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
                 towerBuild.hasTower = false
                 removeTower(tower)
                 gp.getSystemHandler.playSE(SoundConstant.SELL_TOWER)
-              case "U" if (tower.getTowerType == BarrackTower.towerType) =>
+              case "U" if tower.getTowerType == BarrackTower.towerType =>
                 drawingFrame = false
                 gp.getSystemHandler.getKeyHandler.isUniting = true
           case _ =>
@@ -132,7 +132,7 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild) :
         setOffFrame(x, y)
 
   private def setOffFrame(x: Int, y: Int): Unit =
-    if (!towerBuild.isInBuildRange(x, y)) then
+    if !towerBuild.isInBuildRange(x, y) then
       gp.getGUI.currentFrame = None
 
   var drawingFrame = true

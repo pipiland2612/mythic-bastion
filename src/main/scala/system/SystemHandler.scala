@@ -1,7 +1,7 @@
 package system
 
 import game.GamePanel
-import system.stage.{Grid, Stage, StageManager}
+import system.stage.{Stage, StageManager}
 import system.upgrade.UpgradeManager
 import utils.Tools
 
@@ -23,7 +23,7 @@ class SystemHandler (gp: GamePanel):
 
   def setUp(int: Int): Unit =
     require(int >= 1 && int <= 5)
-    val stage: Stage = Tools.loadStage(s"stages/Stage0${int}.json")
+    val stage: Stage = Tools.loadStage(s"stages/Stage0$int.json")
     stageManager.setStage(stage)
 
   def restart(): Unit = 
@@ -35,16 +35,16 @@ class SystemHandler (gp: GamePanel):
   def update(): Unit =
     stageManager.update()
 
-  def draw(g2d: Graphics2D) =
+  def draw(g2d: Graphics2D): Unit =
     stageManager.draw(g2d)
 
-  def playMusic(path: String) =
+  def playMusic(path: String): Unit =
     this.sound.setFile(path)
     this.sound.play()
     this.sound.loop()
 
   def stopMusic (): Unit = this.sound.stop()
 
-  def playSE (path: String) =
+  def playSE (path: String): Unit =
     this.soundEffect.setFile(path)
     this.soundEffect.play()

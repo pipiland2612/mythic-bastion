@@ -3,12 +3,12 @@ package game
 import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
-import gui.{GUI, UpgradeGUI}
+import gui.GUI
 import system.SystemHandler
-import utils.{Constant, SoundConstant, Tools}
+import utils.{SoundConstant, Tools}
 
 import java.awt.image.BufferedImage
-import java.awt.{Color, Dimension, Font, Graphics, Graphics2D}
+import java.awt.*
 import javax.swing.JPanel
 
 
@@ -37,13 +37,13 @@ class GamePanel extends JPanel with Runnable:
   def getSystemHandler: SystemHandler = systemHandler
   def getGUI: GUI = gui
   def getCurrentGameState: GameState = currentGameState
-  def setCurrentGameState(gst: GameState) = currentGameState = gst
-  def getPlayer = player
+  def setCurrentGameState(gst: GameState): Unit = currentGameState = gst
+  def getPlayer: Player = player
 
   private def changeBackgroundImage(imgPath: String, scaleX: Int, scaleY: Int): Unit =
     this.backgroundImage = Tools.scaleImage(Tools.loadImage(imgPath), scaleX, scaleY)
 
-  def handleReloadGameState(gameState: GameState) =
+  def handleReloadGameState(gameState: GameState): Unit =
     if gameState == GameState.TitleState then
       getSystemHandler.stopMusic()
       getSystemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
@@ -53,7 +53,7 @@ class GamePanel extends JPanel with Runnable:
     reloadGameBackGround()
     gui.reset()
 
-  def reloadGameBackGround(): Unit =
+  private def reloadGameBackGround(): Unit =
     getCurrentGameState match
       case GameState.PlayState       =>
         getSystemHandler.getStageManager.getCurrentStage.foreach(stage =>
@@ -126,7 +126,7 @@ class GamePanel extends JPanel with Runnable:
     var lastTime: Long = System.nanoTime()
     var currTime: Long = 0
 
-    while (Option(gameThread).isDefined) do
+    while Option(gameThread).isDefined do
       currTime = System.nanoTime()
       delta += (currTime - lastTime) / drawInterval
       lastTime = currTime

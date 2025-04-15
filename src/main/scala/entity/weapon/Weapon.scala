@@ -15,7 +15,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   private var angleOffset: Double = 0
   private var hasHit: Boolean = false
 
-  protected var attackInProgress: Boolean = false
+  private var attackInProgress: Boolean = false
   protected val deadDuration: Int = 110
   protected val maxAttackCoolDown: Double = 0
   protected val range: Double = 0
@@ -38,8 +38,8 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   def getHitSE: Array[String] = hitSoundEffect
 
   protected def getDamageMultiplier: Double
-  override def getApDmg: Double = (apDmg * getDamageMultiplier)
-  override def getAdDmg: Double = (adDmg * getDamageMultiplier)
+  override def getApDmg: Double = apDmg * getDamageMultiplier
+  override def getAdDmg: Double = adDmg * getDamageMultiplier
 
   protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)
@@ -119,7 +119,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     move(angle)
     angleOffset *= 0.98
 
-  protected var hasPlayHitSound = false
+  private var hasPlayHitSound = false
   protected def finalizeAttack(): Unit =
     if attackT >= 1.0 then
       if !hasPlayHitSound then playHitSound()
@@ -130,7 +130,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       checkAnimationUpdate()
       hasPlayHitSound = false
 
-  protected def playHitSound(): Unit =
+  private def playHitSound(): Unit =
     if hitSoundEffect.nonEmpty then
       hasPlayHitSound = true
       val random = Random.nextInt(hitSoundEffect.length)

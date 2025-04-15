@@ -2,11 +2,11 @@ package gui
 
 import entity.tower.Frame
 import game.{GamePanel, GameState}
+import utils.Constant.*
 import utils.{Constant, Tools}
-import utils.Constant.{downTopLeftCoords, nextTopLeftCoords, startCoords, topLeftCoords, topRightCoords}
 
 import java.awt.image.BufferedImage
-import java.awt.{Color, Font, Graphics2D, RenderingHints}
+import java.awt.{Color, Font, Graphics2D}
 
 class GUI(gp: GamePanel):
   private var currentPreStagebg: BufferedImage = Tools.scaleImage(Tools.loadImage("maps/prestage_map1.png"), 0.6, 0.6)
@@ -19,7 +19,7 @@ class GUI(gp: GamePanel):
     (x.toInt, y.toInt)
 
   def reset(): Unit = currentFrame = None
-  def getupgradeGUI = upgradeGUI
+  def getupgradeGUI: UpgradeGUI = upgradeGUI
   def reloadPreStagebg(): Unit =
     currentPreStageId match
       case Some(id) => currentPreStagebg = Tools.scaleImage(Tools.loadImage(s"maps/prestage_map$id.png"), 0.6, 0.6)

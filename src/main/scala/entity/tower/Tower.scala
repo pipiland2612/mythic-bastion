@@ -1,13 +1,14 @@
 package entity.tower
 
-import entity.{Entity, State}
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
+import entity.{Entity, State}
 import game.GamePanel
-import utils.{Animation, SoundConstant, Tools}
+import utils.{Animation, Tools}
 
-import java.awt.{Color, Graphics2D}
 import java.awt.geom.{AffineTransform, Ellipse2D}
+import java.awt.image.BufferedImage
+import java.awt.{Color, Graphics2D}
 import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
@@ -15,8 +16,8 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
   this.currentAnimation = Some(idleAnimation)
 
   override def getName: String = s"$name"
-  override def getImagePath: String = s"towers/${getName}.png"
-  override def getJsonPath: String = s"towers/${getName}.json"
+  override def getImagePath: String = s"towers/$getName.png"
+  override def getJsonPath: String = s"towers/$getName.json"
   override def getRange: Double = (range + level * 5) * getRangeMultiplier
 
   private val transform: AffineTransform = AffineTransform()
@@ -26,7 +27,7 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
 
   protected val towerType: String
   protected val towerImagePath: String
-  protected var towerImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")
+  protected var towerImage: BufferedImage = Tools.loadImage(s"towers/${towerImagePath}0$level.png")
   protected val offsetX: Double = 0
   protected val offsetY: Double = -10
   protected val drawOffsetX: Double = 25

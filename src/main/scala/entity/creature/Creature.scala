@@ -16,11 +16,11 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
   protected val rect: Rectangle2D
   protected val maxDeadCounter: Double
 
-  protected var isGoing: Boolean = true
-  protected var lastPosition: (Double, Double) = (0, 0)
-  protected var hasDied: Boolean = false
+  private var lastPosition: (Double, Double) = (0, 0)
+  private var hasDied: Boolean = false
   private var deadCounter: Int = 0
 
+  protected var isGoing: Boolean = true
   protected var walkingAnimation: Animation = _
   protected var fightingAnimation: Animation = _
   protected var deadAnimation: Animation = _

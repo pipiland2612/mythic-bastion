@@ -13,12 +13,12 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   private var path: Option[Vector[(Double, Double)]] = None
   private var index = 0
   private var hasGiveCoin: Boolean = false
+  private var walkingUpAnimation: Animation = _
+  private var walkingDownAnimation: Animation = _
+  
   protected val coin: Double
-
   protected var haveReachBase: Boolean = false
   protected val playerDamage: Double
-  protected var walkingUpAnimation: Animation = _
-  protected var walkingDownAnimation: Animation = _
   scaleFactor = 1.25
   isGoing = true
 
@@ -50,8 +50,8 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
     fightingAnimation = Animation(frames = value(4), frameDuration = 10, attackStartFrame = 2, attackEndFrame = 8)
     deadAnimation = Animation(frames = value(5), frameDuration = 10)
 
-  def attackPlayer(): Unit =
-    gp.getSystemHandler.getStageManager.updateHealth(-(this.playerDamage.toInt))
+  private def attackPlayer(): Unit =
+    gp.getSystemHandler.getStageManager.updateHealth(-this.playerDamage.toInt)
 
   protected def findEnemy[T <: Creature](): Option[ListBuffer[T]] =
     gp.getSystemHandler.getStageManager.getGrid match

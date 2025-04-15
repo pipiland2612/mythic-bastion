@@ -15,7 +15,7 @@ import scala.collection.mutable.ListBuffer
 import scala.collection.mutable
 import scala.jdk.CollectionConverters.*
 
-case class ImageProb(val x: Int, val y: Int, val w: Int, val h: Int)
+case class ImageProb(x: Int, y: Int, w: Int, h: Int)
 
 object Tools:
   private var gp: GamePanel = _

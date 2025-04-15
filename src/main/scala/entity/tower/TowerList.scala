@@ -64,7 +64,7 @@ class ExploTower(
 
 object ExploTower:
   val towerType = "Explo"
-  val prices: Map[Int, Int] = Map(
+  private val prices: Map[Int, Int] = Map(
     1 -> 125,
     2 -> 220,
     3 -> 320
@@ -119,7 +119,7 @@ class ArrowTower(
 
 object ArrowTower:
   val towerType = "Arrow"
-  val prices: Map[Int, Int] = Map(
+  private val prices: Map[Int, Int] = Map(
     1 -> 70,
     2 -> 110,
     3 -> 160,
@@ -175,7 +175,7 @@ class MagicTower(
 
 object MagicTower:
   val towerType = "Magic"
-  val prices: Map[Int, Int] = Map(
+  private val prices: Map[Int, Int] = Map(
     1 -> 100,
     2 -> 160,
     3 -> 240,
@@ -258,7 +258,7 @@ class BarrackTower(
       trainer.getCurrentSoldier.foreach(_.followPath((x, y)))
     )
 
-  class BarrackTrainer(var pos: (Double, Double)):
+  private class BarrackTrainer(var pos: (Double, Double)):
     private val soldierTrainingTime = 10 * 60
     private var trainingCounter = soldierTrainingTime
     private var currentSoldier: Option[Alliance] = Alliance.allianceOfName(allianceType, pos)
@@ -289,7 +289,7 @@ class BarrackTower(
 
 object BarrackTower:
   val towerType = "Barrack"
-  val prices: Map[Int, Int] = Map(
+  private val prices: Map[Int, Int] = Map(
     1 -> 70,
     2 -> 110,
     3 -> 160,

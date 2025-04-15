@@ -2,7 +2,7 @@ package system
 
 import entity.tower.Frame
 import game.{GamePanel, GameState}
-import gui.{Image, UpgradeGUI}
+import gui.Image
 import utils.{Constant, SoundConstant, Tools}
 
 import java.awt.event.{KeyEvent, KeyListener, MouseEvent, MouseListener}
@@ -81,7 +81,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
         }),
       Button(Tools.getRectInRange(Constant.playPreStageCoords, Image.play),
         (_, _) => {
-          gp.getGUI.currentPreStageId.foreach(gp.setUpStage(_))
+          gp.getGUI.currentPreStageId.foreach(gp.setUpStage)
           gp.getGUI.currentPreStageId = None
           gp.handleReloadGameState(GameState.PlayState)
         })
@@ -139,7 +139,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
   private def handlePlayStateSpecial(x: Int, y: Int): Unit =
     handleTowerBuildOnClick(x, y)
     gp.getGUI.currentFrame.foreach(frame =>
-      if (isUniting) then
+      if isUniting then
         isUniting = false
         frame.handleUniting(x, y)
         frame.drawingFrame = true
@@ -148,7 +148,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
         frame.handleFrameOnClick(x, y)
     )
 
-    if (x <= 150 && y <= 150) then
+    if x <= 150 && y <= 150 then
       gp.getSystemHandler.getStageManager.startWave()
 
   private def handleTowerBuildOnClick(x: Int, y: Int): Unit =

@@ -1,6 +1,5 @@
 package entity
 
-import entity.creature.Creature
 import game.GamePanel
 import utils.{Animation, Cache, Tools}
 
@@ -38,7 +37,7 @@ abstract class Entity(gp: GamePanel):
   def getMaxAttackCoolDown: Double = maxAttackCoolDown
   def getPosition: (Double, Double) = pos
   def setPosition(pos: (Double, Double)): Unit = this.pos = pos
-  def setState(state: State) = this.state = state
+  def setState(state: State): Unit = this.state = state
   def getId: Int = id
 
   parse()
@@ -59,7 +58,7 @@ abstract class Entity(gp: GamePanel):
           case _ => throw new Exception(s"Parsing error")
 
   protected def checkAnimationUpdate(): Unit =
-    if(needsAnimationUpdate) then
+    if needsAnimationUpdate then
       needsAnimationUpdate = false
       currentAnimation = images.get(this.direction, this.state)
       currentAnimation.foreach(_.update())

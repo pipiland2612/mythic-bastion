@@ -1,7 +1,7 @@
 package system
 
 import java.io.BufferedInputStream
-import javax.sound.sampled.{AudioInputStream, AudioSystem, Clip, FloatControl, LineEvent}
+import javax.sound.sampled.{AudioInputStream, AudioSystem, Clip, FloatControl}
 
 class Sound:
   private var clip: Clip = _
@@ -31,17 +31,17 @@ class Sound:
         println(s"Error: Could not find sound file: $soundPath")
 
   def play(): Unit =
-    if (Option(clip).isDefined) then
+    if Option(clip).isDefined then
       clip.setFramePosition(0)
       clip.start()
 
   def stop(): Unit =
-    if (Option(clip).isDefined) then clip.stop()
+    if Option(clip).isDefined then clip.stop()
 
   def loop(): Unit =
-    if (Option(clip).isDefined) then clip.loop(Clip.LOOP_CONTINUOUSLY)
+    if Option(clip).isDefined then clip.loop(Clip.LOOP_CONTINUOUSLY)
 
-  def checkVolume(): Unit =
+  private def checkVolume(): Unit =
     volume = volumeScale match
       case 0 => -80f
       case 1 => -20f

@@ -174,9 +174,9 @@ object MagicBullet:
   private val imagePath: String = s"weapons/$name.png"
 
   private val baseStats = Map(
-    1 -> (20.0),  // (apDmg)
-    2 -> (25.0),
-    3 -> (30.0)
+    1 -> 20.0,  // (apDmg)
+    2 -> 25.0,
+    3 -> 30.0
   )
 
   def get(gp: GamePanel, enemy: Enemy, pos: (Double, Double), l: Int = 1): MagicBullet =

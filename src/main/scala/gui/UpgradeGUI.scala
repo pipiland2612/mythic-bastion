@@ -14,12 +14,12 @@ case class UpgradeComponent(
   private val image: BufferedImage,
   description: String,
   cost: Int,
-  val upgrade: PermanentUpgrade,
+  upgrade: PermanentUpgrade,
 ):
   private val originalImage: BufferedImage = image
   private var currentImage: BufferedImage = image
 
-  def hasBought = gp.getSystemHandler.getUpgradeManager.findUpgrade(upgrade.towerType, upgrade.level)
+  def hasBought: Boolean = gp.getSystemHandler.getUpgradeManager.findUpgrade(upgrade.towerType, upgrade.level)
   def canBuy: Boolean =
     val condition = if upgrade.level - 1 == 0 then true else gp.getSystemHandler.getUpgradeManager.findUpgrade(upgrade.towerType, upgrade.level-1)
     (gp.getPlayer.stars >= this.cost || hasBought) && condition
@@ -49,7 +49,7 @@ object UpgradeCategory:
         MultiplierUpgrade("Eagle Eye", UpgradeTowerType.ARROW, UpgradeType.RANGE, 1.15, 5, 4))
     )
 
-  case object Barrack extends Category:
+  private case object Barrack extends Category:
     val icon: BufferedImage = Image.barrack
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
       "Barrack Boost"    -> ("barrack/level1", "Increase infantry health\nby 3%", 2,
@@ -79,7 +79,7 @@ object UpgradeCategory:
         MultiplierUpgrade("Mega Blast", UpgradeTowerType.EXPLO, UpgradeType.DAMAGE, 1.10,5, 4))
     )
 
-  case object Mage extends Category:
+  private case object Mage extends Category:
     val icon: BufferedImage = Image.mage
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
       "Arcane Mastery"  -> ("mage/level1", "Increase mage spell\ndamage by 2%", 2,
@@ -94,7 +94,7 @@ object UpgradeCategory:
         MultiplierUpgrade("Eldritch Wisdom", UpgradeTowerType.MAGE, UpgradeType.RANGE, 1.10,5, 4))
     )
 
-  case object Rock extends Category:
+  private case object Rock extends Category:
     val icon: BufferedImage = Image.rock
     val upgrades: ListMap[String, (String, String, Int, PermanentUpgrade)] = ListMap(
       "Rock Solid"      -> ("rock/level1", "Increase fortress durability\nby 5%", 2,
@@ -176,9 +176,9 @@ class UpgradeGUI(gp: GamePanel):
     upgradeMap.foreach{case ((x, y), component) =>
       g2d.drawImage(component.getCurrentImage, x, y, None.orNull)
 
-      if (!component.hasBought) then
+      if !component.hasBought then
         val (starImage, starColor) =
-          if (!component.canBuy) then (Image.grey_starCost, Color.GRAY)
+          if !component.canBuy then (Image.grey_starCost, Color.GRAY)
           else (Image.starCost, Color.YELLOW)
 
         val starX = x + component.getCurrentImage.getWidth / 2

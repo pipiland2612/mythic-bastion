@@ -16,6 +16,6 @@ class Animation(val frames: Vector[BufferedImage], val frameDuration: Int, var a
     currentFrame = 0
     frameCount = 0
 
-  def getCurrentFrameCount = currentFrame
+  def getCurrentFrameCount: Int = currentFrame
   def getCurrentFrame: BufferedImage = frames(currentFrame)
   def isInAttackInterval: Boolean = currentFrame >= attackStartFrame && currentFrame <= attackEndFrame
