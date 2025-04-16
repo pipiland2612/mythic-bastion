@@ -7,10 +7,9 @@ import system.stage.{Grid, GridCell}
 
 import java.awt.geom.Rectangle2D
 
-class StubGamePanel extends GamePanel {
+class StubGamePanel extends GamePanel:
   override val screenWidth: Int = 960  // 10 cells at 96px each
   override val screenHeight: Int = 768 // 8 cells at 96px each
-}
 
 class GridTest extends AnyFlatSpec with Matchers:
   val gamePanel = new StubGamePanel
