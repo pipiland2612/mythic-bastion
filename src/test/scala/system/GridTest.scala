@@ -1,3 +1,5 @@
+package system
+
 import entity.creature.alliance.{Alliance, Soldier}
 import entity.creature.enemy.{Creep, Enemy}
 import game.GamePanel
@@ -16,7 +18,7 @@ class GridTest extends AnyFlatSpec with Matchers:
   val grid = new Grid(gamePanel)
   val cellSize = 96
 
-  def makeCreep(pos: (Double, Double)): Enemy = 
+  def makeCreep(pos: (Double, Double)): Enemy =
     Creep(
       name = "TestCreep",
       maxHealth = 100.0,
@@ -38,7 +40,7 @@ class GridTest extends AnyFlatSpec with Matchers:
       pos = pos
     )
 
-  def makeSoldier(pos: (Double, Double)): Alliance = 
+  def makeSoldier(pos: (Double, Double)): Alliance =
     Soldier(
       name = "TestSoldier",
       maxHealth = 100.0,

@@ -36,6 +36,7 @@ abstract class Entity(gp: GamePanel):
   def getCenterCoords: (Double, Double) = Tools.getCenterCoords(pos, idleAnimation.getCurrentFrame)
   def getMaxAttackCoolDown: Double = maxAttackCoolDown
   def getPosition: (Double, Double) = pos
+  def getState: State = state
   def setPosition(pos: (Double, Double)): Unit = this.pos = pos
   def setState(state: State): Unit = this.state = state
   def getId: Int = id

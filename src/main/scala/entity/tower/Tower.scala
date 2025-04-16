@@ -92,12 +92,6 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
     if attackCoolDown > 0 then
       attackCoolDown -= 1
 
-  private def findEnemy(): Option[ListBuffer[Enemy]] =
-    gp.getSystemHandler.getStageManager.getGrid match
-      case Some(grid) =>
-        Some(grid.scanForEnemiesInRange(this))
-      case _ => None
-
   private def attack(enemy: Enemy): Unit =
     if attackCoolDown <= 0 && this.state != State.PREPARE then
       state = State.ATTACK
@@ -155,6 +149,12 @@ abstract class Tower(val gp: GamePanel, var level: Int) extends Entity(gp):
     if isShowingRange then
       g2d.setColor(Color.RED)
       g2d.draw(attackCircle)
+
+  def findEnemy(): Option[ListBuffer[Enemy]] =
+    gp.getSystemHandler.getStageManager.getGrid match
+      case Some(grid) =>
+        Some(grid.scanForEnemiesInRange(this))
+      case _ => None
 
 object Tower:
   def moneyToLevelUp(tower: Tower, level: Int): Option[Int] =

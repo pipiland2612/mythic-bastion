@@ -1,3 +1,4 @@
+package utils
 
 import game.GamePanel
 import org.scalatest.flatspec.AnyFlatSpec
