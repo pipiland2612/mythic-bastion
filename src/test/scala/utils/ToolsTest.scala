@@ -3,7 +3,6 @@ package utils
 import game.GamePanel
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import utils.Tools
 
 class ToolsTest extends AnyFlatSpec with Matchers:
 

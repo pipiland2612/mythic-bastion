@@ -28,13 +28,11 @@ class TowerTest extends AnyFlatSpec with Matchers with BeforeAndAfterEach:
     var playedSounds: List[String] = List()
     var enemies: mutable.ListBuffer[Enemy] = mutable.ListBuffer()
 
-    def playSE(sound: String): Unit = {
+    def playSE(sound: String): Unit =
       playedSounds = playedSounds :+ sound
-    }
 
-    def addEnemy(enemy: Enemy): Unit = {
+    def addEnemy(enemy: Enemy): Unit =
       enemies += enemy
-    }
 
     override def getSystemHandler: SystemHandler = new SystemHandler(testGamePanel) :
       override def getStageManager: StageManager = new StageManager(testGamePanel) :
@@ -48,11 +46,11 @@ class TowerTest extends AnyFlatSpec with Matchers with BeforeAndAfterEach:
             )
         )
 
-  override def beforeEach(): Unit = {
+  override def beforeEach(): Unit =
     testGamePanel = new TestGamePanel()
 
     // Create test creep
-    testCreep = new Creep(
+    testCreep = Creep(
       name = "TestCreep",
       maxHealth = 100.0,
       playerDamage = 10.0,
@@ -82,7 +80,6 @@ class TowerTest extends AnyFlatSpec with Matchers with BeforeAndAfterEach:
 
     // Add enemy to game panel
     testGamePanel.addEnemy(testCreep)
-  }
 
   "BarrackTower" should "initialize with correct properties" in {
     barrackTower.level shouldBe 1

@@ -4,7 +4,6 @@ import entity.tower.TowerBuild
 import game.GamePanel
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import utils.Tools
 
 import scala.util.Try
 

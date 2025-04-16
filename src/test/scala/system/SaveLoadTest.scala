@@ -3,7 +3,6 @@ package system
 import game.GamePanel
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import system.PlayerDataManager
 
 import java.io.{FileInputStream, FileOutputStream, ObjectInputStream, ObjectOutputStream}
 import java.nio.file.{Files, Paths}
@@ -44,17 +43,13 @@ class SaveLoadTest extends AnyFlatSpec with Matchers:
         mockGP.getMockPlayer.stars = loadedPlayerData.stars
         ois.close()
 
-    // Set initial value
     mockGP.getMockPlayer.stars = 42
 
-    // Test save
     manager.savePlayerData()
     Files.exists(Paths.get(testSavePath)) shouldBe true
 
-    // Reset value
     mockGP.getMockPlayer.stars = 0
 
-    // Test load
     manager.loadPlayerData()
     mockGP.getMockPlayer.stars shouldBe 42
 
@@ -70,8 +65,7 @@ class SaveLoadTest extends AnyFlatSpec with Matchers:
         try
           super.loadPlayerData()
         catch
-          case _: Exception => // swallow exception for test
+          case _: Exception =>
 
-    // Should not throw
     manager.loadPlayerData()
   }
