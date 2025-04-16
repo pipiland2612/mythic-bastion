@@ -15,7 +15,7 @@ class MockGamePanel extends GamePanel:
   val player = new MockPlayer
   def getMockPlayer: MockPlayer = player
 
-class PlayerDataManagerSmokeTest extends AnyFlatSpec with Matchers:
+class SaveLoadTest extends AnyFlatSpec with Matchers:
   val testSavePath = "src/test/resources/player_save_test.dat"
 
   def cleanupTestFiles(): Unit =
@@ -29,7 +29,7 @@ class PlayerDataManagerSmokeTest extends AnyFlatSpec with Matchers:
 
     val mockGP = new MockGamePanel
     // Modified to use test path
-    val manager = new PlayerDataManager(mockGP) {
+    val manager = new PlayerDataManager(mockGP):
       override def savePlayerData(): Unit =
         val oos = new ObjectOutputStream(new FileOutputStream(testSavePath))
         val data = PlayerData(mockGP.getMockPlayer.stars)
@@ -41,7 +41,6 @@ class PlayerDataManagerSmokeTest extends AnyFlatSpec with Matchers:
         val loadedPlayerData = ois.readObject().asInstanceOf[PlayerData]
         mockGP.getMockPlayer.stars = loadedPlayerData.stars
         ois.close()
-    }
 
     // Set initial value
     mockGP.getMockPlayer.stars = 42
@@ -64,14 +63,12 @@ class PlayerDataManagerSmokeTest extends AnyFlatSpec with Matchers:
     cleanupTestFiles()
 
     val mockGP = new MockGamePanel
-    val manager = new PlayerDataManager(mockGP) {
+    val manager = new PlayerDataManager(mockGP):
       override def loadPlayerData(): Unit =
-        try {
+        try
           super.loadPlayerData()
-        } catch {
+        catch
           case _: Exception => // swallow exception for test
-        }
-    }
 
     // Should not throw
     manager.loadPlayerData()
