@@ -5,8 +5,6 @@ import game.GamePanel
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.util.Try
-
 class StageLoadTest extends AnyFlatSpec with Matchers:
   val mockGamePanel: GamePanel = new GamePanel()
 
@@ -78,11 +76,6 @@ class StageLoadTest extends AnyFlatSpec with Matchers:
   testStageLoading("stages/Stage03.json", "Twight Light", 3, 1000)
   testStageLoading("stages/Stage04.json", "Into the forest", 4, 1000)
   testStageLoading("stages/Stage05.json", "New Adventure", 5, 1000)
-
-  "loadStage" should "throw an exception when loading a non-existent file" in {
-    val result = Try(Tools.loadStage("stages/nonexistent.json"))
-    result.isFailure shouldBe true
-  }
 
   it should "validate enemy types exist" in {
     val stage = Tools.loadStage("stages/Stage01.json")

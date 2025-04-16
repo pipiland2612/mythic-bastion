@@ -11,7 +11,9 @@ import java.awt.image.BufferedImage
 import java.awt.*
 import javax.swing.JPanel
 
-
+/** Represents the main game panel responsible for rendering and updating game content.
+ * Extends JPanel for GUI rendering and Runnable for game loop execution.
+ */
 class GamePanel extends JPanel with Runnable:
 
   // Configuration
@@ -40,9 +42,17 @@ class GamePanel extends JPanel with Runnable:
   def setCurrentGameState(gst: GameState): Unit = currentGameState = gst
   def getPlayer: Player = player
 
+  /** Changes the background image with specified scaling.
+   * @param imgPath Path to the image file
+   * @param scaleX Desired width of the scaled image
+   * @param scaleY Desired height of the scaled image
+   */
   private def changeBackgroundImage(imgPath: String, scaleX: Int, scaleY: Int): Unit =
     this.backgroundImage = Tools.scaleImage(Tools.loadImage(imgPath), scaleX, scaleY)
 
+  /** Handles game state transitions and reloads necessary resources.
+   * @param gameState The new game state to transition to
+   */
   def handleReloadGameState(gameState: GameState): Unit =
     if gameState == GameState.TitleState then
       getSystemHandler.stopMusic()
@@ -53,6 +63,7 @@ class GamePanel extends JPanel with Runnable:
     reloadGameBackGround()
     gui.reset()
 
+  /** Reloads the background image based on the current game state. */
   private def reloadGameBackGround(): Unit =
     getCurrentGameState match
       case GameState.PlayState       =>
@@ -65,6 +76,7 @@ class GamePanel extends JPanel with Runnable:
       case GameState.UpgradeState    => changeBackgroundImage(s"maps/upgrade_bg.png", screenWidth, screenHeight)
       case _ =>
 
+  /** Initializes game components and resources. */
   def setUpGame(): Unit =
     Enemy.setUp(this)
     Alliance.setUp(this)
@@ -75,6 +87,9 @@ class GamePanel extends JPanel with Runnable:
     systemHandler.getPlayerDataManager.loadPlayerData()
     systemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
 
+  /** Sets up a specific game stage.
+   * @param int Stage identifier
+   */
   def setUpStage(int: Int): Unit =
     systemHandler.stopMusic()
     systemHandler.setUp(int)
@@ -92,12 +107,16 @@ class GamePanel extends JPanel with Runnable:
     systemHandler.continue()
     handleReloadGameState(GameState.PlayState)
 
+  /** Updates game logic based on the current game state. */
   def update(): Unit =
     currentGameState match
       case GameState.PlayState =>
         systemHandler.update()
       case _ =>
 
+  /** Renders the game graphics, including background, game objects, and UI.
+   * @param g Graphics context for rendering
+   */
   override def paintComponent(g: Graphics): Unit =
     super.paintComponents(g)
     val g2d = g.asInstanceOf[Graphics2D]
@@ -113,13 +132,14 @@ class GamePanel extends JPanel with Runnable:
     val y = 400
     val endTime = System.nanoTime()
     val passTime = endTime - startTime
-    g2d.setFont(new Font("Arial",Font.PLAIN, 20))
+    g2d.setFont(new Font("Arial", Font.PLAIN, 20))
     g2d.setColor(Color.WHITE)
 
-//    g2d.drawString("Draw time: " + passTime, x,y)
+    // g2d.drawString("Draw time: " + passTime, x, y)
 
     g2d.dispose()
 
+  /** Main game loop controlling updates and rendering at a fixed frame rate (60 FPS). */
   override def run(): Unit =
     val drawInterval: Double = 1e9 / FPS
     var delta: Double = 0

@@ -9,24 +9,30 @@ import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import scala.collection.mutable.ListBuffer
 
+/** Abstract base class for enemy creatures in the game, handling pathfinding and player damage.
+ * Extends Creature for movement, combat, and health management.
+ * @param gp The GamePanel instance managing the game.
+ */
 abstract class Enemy(gp: GamePanel) extends Creature(gp):
   private var path: Option[Vector[(Double, Double)]] = None
   private var index = 0
   private var hasGiveCoin: Boolean = false
   private var walkingUpAnimation: Animation = _
   private var walkingDownAnimation: Animation = _
-  
   protected val coin: Double
   protected var haveReachBase: Boolean = false
   protected val playerDamage: Double
   scaleFactor = 1.25
   isGoing = true
 
+  /** Sets the path for the enemy to follow.
+   * @param path A vector of coordinates representing the enemy's path.
+   */
   def setPath(path: Vector[(Double, Double)]): Unit = this.path = Some(path)
   def haveReach: Boolean = haveReachBase
-
   def getCoin: Double = coin
 
+  /** Sets up the animation map for the enemy, including mirrored and directional animations. */
   override def setUpImages(): Unit =
     val mirroredDirections = Seq(Direction.LEFT, Direction.UP_LEFT, Direction.DOWN_LEFT)
     val nonMirroredDirections = Direction.allCreatureDirections.diff(mirroredDirections)
@@ -42,6 +48,9 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       deadAnim = deadAnimation
     )
 
+  /** Parses animation frames for the enemy from a provided vector.
+   * @param value A vector of vectors containing BufferedImage frames for different animations.
+   */
   override def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     walkingAnimation = Animation(frames = value(0), frameDuration = 10)
     walkingUpAnimation = Animation(frames = value(1), frameDuration = 10)
@@ -53,11 +62,17 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
   private def attackPlayer(): Unit =
     gp.getSystemHandler.getStageManager.updateHealth(-this.playerDamage.toInt)
 
+  /** Finds alliance creatures within the enemy's attack range.
+   * @return An optional list of alliance creatures in range.
+   */
   protected def findEnemy[T <: Creature](): Option[ListBuffer[T]] =
     gp.getSystemHandler.getStageManager.getGrid match
       case Some(grid) => Some(grid.scanForAlliancesInRange(this).asInstanceOf[ListBuffer[T]])
       case _ => None
 
+  /** Moves the enemy toward the next point in its path.
+   * @param goal The target coordinates in the path.
+   */
   private def followPath(goal: (Double, Double)): Unit =
     val (xDist, yDist) = (goal._1 - this.pos._1, goal._2 - this.pos._2)
     val absX = Math.abs(xDist)
@@ -69,6 +84,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
 
     direction = determineDirection(xDist, yDist)
 
+  /** Determines the enemy's action, including following its path or attacking. */
   override def setAction(): Unit =
     super.setAction()
     if this.state != State.ATTACK then
@@ -79,6 +95,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
         else this.haveReachBase = true
       )
 
+  /** Updates the enemy's state, including pathfinding, attacks, and health status. */
   override def update(): Unit =
     super.update()
     if this.state != State.DEAD then
@@ -88,6 +105,7 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
       if this.haveReachBase then attackPlayer()
     checkHealthStatus()
 
+  /** Checks the enemy's health and awards coins upon death. */
   private def checkHealthStatus(): Unit =
     if this.health <= 0 then
       if !hasGiveCoin then
@@ -95,13 +113,20 @@ abstract class Enemy(gp: GamePanel) extends Creature(gp):
         gp.getSystemHandler.getStageManager.updateCoin(coin.toInt)
       removeGrid()
 
-end Enemy
-
+/** Companion object for Enemy, handling enemy setup and instantiation. */
 object Enemy:
   private var gp: GamePanel = _
 
+  /** Sets up the GamePanel for enemy instantiation.
+   * @param gp The GamePanel instance.
+   */
   def setUp(gp: GamePanel): Unit = this.gp = gp
 
+  /** Creates an enemy instance based on its name and difficulty level.
+   * @param key The name of the enemy.
+   * @param difficulty The difficulty multiplier for enemy stats.
+   * @return An optional Enemy instance.
+   */
   def enemyOfName(key: String, difficulty: Int): Option[Enemy] =
     EnemyData.registry.get(key).map(data =>
       val adjustedData = data.stats.map(_ * difficulty)
@@ -126,6 +151,10 @@ object Enemy:
       )
     )
 
+  /** Clones an existing enemy with the same attributes.
+   * @param enemy The enemy to clone.
+   * @return A new Enemy instance with identical attributes.
+   */
   def clone(enemy: Enemy): Enemy =
     Creep(
       name = enemy.getName,
@@ -147,6 +176,7 @@ object Enemy:
       healthOffSet = enemy.getHealthOffSet
     )
 
+/** Factory object for creating enemy animation maps. */
 private object EnemyAnimationFactory:
   def createEnemyAnimationMap(
     allDirections: Seq[Direction],
@@ -169,6 +199,7 @@ private object EnemyAnimationFactory:
     Tools.fillMap(allDirections, State.ATTACK, fightAnim) ++
     Tools.fillMap(allDirections, State.DEAD, deadAnim)
 
+/** Data object for storing enemy configurations. */
 private object EnemyData:
   case class EnemyConfig(
     stats: Vector[Double],
@@ -178,6 +209,7 @@ private object EnemyData:
     healthOffSet: (Int, Int)
   )
 
+  /** Registry of enemy configurations, mapping enemy names to their configurations. */
   val registry: Map[String, EnemyConfig] = Map(
     Monster01.name -> EnemyConfig(Monster01.data, Monster01.jsonPath, Monster01.imagePath, Monster01.rect, Monster01.healthOffSet),
     Monster02.name -> EnemyConfig(Monster02.data, Monster02.jsonPath, Monster02.imagePath, Monster02.rect, Monster02.healthOffSet),

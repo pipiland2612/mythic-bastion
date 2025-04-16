@@ -9,12 +9,17 @@ import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 import scala.util.Random
 
+/** Abstract base class for weapons in the game, handling projectile behavior and enemy interaction.
+ * Extends Entity for rendering and position management, and Attacker for damage dealing.
+ *
+ * @param gp    The GamePanel instance managing the game.
+ * @param enemy The target enemy for this weapon.
+ */
 abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel) with Attacker:
   this.currentAnimation = Some(idleAnimation)
   private var deadCounter: Int = 0
   private var angleOffset: Double = 0
   private var hasHit: Boolean = false
-
   private var attackInProgress: Boolean = false
   protected val deadDuration: Int = 110
   protected val maxAttackCoolDown: Double = 0
@@ -25,9 +30,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   protected val weight: Double = 2
   protected var attackT: Double = 0.0
   protected var attackCurve: Option[((Double, Double), (Double, Double), (Double, Double))] = None
-
   private val baseSpeed: Double = 0.02
-
   protected val flySoundEffect: Array[String]
   protected val hitSoundEffect: Array[String]
 
@@ -36,11 +39,14 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
   def attackCircle: Ellipse2D = Ellipse2D.Double(0, 0, 0, 0)
   def getFlySE: Array[String] = flySoundEffect
   def getHitSE: Array[String] = hitSoundEffect
-
   protected def getDamageMultiplier: Double
   override def getApDmg: Double = apDmg * getDamageMultiplier
   override def getAdDmg: Double = adDmg * getDamageMultiplier
 
+  /** Parses animation frames for the weapon.
+   *
+   * @param value A vector of vectors containing BufferedImage frames for different animations.
+   */
   protected def parseInformation(value: Vector[Vector[BufferedImage]]): Unit =
     idleAnimation = Animation(frames = value(0), frameDuration = 10)
     hitAnimation = Animation(frames = value(1), frameDuration = 10)
@@ -53,11 +59,16 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       attackAnim = hitAnimation
     )
 
+  /** Deals damage to the target enemy, accounting for their defenses. */
   protected def dealDamage(): Unit =
     val adDamage = Math.max(getAdDmg - enemy.getAdDefense, 0)
     val apDamage = Math.max(getApDmg - enemy.getApDefense, 0)
     enemy.takeDamage(adDamage + apDamage)
 
+  /** Moves the weapon along a specified angle.
+   *
+   * @param angle The angle of movement in degrees.
+   */
   protected def move(angle: Double): Unit =
     val radians = Math.toRadians(angle)
     val x = pos._1 + speed * Math.cos(radians)
@@ -78,6 +89,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     if deadCounter >= deadDuration then
       hasHit = true
 
+  /** Manages the attack process, initializing and following a Bezier curve toward the enemy. */
   def attack(): Unit =
     if !attackInProgress then
       initializeAttackCurve()
@@ -86,6 +98,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       updateProjectileMovement()
       finalizeAttack()
 
+  /** Initializes the Bezier curve for the weapon's attack path. */
   private def initializeAttackCurve(): Unit =
     val start = pos
     val end = (enemy.attackBox.getCenterX, enemy.attackBox.getCenterY)
@@ -95,12 +108,19 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     attackInProgress = true
     angleOffset = Math.toRadians(40)
 
+  /** Calculates the midpoint for the Bezier curve with randomized offset.
+   *
+   * @param start Starting position of the weapon.
+   * @param end   Target position (enemy's center).
+   * @return The calculated midpoint coordinates.
+   */
   private def calculateMidPoint(start: (Double, Double), end: (Double, Double)): (Double, Double) =
     val xOffset = Math.random() * 40 - 20
     val distance = Tools.distance(end, start)
     val yOffset = -distance * curveConst
     ((start._1 + end._1) / 2 + xOffset, (start._2 + end._2) / 2 + yOffset)
 
+  /** Moves the weapon along the Bezier curve, adjusting speed based on distance and weight. */
   private def moveAlongCurve(): Unit =
     attackCurve match
       case Some((start, mid, end)) =>
@@ -120,6 +140,7 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
     angleOffset *= 0.98
 
   private var hasPlayHitSound = false
+
   protected def finalizeAttack(): Unit =
     if attackT >= 1.0 then
       if !hasPlayHitSound then playHitSound()
@@ -136,12 +157,26 @@ abstract class Weapon(gp: GamePanel, enemy: Enemy) extends Entity(gp: GamePanel)
       val random = Random.nextInt(hitSoundEffect.length)
       gp.getSystemHandler.playSE(hitSoundEffect(random))
 
-object Weapon :
+/** Companion object for Weapon, handling setup and instantiation of specific weapon types. */
+object Weapon:
   private var gp: GamePanel = _
 
+  /** Sets up the GamePanel for weapon instantiation.
+   *
+   * @param gp The GamePanel instance.
+   */
   def setUp(gp: GamePanel): Unit =
     this.gp = gp
 
+  /** Creates a new weapon instance based on the specified type and level.
+   *
+   * @param weapon The weapon type (e.g., "Explo", "Arrow", "MagicBullet").
+   * @param enemy  The target enemy.
+   * @param pos    The starting position of the weapon.
+   * @param l      The level of the weapon (default is 1).
+   * @return A new Weapon instance.
+   * @throws IllegalArgumentException if the weapon type is unknown.
+   */
   def clone(weapon: String, enemy: Enemy, pos: (Double, Double), l: Int = 1): Weapon =
     val level = Math.min(l, 3)
     val extractedLevel = extractLevel(weapon, level)
@@ -154,6 +189,12 @@ object Weapon :
         MagicBullet.get(gp, enemy, pos, extractedLevel)
       case _ => throw new IllegalArgumentException(s"Unknown weapon type: $weapon")
 
+  /** Extracts the weapon level from the weapon name or uses the default.
+   *
+   * @param weaponName   The name of the weapon.
+   * @param defaultLevel The default level if no level is specified.
+   * @return The extracted or default level.
+   */
   private def extractLevel(weaponName: String, defaultLevel: Int): Int =
     val levelPattern = ".*0(\\d)$".r
     weaponName match
@@ -162,7 +203,15 @@ object Weapon :
       case _ =>
         defaultLevel
 
+/** Factory object for creating weapon animation maps. */
 private object WeaponAnimationFactory:
+  /** Creates a map of animations for different directions and states.
+   *
+   * @param directions The directions to map animations for.
+   * @param idleAnim   The idle animation.
+   * @param attackAnim The attack animation.
+   * @return A map of (Direction, State) to Animation.
+   */
   def createWeaponAnimationMap(
     directions: Seq[Direction],
     idleAnim: Animation,
