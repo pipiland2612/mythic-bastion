@@ -48,4 +48,4 @@ build/
 .bsp/
 
 ### Saved File
-.dat
+src/main/resources/*.dat
