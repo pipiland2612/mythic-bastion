@@ -133,7 +133,7 @@ abstract class Creature(gp: GamePanel) extends Entity(gp) with Attacker with Def
       if xDist < 0 then Direction.LEFT else Direction.RIGHT
     else if yDist < 0 then Direction.UP else Direction.DOWN
 
-  def handleAttackAnimation(): Unit =
+  protected def handleAttackAnimation(): Unit =
     attackCounter += 1
     if attackCounter >= maxAttackCounter then
       attackCounter = 0

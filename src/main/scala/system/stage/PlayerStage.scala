@@ -16,6 +16,3 @@ class PlayerStage (private var coins: Int):
     var result = health + dx
     if (health + dx > maxHealth) result = maxHealth
     this.health = result
-    
-//  def buildTower()
-
