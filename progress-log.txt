@@ -1,0 +1,182 @@
+Progress Log for Mythic Bastion Project
+
+1. Classes Added or Updated and Implemented Functionality
+
+Issue #1: Implement method to handle stage JSON data
+
+- Implemented stageLoader method to parse and handle stage JSON data, enabling dynamic stage configuration.
+- Added utility class or module for stage data management.
+
+Issue #2: Implement enemies wave spawning
+
+- Added enemy wave spawning logic to EnemyManager or similar class, handling timed enemy spawns.
+
+Issue #3: Change position system so that can handle double coords
+
+- Updated position system across game entities to support double-precision coordinates for improved accuracy.
+
+Issue #4: Implement tower class
+
+- Added Tower base class with core properties and methods for tower behavior.
+
+Issue #5: Handle tower animation & build tower
+
+- Implemented animation and build methods for Tower class, including sprite rendering.
+
+Issue #6: Handle dead state & animation of creature class
+
+- Updated Creature class to manage dead states and associated animations.
+
+Issue #7: Implement tower update method to find and attack enemy
+
+- Added update method to Tower class for enemy detection and attack initiation.
+
+Issue #8: Optimize drawing time, update time
+
+- Optimized rendering and update loops for better performance across game entities.
+
+Issue #9: Implement weapon class
+
+- Added Weapon class to manage tower weapon behaviors and properties.
+
+Issue #10: Handle ExploBullet animation
+
+- Implemented animation logic for ExploBullet in the Weapon class.
+
+Issue #11: Implement GUI class
+
+- Added GUI class for core user interface functionality.
+
+Issue #12: Implement core function for GUI
+
+- Extended GUI class with methods for handling user interactions and state transitions.
+
+Issue #13: Implement arrow tower and update attack method
+
+- Added ArrowTower class with specific attack methods.
+
+Issue #14: Implement mage tower
+
+- Added MageTower class with unique attack behaviors.
+
+Issue #15: Optimize attack algorithm by using grid based
+
+- Optimized attack algorithms for towers using a grid-based approach for efficiency.
+
+Issue #16: Fix arrow animation to rotate by moving angle
+
+- Fixed ArrowTower animation to rotate based on movement angle.
+
+Issue #17: Fix arrow tower and magic tower animation
+
+- Resolved animation bugs for ArrowTower and MageTower.
+
+Issue #18: Implement upgrade tower method
+
+- Added upgrade methods to Tower class for stat improvements.
+
+Issue #19: Optimize attack method, choose better enemy to attack
+
+- Enhanced attack logic to prioritize optimal enemy targets.
+
+Issue #20: Implement barrack tower
+
+- Added BarrackTower class with unique alliance-spawning mechanics.
+
+Issue #21: Implement method for enemies to find and attack alliance
+
+- Updated Enemy class to detect and attack alliance units.
+
+Issue #22: Implement alliance class
+
+- Added Alliance class for player-controlled units.
+
+Issue #23: Implement attack, update method for alliance
+
+- Added attack and update methods to Alliance class.
+
+Issue #24: Refactor code (First time)
+
+- Refactored codebase for improved readability and maintainability.
+
+Issue #25: Implement AOE damage for explo tower
+
+- Added AOE damage mechanics to ExploTower.
+
+Issue #26: Implement tower range for barrack, move alliance by cursor
+
+- Added range mechanics to BarrackTower and cursor-based alliance movement.
+
+Issue #27: Implement sound class
+
+- Added Sound class for audio management.
+
+Issue #28: Update more stage and enemies
+
+- Expanded stage configurations and added new enemy types.
+
+Issue #29: Draw enemies health
+
+- Implemented health bar rendering for enemies.
+
+Issue #30: GUI for win and lost state
+
+- Added GUI elements for win/lose states.
+
+Issue #31: GUI for title state
+
+- Implemented GUI for title screen.
+
+Issue #32: GUI for pre stage
+
+- Added GUI for pre-stage setup.
+
+Issue #34: Implement load files
+
+- Added file loading functionality for assets and configurations.
+
+Issue #35: Implement upgrade methods
+
+- Extended upgrade methods for additional tower enhancements.
+
+Issue #36: Fix barrack update bugs (alliance doesn't get replace)
+
+- Fixed BarrackTower bug where alliances were not replaced correctly.
+
+Issue #37: Implement upgrade draw methods
+
+- Added drawing methods for upgraded tower visuals.
+
+Issue #38: Handle upgrade animation
+
+- Implemented animations for tower upgrades.
+
+Issue #39: Refactor code, add comment
+
+- Performed second code refactor, adding detailed comments.
+
+Issue #40: Implement test
+
+- Added unit tests for key game mechanics.
+
+2. Tested Functionality
+
+- Tested stageLoader method for correct JSON parsing and stage setup (Issue #1).
+- Verified enemy wave spawning mechanics (Issue #2).
+- Confirmed double-coordinate system accuracy (Issue #3).
+- Tested tower behaviors, animations, and upgrades (Issues #4, #5, #7, #18, #35, #37).
+- Validated weapon and bullet animations (Issues #9, #10).
+- Tested GUI interactions for all states (Issues #11, #12, #30, #31, #32).
+- Verified tower-specific mechanics for Arrow, Mage, Barrack, and Explo towers (Issues #13, #14, #20, #25).
+- Tested optimized attack algorithms (Issues #15, #19).
+- Confirmed alliance and enemy interaction logic (Issues #21, #23, #26).
+- Tested sound integration (Issue #27).
+- Verified enemy health rendering (Issue #29).
+- Tested file loading functionality (Issue #34).
+- Ran unit tests for critical systems (Issue #40).
+
+3. Errors Encountered and Resolutions
+
+- Barrack Update Bug (Issue #36): Fixed alliance replacement issue in BarrackTower.
+- Animation Bugs (Issues #16, #17): Corrected arrow rotation and tower animation issues.
+- Performance Issues (Issues #8, #15): Optimized drawing/update times and attack algorithms using grid-based methods.
