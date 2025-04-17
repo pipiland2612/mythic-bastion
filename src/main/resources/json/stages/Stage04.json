@@ -1,8 +1,9 @@
 {
   "stageName": "Into the forest",
+  "description": "Battle your way into the edge of the\nForest of Myth. Twisted trees and ancient\nruins block your path as feral beasts\ncharge from the shadows.\n\nSurvive the first waves and push deeper\ninto the cursed woodland. Watch your step—\nthis is just the beginning.",
   "stageID": 4,
   "difficulty": 1,
-  "coins": 1000,
+  "coins": 1400,
   "spawnPosition": [
     {"x": 5, "y": 435},
     {"x": 11, "y": 466},

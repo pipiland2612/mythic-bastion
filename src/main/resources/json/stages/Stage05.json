@@ -1,8 +1,9 @@
 {
   "stageName": "New Adventure",
+  "description": "The air crackles with tension as shadows\ngather beyond the shattered walls. From\nevery path, creatures surge—stronger,\nfaster, unrelenting.\n\nThis is no ordinary battle; it’s a storm\nof steel and fury. Stand your ground,\nsharpen your blade, and brace yourself…\n\nThe true test begins now.",
   "stageID": 5,
   "difficulty": 1,
-  "coins": 1000,
+  "coins": 1400,
   "spawnPosition": [
     {"x": 415, "y": 0},
     {"x": 380, "y": 0},

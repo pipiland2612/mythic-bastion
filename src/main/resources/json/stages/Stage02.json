@@ -1,8 +1,9 @@
 {
-  "stageName": "Cavern of Shadows",
+  "stageName": "The Scorched Path",
+  "description": "A chaotic battlefield where enemies strike\nfrom six different directions. Twelve tower\npositions offer just enough ground for a\ntactical stand.\n\nEndure ten relentless waves, each more\nintense than the last. With only 55 seconds\nbetween waves, there's little time to breathe.\n\nPrepare for a full range of monsters—from\nthe weakest scouts to the most terrifying\nbeasts in the wilds.",
   "stageID": 2,
   "difficulty": 1,
-  "coins": 800,
+  "coins": 1000,
   "spawnPosition": [
     { "x": 5, "y": 360 },
     { "x": 5, "y": 405 },

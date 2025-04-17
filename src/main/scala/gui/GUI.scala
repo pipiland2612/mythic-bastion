@@ -124,6 +124,16 @@ class GUI(gp: GamePanel):
    * @param g2d The Graphics2D context for rendering.
    */
   private def drawPlayState(g2d: Graphics2D): Unit =
+    if gp.getSystemHandler.getStageManager.getCurrentWave.get == 0 then
+      val msg = "Click on the top left\ncorner to start wave"
+      var y = 530
+      g2d.setFont(Constant.ARIAL_FONT_SMALL)
+      g2d.setColor(Color.WHITE)
+      msg.split("\n").foreach(string =>
+        g2d.drawString(string, 795, y)
+        y += 20
+      )
+
     drawPlayerStats(g2d)
 
   /** Renders a pause banner overlay in the pause state.
@@ -164,6 +174,9 @@ class GUI(gp: GamePanel):
     for coords <- map do
       g2d.drawImage(Image.red_stage, coords._1, coords._2, None.orNull)
     g2d.drawImage(Image.menu_upgrade, 700, 500, None.orNull)
+    g2d.setFont(Constant.ARIAL_FONT_SMALL)
+    g2d.setColor(Color.WHITE)
+    g2d.drawString("Upgrade", 707, 550)
 
   /** Renders the end stage state UI, showing a lose message and quit/restart options.
    * @param g2d The Graphics2D context for rendering.
@@ -192,7 +205,6 @@ class GUI(gp: GamePanel):
     g2d.drawImage(Image.start, startCoords._1, startCoords._2, None.orNull)
     g2d.drawImage(Image.mythic_bastion, startCoords._1 - 45, startCoords._2 - 190, None.orNull)
 
-  private val font = new Font("Arial", Font.BOLD, 30)
   /** Renders the pre-stage state UI, showing stage preview and play/exit options.
    * @param g2d The Graphics2D context for rendering.
    * @param stageId The ID of the current stage.
@@ -203,3 +215,13 @@ class GUI(gp: GamePanel):
     g2d.drawImage(Image.glass, 70, 50, None.orNull)
     g2d.drawImage(Image.exit, Constant.exitPreStageCoords._1, Constant.exitPreStageCoords._2, None.orNull)
     g2d.drawImage(Image.play, Constant.playPreStageCoords._1, Constant.playPreStageCoords._2, None.orNull)
+
+    val (name, desc) = Tools.getStageInfo(stageId)
+    g2d.setFont(Constant.HEADER_FONT)
+    g2d.drawString(name, 470, 60)
+    g2d.setFont(Constant.TEXT_FONT)
+    var y = 90
+    desc.split("\n").foreach(string =>
+      g2d.drawString(string, 470, y)
+      y += 30
+    )

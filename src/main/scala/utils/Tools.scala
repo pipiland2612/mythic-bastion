@@ -8,8 +8,9 @@ import game.GamePanel
 import system.stage.{EnemyData, GameMap, Stage, Wave}
 
 import java.awt.geom.{AffineTransform, Ellipse2D, Rectangle2D}
-import java.awt.Graphics2D
+import java.awt.{Font, Graphics2D, GraphicsEnvironment}
 import java.awt.image.BufferedImage
+import java.io.File
 import javax.imageio.ImageIO
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable
@@ -45,7 +46,7 @@ object Tools:
    * @param image The BufferedImage to flip.
    * @return A new BufferedImage that is horizontally flipped.
    */
-  def flipImageHorizontally(image: BufferedImage): BufferedImage =
+  private def flipImageHorizontally(image: BufferedImage): BufferedImage =
     val flippedImage = new BufferedImage(image.getWidth, image.getHeight, image.getType)
     val g2d: Graphics2D = flippedImage.createGraphics()
     val at = AffineTransform.getScaleInstance(-1, 1)
@@ -162,6 +163,7 @@ object Tools:
     try
       val root: JsonNode = loadJson(jsonPath)
       val stageName: String = root.path("stageName").asText()
+      val description: String = root.path("description").asText()
       val stageID: Int = root.path("stageID").asInt()
       val difficulty: Int = root.path("difficulty").asInt()
       val coins: Int = root.path("coins").asInt()
@@ -197,7 +199,7 @@ object Tools:
         waves = waves :+ wave
       )
 
-      Stage(gp, stageName, stageID, difficulty, coins, spawnPosition, waves, map)
+      Stage(gp, stageName, description, stageID, difficulty, coins, spawnPosition, waves, map)
 
     catch
       case e: Exception =>
@@ -286,6 +288,16 @@ object Tools:
     catch
       case e: Exception =>
         throw new Exception(s"Failed to parse the file at $jsonPath and $imagePath with exception $e")
+
+  def getStageInfo(id: Int): (String, String) =
+    try
+      val jsonPath = s"stages/Stage0$id.json"
+      val root: JsonNode = loadJson(jsonPath)
+      val stageName: String = root.path("stageName").asText()
+      val description: String = root.path("description").asText()
+      (stageName, description)
+    catch
+      case e: Exception => throw new Exception(s"Failed to parse the file at $id with exception $e")
 
   /** Creates a mapping of direction and state to an animation.
    *
@@ -389,3 +401,9 @@ object Tools:
       grayImage.setRGB(x, y, grayColor)
 
     grayImage
+
+  def loadCustomFont(path: String, size: Float): Font =
+    val fontStream = getClass.getResourceAsStream(s"/fonts/$path")
+    if (Option(fontStream).isEmpty) throw new RuntimeException(s"Font not found: /fonts/$path")
+    val font = Font.createFont(Font.TRUETYPE_FONT, fontStream)
+    font.deriveFont(size)

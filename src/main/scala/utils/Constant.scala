@@ -1,7 +1,8 @@
 package utils
 
-import game.GamePanel
 import gui.Image
+
+import java.awt.Font
 
 
 object Constant:
@@ -19,10 +20,14 @@ object Constant:
   val xUpgradeStageCoords: (Int, Int) = (20, 20)
   val buyUpgradeStageCoords: (Int, Int) = (730, 400)
   val quitEndStageCoords: (Int, Int) = (screenWidth / 2 - Image.quit.getWidth / 2, screenHeight / 2 + Image.quit.getHeight / 2)
-  val continueEndStageCoords: (Int, Int) = (screenWidth / 2 - Image.continue.getWidth / 2, screenHeight / 2 + Image.continue.getHeight)
+  val continueEndStageCoords: (Int, Int) = (screenWidth / 2 - Image.continue.getWidth / 2, screenHeight / 2)
 
   val stage01Coords: (Int, Int) = (280, 360)
   val stage02Coords: (Int, Int) = (350, 270)
   val stage03Coords: (Int, Int) = (450, 220)
   val stage04Coords: (Int, Int) = (570, 250)
   val stage05Coords: (Int, Int) = (680, 360)
+
+  val TEXT_FONT: Font = Tools.loadCustomFont("header.ttf", 15).deriveFont(Font.BOLD)
+  val HEADER_FONT: Font = Tools.loadCustomFont("text.ttf", 18)
+  val ARIAL_FONT_SMALL: Font = Tools.loadCustomFont("arial.ttf", 15)

@@ -71,11 +71,11 @@ class StageLoadTest extends AnyFlatSpec with Matchers:
     }
 
   // Test each stage file
-  testStageLoading("stages/Stage01.json", "Forest of Doom", 1, 600)
-  testStageLoading("stages/Stage02.json", "Cavern of Shadows", 2, 800)
-  testStageLoading("stages/Stage03.json", "Twight Light", 3, 1000)
-  testStageLoading("stages/Stage04.json", "Into the forest", 4, 1000)
-  testStageLoading("stages/Stage05.json", "New Adventure", 5, 1000)
+  testStageLoading("stages/Stage01.json", "Sands of Doom", 1, 1000)
+  testStageLoading("stages/Stage02.json", "The Scorched Path", 2, 1000)
+  testStageLoading("stages/Stage03.json", "The Dune Reaper", 3, 1200)
+  testStageLoading("stages/Stage04.json", "Into the forest", 4, 1400)
+  testStageLoading("stages/Stage05.json", "New Adventure", 5, 1400)
 
   it should "validate enemy types exist" in {
     val stage = Tools.loadStage("stages/Stage01.json")

@@ -24,6 +24,7 @@ import utils.Tools
 case class Stage(
   gp: GamePanel,
   private val stageName: String,
+  private val description: String,
   private val stageID: Int,
   private val difficulty: Int,
   private val coins: Int,
@@ -39,6 +40,7 @@ case class Stage(
   private val currentPlayer: PlayerStage = PlayerStage(coins)
 
   def getStageName: String = stageName
+  def getDescription: String = description
   def getStageID: Int = stageID
   def getDifficulty: Int = difficulty
   def getCoins: Int = coins
@@ -172,7 +174,7 @@ object Stage:
    * @return A new Stage with the same properties and a reset map.
    */
   def clone(stage: Stage): Stage =
-    new Stage(stage.gp, stage.stageName, stage.stageID, stage.difficulty, stage.coins, stage.spawnPosition, stage.waves, stage.map.reset())
+    new Stage(stage.gp, stage.stageName, stage.description, stage.stageID, stage.difficulty, stage.coins, stage.spawnPosition, stage.waves, stage.map.reset())
 
 end Stage
 

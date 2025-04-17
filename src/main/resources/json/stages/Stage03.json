@@ -1,8 +1,9 @@
 {
-  "stageName": "Twight Light",
+  "stageName": "The Dune Reaper",
+  "description": "The scorching sun bleaches the endless\nsands, but something darker than heat\nstalks the dunes. Whispers speak of an\nancient predator—silent, swift, and deadly.\n\nDefend the last outpost before the desert\nreclaims all, and beware... the Dune Reaper\ncomes for the unprepared.",
   "stageID": 3,
   "difficulty": 1,
-  "coins": 1000,
+  "coins": 1200,
   "spawnPosition": [
     { "x": 5, "y": 460 },
     { "x": 5, "y": 580 },
