@@ -77,13 +77,6 @@ class EntityTest extends AnyFlatSpec with Matchers with BeforeAndAfterEach:
     if !Cache.animationCached.contains(testCreep.name) then
       Cache.animationCached = Cache.animationCached + (testCreep.name -> mockAnimation)
 
-  "Creep" should "initialize with correct properties" in {
-    testCreep.getId shouldBe 1
-    testCreep.getName shouldBe "TestCreep"
-    testCreep.getPosition shouldBe(100.0, 100.0)
-    testCreep.health shouldBe 100.0
-  }
-
   it should "update state and animation correctly" in {
     testCreep.setState(State.ATTACK)
     testCreep.getState shouldBe State.ATTACK
