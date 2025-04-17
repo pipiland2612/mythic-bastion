@@ -6,7 +6,7 @@ import entity.weapon.MagicBullet
 import entity.{Direction, State}
 import game.GamePanel
 import system.upgrade.UpgradeTowerType.{ARROW, BARRACK, EXPLO, MAGE}
-import system.upgrade.UpgradeType.RANGE
+import system.upgrade.UpgradeType.{HEALTH, RANGE}
 import utils.{Animation, SoundConstant, Tools}
 
 import java.awt.geom.AffineTransform
@@ -298,6 +298,7 @@ class BarrackTower(
   private val allianceHeight = 42
 
   protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(BARRACK, RANGE)
+  private def getHealthMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(BARRACK, HEALTH)
 
   /** Removes all soldiers associated with the tower from the grid.
    *
@@ -398,7 +399,7 @@ class BarrackTower(
   private class BarrackTrainer(var pos: (Double, Double)):
     private val soldierTrainingTime = 10 * 60
     private var trainingCounter = soldierTrainingTime
-    private var currentSoldier: Option[Alliance] = Alliance.allianceOfName(allianceType, pos)
+    private var currentSoldier: Option[Alliance] = Alliance.allianceOfNameAndHealth(allianceType, pos, getHealthMultiplier)
 
     def getCurrentSoldier: Option[Alliance] = currentSoldier
 
@@ -428,6 +429,7 @@ class BarrackTower(
     private def startTraining(): Unit =
       if trainingCounter <= 0 then
         currentSoldier = Alliance.allianceOfName(allianceType, pos)
+        
         trainingCounter = soldierTrainingTime
       else
         trainingCounter -= 1

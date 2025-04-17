@@ -125,6 +125,29 @@ object Alliance:
       soldier
     )
 
+  def allianceOfNameAndHealth(key: String, position: (Double, Double), healthMultiplier: Double): Option[Alliance] =
+    AllianceData.registry.get(key).map(data =>
+      val soldier = Soldier(
+        name = key,
+        maxHealth = data.stats(0) * healthMultiplier,
+        apDmg = data.stats(1),
+        apDefense = data.stats(2),
+        adDmg = data.stats(3),
+        adDefense = data.stats(4),
+        range = data.stats(5),
+        speed = data.stats(6),
+        maxAttackCoolDown = data.stats(7),
+        maxDeadCounter = data.stats(8),
+        jsonPath = data.jsonPath,
+        imagePath = data.imagePath,
+        rect = data.rect,
+        gp = gp,
+        healthOffSet = data.healthOffSet
+      )
+      soldier.setPosition(position)
+      soldier
+    )
+
   /** Clones an existing alliance with the same attributes.
    * @param alliance The alliance to clone.
    * @return A new Alliance instance with identical attributes.
