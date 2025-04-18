@@ -3,6 +3,7 @@ package game
 import entity.creature.alliance.Alliance
 import entity.creature.enemy.Enemy
 import entity.weapon.Weapon
+import game.GameState.{PreStageState, UpgradeState}
 import gui.GUI
 import system.SystemHandler
 import utils.{SoundConstant, Tools}
@@ -54,7 +55,9 @@ class GamePanel extends JPanel with Runnable:
    * @param gameState The new game state to transition to
    */
   def handleReloadGameState(gameState: GameState): Unit =
-    if gameState == GameState.TitleState then
+    if gameState == GameState.TitleState &&
+      !(currentGameState == PreStageState || currentGameState == UpgradeState)
+    then
       getSystemHandler.stopMusic()
       getSystemHandler.playMusic(SoundConstant.MAP_BG_SOUND)
     if gameState == GameState.UpgradeState then
