@@ -29,7 +29,8 @@ cd mythic-bastion
 
 3. Compile and run the game using your IDE or command line.
 ```bash
-java -jar target/scala-3.3.5/mythic-bastion-assembly-0.1.0-SNAPSHOT.jar
+sbt reload
+sbt run
 ```
 
 ## How to Play
