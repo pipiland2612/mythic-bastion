@@ -139,6 +139,9 @@ case class Stage(
       hasSpawn = true
       waveSpawner.scheduleWaveSpawn(waves)
 
+  def stopWave(): Unit =
+    waveSpawner.stopAllSchedules()
+
   /** Generates a string representation of the stage.
    *
    * Includes stage name, ID, difficulty, spawn positions, wave information, and alliances.

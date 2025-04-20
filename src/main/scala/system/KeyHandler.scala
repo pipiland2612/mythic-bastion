@@ -88,7 +88,10 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
       Button(Rectangle2D.Double(680, 165, 40, 40),
         (_, _) => gp.handleReloadGameState(GameState.PlayState)),
       Button(Rectangle2D.Double(500, 335, 170, 50),
-        (_, _) => gp.handleReloadGameState(GameState.TitleState)),
+        (_, _) => {
+          gp.getSystemHandler.getStageManager.quit()
+          gp.handleReloadGameState(GameState.TitleState)
+        }),
       Button(Rectangle2D.Double(300, 335, 170, 50),
         (_, _) => gp.restart())
     ),

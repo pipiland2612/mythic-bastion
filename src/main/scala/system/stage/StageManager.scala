@@ -48,6 +48,9 @@ class StageManager (gp: GamePanel):
   def startWave(): Unit =
     currentStage.foreach(_.startWave())
 
+  private def stopWave(): Unit =
+    currentStage.foreach(_.stopWave())
+
   private var endCounter: Int = 0
 
   /** Updates the game state by checking win/lose conditions and updating entities.
@@ -121,6 +124,10 @@ class StageManager (gp: GamePanel):
         this.currentStage = Some(Stage.clone(stage))
         gp.getSystemHandler.playMusic(SoundConstant.GAME_BG_SOUND)
       case _ =>
+
+  def quit(): Unit =
+    stopWave()
+    currentStage = None
 
   /** Advances to the next level of the current stage and replays the background music.
    */

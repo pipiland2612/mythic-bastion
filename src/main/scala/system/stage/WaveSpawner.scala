@@ -104,9 +104,9 @@ class WaveSpawner(stage: Stage):
    * Shuts down the wave scheduler and all enemy spawner schedulers, clearing the list of spawner
    * schedulers to ensure no tasks continue running.
    */
-  private def stopAllSchedules(): Unit =
+  def stopAllSchedules(): Unit =
     if Option(waveScheduler).isDefined then
-      waveScheduler.shutdown()
+      waveScheduler.shutdownNow()
       waveScheduler = null
-    spawnerSchedulers.foreach(_.shutdown())
+    spawnerSchedulers.foreach(_.shutdownNow())
     spawnerSchedulers = Vector()
