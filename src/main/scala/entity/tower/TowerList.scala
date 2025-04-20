@@ -298,7 +298,7 @@ class BarrackTower(
   private val allianceHeight = 42
 
   protected def getRangeMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(BARRACK, RANGE)
-  private def getHealthMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(BARRACK, HEALTH)
+  private def getHealthMultiplier: Double = gp.getSystemHandler.getUpgradeManager.getCumulativeMultiplier(BARRACK, HEALTH) + level * 0.3
 
   /** Removes all soldiers associated with the tower from the grid.
    *
@@ -428,8 +428,7 @@ class BarrackTower(
      */
     private def startTraining(): Unit =
       if trainingCounter <= 0 then
-        currentSoldier = Alliance.allianceOfName(allianceType, pos)
-        
+        currentSoldier = Alliance.allianceOfNameAndHealth(allianceType, pos, getHealthMultiplier)
         trainingCounter = soldierTrainingTime
       else
         trainingCounter -= 1

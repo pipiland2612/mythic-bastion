@@ -82,9 +82,11 @@ class SystemHandler(gp: GamePanel):
     this.sound.play()
     this.sound.loop()
 
-  /** Stops the currently playing background music.
+  /** Stops the currently playing background music and sound effect.
    */
-  def stopMusic(): Unit = this.sound.stop()
+  def stopMusic(): Unit =
+    this.sound.stop()
+    this.soundEffect.stop()
 
   /** Plays a sound effect from the specified file path.
    *
