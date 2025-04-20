@@ -24,6 +24,7 @@ Compile / resourceDirectories += baseDirectory.value / "src/main/resources"
 lazy val root = (project in file("."))
   .settings(
     name := "mythic-bastion",
+    Compile / run / fork := true,
 
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.2.16" % Test,
