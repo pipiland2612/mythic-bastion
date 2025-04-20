@@ -223,9 +223,9 @@ class Frame(gp: GamePanel, towerBuild: TowerBuild):
    */
   private def drawTowerRange(g2d: Graphics2D, tower: Tower): Unit =
     val circle = tower.attackCircle
-    val (centerX, centerY) = (circle.getCenterX.toInt, circle.getCenterY.toInt)
+    val (centerX, centerY) = (circle.getCenterX, circle.getCenterY)
     val (x, y, w, h) = (circle.getX.toInt, circle.getY.toInt, circle.getWidth.toInt, circle.getHeight.toInt)
-    val gradient = new RadialGradientPaint(centerX, centerY, w, DIST, COLORS)
+    val gradient = new RadialGradientPaint(centerX.toFloat, centerY.toFloat, w.toFloat, DIST, COLORS)
     g2d.setPaint(gradient)
     g2d.fillOval(x, y, w, h)
     g2d.drawOval(x, y, w, h)
