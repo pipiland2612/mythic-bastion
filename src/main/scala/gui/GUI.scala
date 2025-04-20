@@ -82,8 +82,6 @@ class GUI(gp: GamePanel):
     g2d.drawImage(Image.skull_img, downTopLeftCoords._1, downTopLeftCoords._2, None.orNull)
     g2d.drawImage(Image.pause_img, topRightCoords._1, topRightCoords._2, None.orNull)
 
-    currentFrame.foreach(_.draw(g2d))
-
   private val font2 = new Font("Arial", Font.BOLD, 25)
   /** Renders the upgrade state UI, including upgrade options and descriptions.
    * @param g2d The Graphics2D context for rendering.
@@ -135,6 +133,7 @@ class GUI(gp: GamePanel):
       )
 
     drawPlayerStats(g2d)
+    currentFrame.foreach(_.draw(g2d))
 
   /** Renders a pause banner overlay in the pause state.
    * @param g2d The Graphics2D context for rendering.

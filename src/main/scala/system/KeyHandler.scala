@@ -145,7 +145,7 @@ class KeyHandler(gp: GamePanel) extends MouseListener with KeyListener:
    */
   override def mouseClicked(e: MouseEvent): Unit =
     val (x, y) = (e.getX, e.getY - offSetY)
-    println(s"Mouse clicked at: $x, $y")
+//    println(s"Mouse clicked at: $x, $y")
 
     val currentState = gp.getCurrentGameState
     buttonsByState.getOrElse(currentState, Nil).find(_.contains(x, y)).foreach(_.execute(x, y))

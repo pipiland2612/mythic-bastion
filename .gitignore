@@ -1,4 +1,12 @@
-target/
+# sbt specific
+target/**
+project/target/
+project/project/
+
+# include the pre-build game
+!target/scala-3.3.5/
+!target/scala-3.3.5/mythic-bastion-assembly-0.1.0-SNAPSHOT.jar
+
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
