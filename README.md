@@ -27,7 +27,10 @@ git clone https://github.com/pipiland2612/mythic-bastion.git
 cd mythic-bastion
 ```
 
-3. Compile and run the game using your IDE or command line. (Update later)
+3. Compile and run the game using your IDE or command line.
+```bash
+java -jar target/scala-3.3.5/mythic-bastion-assembly-0.1.0-SNAPSHOT.jar
+```
 
 ## How to Play
 
