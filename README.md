@@ -41,3 +41,6 @@ sbt run
 4. **Special Abilities**: Activate special powers to deal with tougher enemies or emergency situations.
 
 See more in game general plan and technical plan
+
+## Demo video 
+- https://drive.google.com/file/d/1yuLnB9lKNB23eVXX-Skv9m24cwc2h3w8/view
