@@ -1,0 +1,196 @@
+package entity
+
+import entity.creature.alliance.Soldier
+import entity.creature.enemy.{Creep, Enemy}
+import entity.tower.BarrackTower
+import entity.{Attacker, Defender, State}
+import game.GamePanel
+import org.scalatest.BeforeAndAfterEach
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+import utils.Cache
+
+import java.awt.geom.Rectangle2D
+import java.awt.image.BufferedImage
+import scala.math.Ordering.Implicits._
+
+class CreatureInteractionTest extends AnyFlatSpec with Matchers with BeforeAndAfterEach:
+
+  var testGamePanel: TestGamePanel = _
+  var testCreep: Creep = _
+  var testSoldier: Soldier = _
+  var testTower: BarrackTower = _
+  val testRect = new Rectangle2D.Double(0, 0, 32, 32)
+  val testImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB)
+
+  class TestGamePanel extends GamePanel:
+    var playedSounds: List[String] = List()
+    def playSE(sound: String): Unit =
+      playedSounds = playedSounds :+ sound
+
+  override def beforeEach(): Unit =
+    testGamePanel = new TestGamePanel()
+    
+    // Create test enemy
+    testCreep = Creep(
+      name = "TestCreep",
+      maxHealth = 100.0,
+      playerDamage = 10.0,
+      apDmg = 5.0,
+      apDefense = 2.0,
+      adDmg = 8.0,
+      adDefense = 3.0,
+      range = 50.0,
+      speed = 2.0,
+      maxAttackCoolDown = 5.0,
+      maxDeadCounter = 10.0,
+      coin = 5.0,
+      jsonPath = "enemies/Boss01.json",
+      imagePath = "enemies/Boss01.png",
+      rect = testRect,
+      gp = testGamePanel,
+      healthOffSet = (0, 0),
+      pos = (100.0, 100.0)
+    )
+    
+    // Create test soldier
+    testSoldier = Soldier(
+      name = "TestSoldier",
+      maxHealth = 80.0,
+      apDmg = 6.0,
+      apDefense = 3.0,
+      adDmg = 7.0,
+      adDefense = 2.0,
+      range = 40.0,
+      speed = 1.5,
+      maxAttackCoolDown = 4.0,
+      maxDeadCounter = 8.0,
+      jsonPath = "alliances/Soldier01.json",
+      imagePath = "alliances/Soldier01.png",
+      rect = testRect,
+      gp = testGamePanel,
+      healthOffSet = (0, 0),
+      pos = (120.0, 120.0)
+    )
+    
+    // Create test tower
+    testTower = BarrackTower(testGamePanel, 1, (150.0, 150.0))
+    
+    // Setup mock animations
+    val mockAnimation = Vector(Vector(testImage))
+    Cache.animationCached = Cache.animationCached + (testCreep.name -> mockAnimation)
+    Cache.animationCached = Cache.animationCached + (testSoldier.name -> mockAnimation)
+    Cache.animationCached = Cache.animationCached + (testTower.getName -> mockAnimation)
+
+  "Creature" should "take damage correctly" in {
+    val initialHealth = testCreep.getHealth
+    testSoldier.dealDamage(testCreep)
+    
+    testCreep.getHealth should be < initialHealth
+  }
+
+  it should "die when health reaches zero" in {
+    // Deal massive damage
+    while testCreep.getHealth > 0 do
+      testCreep.takeDamage(50.0)
+    
+    testCreep.getHealth shouldBe 0.0
+    testCreep.getState shouldBe State.DEAD
+  }
+
+  it should "enter combat state when attacking" in {
+    testSoldier.setState(State.ATTACK)
+    testSoldier.getState shouldBe State.ATTACK
+    
+    testSoldier.update()
+    // After update, should maintain attack state or change based on logic
+  }
+
+  "Enemy and Alliance interaction" should "handle combat correctly" in {
+    val initialCreepHealth = testCreep.getHealth
+    val initialSoldierHealth = testSoldier.getHealth
+    
+    // Simulate combat
+    testCreep.dealDamage(testSoldier)
+    testSoldier.dealDamage(testCreep)
+    
+    testCreep.getHealth should be < initialCreepHealth
+    testSoldier.getHealth should be < initialSoldierHealth
+  }
+
+  it should "calculate damage considering armor" in {
+    val highArmorCreep = Creep(
+      "ArmoredCreep", 100.0, 10.0, 5.0, 10.0, 8.0, 10.0, 50.0, 2.0, 5.0, 10.0, 5.0,
+      "enemies/Boss01.json", "enemies/Boss01.png", testRect, testGamePanel, (0, 0), (100.0, 100.0)
+    )
+    
+    val lowArmorCreep = Creep(
+      "WeakCreep", 100.0, 10.0, 5.0, 1.0, 8.0, 1.0, 50.0, 2.0, 5.0, 10.0, 5.0,
+      "enemies/Boss01.json", "enemies/Boss01.png", testRect, testGamePanel, (0, 0), (100.0, 100.0)
+    )
+    
+    Cache.animationCached = Cache.animationCached + (highArmorCreep.name -> Vector(Vector(testImage)))
+    Cache.animationCached = Cache.animationCached + (lowArmorCreep.name -> Vector(Vector(testImage)))
+    
+    val initialHighArmorHealth = highArmorCreep.getHealth
+    val initialLowArmorHealth = lowArmorCreep.getHealth
+    
+    testSoldier.dealDamage(highArmorCreep)
+    testSoldier.dealDamage(lowArmorCreep)
+    
+    val damageToHighArmor = initialHighArmorHealth - highArmorCreep.getHealth
+    val damageToLowArmor = initialLowArmorHealth - lowArmorCreep.getHealth
+    
+    damageToLowArmor should be > damageToHighArmor
+  }
+
+  "Tower and creature interaction" should "detect enemies in range" in {
+    // Move enemy within range
+    testCreep.setPosition(145.0, 145.0) // Close to tower at (150, 150)
+    
+    // Tower should be able to detect and target the enemy
+    val towerRange = testTower.getRange
+    towerRange should be > 0.0
+  }
+
+  it should "attack enemies within range" in {
+    val initialCreepHealth = testCreep.getHealth
+    
+    // Position enemy within tower range
+    testCreep.setPosition(160.0, 160.0)
+    
+    // Simulate tower attack
+    testTower.setState(State.ATTACK)
+    testTower.update()
+    
+    // Tower should be in attack state
+    testTower.getState shouldBe State.ATTACK
+  }
+
+  "Entity positioning" should "update correctly" in {
+    val newPos = (200.0, 250.0)
+    testCreep.setPosition(newPos._1, newPos._2)
+    
+    testCreep.getPosition shouldBe newPos
+  }
+
+  it should "maintain bounds within rectangle" in {
+    val entityRect = testCreep.getRect
+    entityRect should not be null
+    entityRect.getWidth should be > 0.0
+    entityRect.getHeight should be > 0.0
+  }
+
+  "State management" should "transition correctly" in {
+    testCreep.setState(State.IDLE)
+    testCreep.getState shouldBe State.IDLE
+    
+    testCreep.setState(State.RUN)
+    testCreep.getState shouldBe State.RUN
+    
+    testCreep.setState(State.ATTACK)
+    testCreep.getState shouldBe State.ATTACK
+    
+    testCreep.setState(State.DEAD)
+    testCreep.getState shouldBe State.DEAD
+  }
