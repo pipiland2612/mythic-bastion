@@ -42,5 +42,11 @@ sbt run
 
 See more in game general plan and technical plan
 
-## Demo video 
-- https://drive.google.com/file/d/1yuLnB9lKNB23eVXX-Skv9m24cwc2h3w8/view
+## Demo Video
+
+<video width="800" controls>
+  <source src="mythic_bastion.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+*Note: If the video doesn't play in your browser, you can [download it here](mythic_bastion.mp4)*
