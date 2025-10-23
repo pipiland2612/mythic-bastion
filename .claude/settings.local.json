@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(sbt test)"
-    ],
-    "deny": [],
-    "ask": []
-  }
-}
