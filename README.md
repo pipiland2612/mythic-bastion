@@ -44,9 +44,5 @@ See more in game general plan and technical plan
 
 ## Demo Video
 
-<video width="800" controls>
-  <source src="mythic_bastion.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/b367199e-fcdb-4c23-8cbb-c92b96f7450b
 
-*Note: If the video doesn't play in your browser, you can [download it here](mythic_bastion.mp4)*
